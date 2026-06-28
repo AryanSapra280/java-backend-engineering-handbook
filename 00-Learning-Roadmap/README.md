@@ -1,27 +1,23 @@
-Java Backend Engineering Roadmap
+# Java Backend Engineering Roadmap
 
-✅ OOP
+## OOP
 
-⬜ UML
+- [x] Background of OOP
+- [x] Encapsulation
+- [ ] Abstraction
+- [ ] Inheritance
+- [ ] Polymorphism
 
-⬜ SOLID
+## UML
 
-⬜ Design Patterns
+- [ ] Class Diagram
+- [ ] Sequence Diagram
+- [ ] Activity Diagram
 
-⬜ Parking Lot
+## SOLID
 
-⬜ Library
-
-⬜ ATM
-
-⬜ Elevator
-
-⬜ Spring
-
-⬜ Kafka
-
-⬜ Redis
-
-⬜ HLD
-
-⬜ Distributed Systems
+- [ ] SRP
+- [ ] OCP
+- [ ] LSP
+- [ ] ISP
+- [ ] DIP
