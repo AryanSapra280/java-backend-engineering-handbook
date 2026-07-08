@@ -1,281 +1,283 @@
-# DSA Roadmap for Product-Based Companies 🚀
+# DSA Weekly Preparation Plan (Google / Product Companies)
 
-## Objective
+## Goal
 
-This repository documents my journey towards mastering Data Structures & Algorithms for Software Engineering interviews at top product-based companies like:
+This roadmap focuses on mastering interview patterns rather than solving random problems.
 
-* Google
-* Microsoft
-* Amazon
-* Uber
-* Atlassian
-* Rubrik
-* Adobe
-* Walmart Global Tech
-* Flipkart
-* Intuit
-* Salesforce
+**Start Date:** 8 July 2026 (Wednesday)
 
-The goal is **not** to solve the maximum number of problems, but to master the **patterns** that repeatedly appear in coding interviews.
+Each week follows the same workflow:
+
+1. Learn the pattern.
+2. Understand recognition clues.
+3. Solve core problems.
+4. Solve 1–2 similar LeetCode problems.
+5. Update GitHub notes.
+6. Revise previous week's pattern.
 
 ---
 
-# Learning Philosophy
+# Week 1 (8 Jul – 12 Jul)
 
-* Learn one pattern at a time.
-* Master Medium problems before attempting Hard.
-* Understand *why* an algorithm works.
-* Write clean, interview-quality code.
-* Revise consistently.
-* Focus on pattern recognition rather than memorization.
+## Pattern
 
----
+Two Pointers
 
-# Progress
+## Problems
 
-* [ ] Phase 1 – Arrays & Strings
-* [ ] Phase 2 – Core Data Structures
-* [ ] Phase 3 – Trees
-* [ ] Phase 4 – Graphs
-* [ ] Phase 5 – Backtracking
-* [ ] Phase 6 – Dynamic Programming
-* [ ] Phase 7 – Design Problems
+* Merge Sorted Array
+* Squares of a Sorted Array
+* Two Sum II
+* Container With Most Water
+* Boats to Save People
+* 3Sum
+* String Compression
+* Trapping Rain Water
 
----
+## Deliverables
 
-# Phase 1 – Arrays & Strings
-
-## Arrays
-
-* [ ] Rotate Array
-* [ ] Product of Array Except Self
-* [ ] Majority Element II
-* [ ] Best Time to Buy and Sell Stock II
-* [ ] Increasing Triplet
-* [ ] Number of Zero Filled Subarrays
-* [ ] Next Permutation
-* [ ] First Missing Positive ⭐
+* Pattern README
+* Java template
+* Recognition notes
+* Common mistakes
+* One revision session
+* One LeetCode similar problem
 
 ---
 
-## Two Pointers
+# Week 2 (13 Jul – 19 Jul)
 
-* [ ] Two Sum II
-* [ ] Container With Most Water ⭐
-* [ ] 3Sum ⭐
-* [ ] 4Sum
-* [ ] String Compression
-* [ ] Boats to Save People
-* [ ] Longest Palindromic Substring
-* [ ] Trapping Rain Water ⭐
-* [ ] Count Subarrays With Fixed Bounds
+## Pattern
 
----
+Sliding Window (Fixed)
 
-## Sliding Window
+Problems
 
-### Fixed Window
+* Maximum Average Subarray
+* Find All Anagrams
+* Permutation in String
+* Maximum Number of Vowels
+* Maximum Sum of Distinct Subarrays
 
-* [ ] Find All Anagrams
-* [ ] Permutation in String
-* [ ] Maximum Number of Vowels
-* [ ] Maximum Sum of Distinct Subarrays
+Deliverables
 
-### Variable Window
-
-* [ ] Longest Substring Without Repeating Characters ⭐
-* [ ] Character Replacement ⭐
-* [ ] Minimum Size Subarray Sum
-* [ ] Fruit Into Baskets
-* [ ] Maximum Points from Cards
-* [ ] Frequency of Most Frequent Element
-* [ ] Longest Substring with K Distinct
-* [ ] Minimum Window Substring ⭐
-* [ ] Subarrays with K Different Integers ⭐
+* Fixed Window template
+* Recognition checklist
+* Similar questions
 
 ---
 
-## Prefix Sum
+# Week 3 (20 Jul – 26 Jul)
 
-* [ ] Subarray Sum Equals K ⭐
-* [ ] Continuous Subarray Sum
-* [ ] Contiguous Array
-* [ ] Subarray Sums Divisible by K
+## Pattern
 
----
+Sliding Window (Variable)
 
-# Phase 2 – Core Data Structures
+Problems
 
-## Binary Search
-
-* [ ] Search in Rotated Sorted Array ⭐
-* [ ] Find Minimum in Rotated Sorted Array
-* [ ] Koko Eating Bananas ⭐
-* [ ] Capacity to Ship Packages ⭐
-* [ ] Minimum Days to Make Bouquets
-* [ ] Split Array Largest Sum ⭐
-* [ ] Median of Two Sorted Arrays ⭐
+* Longest Substring Without Repeating Characters
+* Character Replacement
+* Minimum Size Subarray Sum
+* Fruit Into Baskets
+* Maximum Points from Cards
+* Frequency of Most Frequent Element
+* Longest Substring with K Distinct
+* Minimum Window Substring
+* Subarrays with K Different Integers
 
 ---
 
-## Stack
+# Week 4 (27 Jul – 2 Aug)
 
-* [ ] Min Stack
-* [ ] Car Fleet ⭐
-* [ ] Simplify Path
-* [ ] Evaluate Reverse Polish Notation
-* [ ] Basic Calculator II
-* [ ] Valid Parenthesis String
+## Pattern
 
----
+Prefix Sum
 
-## Monotonic Stack
+Problems
 
-* [ ] Daily Temperatures ⭐
-* [ ] Online Stock Span
-* [ ] Remove K Digits ⭐
-* [ ] Sum of Subarray Minimums ⭐
-* [ ] Largest Rectangle in Histogram ⭐
+* Running Sum
+* Pivot Index
+* Subarray Sum Equals K
+* Continuous Subarray Sum
+* Contiguous Array
+* Subarray Sums Divisible by K
 
 ---
 
-## Heap
+# Week 5 (3 Aug – 9 Aug)
 
-* [ ] Furthest Building
-* [ ] Single Threaded CPU
-* [ ] Maximum Performance of a Team ⭐
+## Pattern
 
----
+Hash Map
 
-# Phase 3 – Trees
+Problems
 
-## Linked List
-
-* [ ] Add Two Numbers ⭐
-* [ ] Copy List with Random Pointer ⭐
-* [ ] Remove Nth Node
-* [ ] Reorder List ⭐
-* [ ] Reverse Nodes in K Group ⭐
+* Contains Duplicate
+* Group Anagrams
+* Longest Consecutive Sequence
+* Reorganize String
+* Isomorphic Strings
+* Encode & Decode TinyURL
 
 ---
 
-## Binary Trees
+# Week 6 (10 Aug – 16 Aug)
 
-### Traversal
+## Pattern
 
-* [ ] Level Order Traversal
-* [ ] Zigzag Traversal
-* [ ] Right Side View
+Binary Search
 
-### Construction
+Problems
 
-* [ ] Construct Binary Tree from Preorder + Inorder
-* [ ] Construct Binary Tree from Inorder + Postorder
-
-### Important
-
-* [ ] Path Sum III
-* [ ] Lowest Common Ancestor ⭐
-* [ ] Serialize & Deserialize Binary Tree ⭐
-* [ ] Binary Tree Maximum Path Sum ⭐
+* Search in Rotated Sorted Array
+* Find Minimum in Rotated Sorted Array
+* Koko Eating Bananas
+* Capacity to Ship Packages
+* Minimum Days to Make Bouquets
+* Split Array Largest Sum
+* Median of Two Sorted Arrays
 
 ---
 
-# Phase 4 – Graphs
+# Week 7 (17 Aug – 23 Aug)
 
-* [ ] Number of Islands ⭐
-* [ ] Clone Graph ⭐
-* [ ] Course Schedule ⭐
-* [ ] Word Ladder ⭐
-* [ ] Network Delay Time ⭐
-* [ ] Cheapest Flights Within K Stops
-* [ ] Accounts Merge
-* [ ] Redundant Connection
-* [ ] Alien Dictionary ⭐
+## Pattern
 
----
+Stack
 
-# Phase 5 – Backtracking
+Problems
 
-* [ ] Generate Parentheses ⭐
-* [ ] Permutations
-* [ ] Combination Sum ⭐
-* [ ] Subsets
-* [ ] N Queens ⭐
-* [ ] Sudoku Solver
+* Min Stack
+* Car Fleet
+* Simplify Path
+* Evaluate Reverse Polish Notation
+* Basic Calculator II
+* Valid Parenthesis String
 
 ---
 
-# Phase 6 – Dynamic Programming
+# Week 8 (24 Aug – 30 Aug)
 
-## 1D DP
+## Pattern
 
-* [ ] House Robber ⭐
-* [ ] House Robber II
-* [ ] Delete and Earn
+Monotonic Stack
 
----
+Problems
 
-## 0/1 Knapsack
-
-* [ ] Partition Equal Subset Sum ⭐
-* [ ] Target Sum ⭐
-
----
-
-## Unbounded Knapsack
-
-* [ ] Coin Change ⭐
-* [ ] Coin Change II
+* Daily Temperatures
+* Online Stock Span
+* Remove K Digits
+* Sum of Subarray Minimums
+* Largest Rectangle in Histogram
 
 ---
 
-## Longest Increasing Subsequence
+# Week 9 (31 Aug – 6 Sep)
 
-* [ ] Longest Increasing Subsequence ⭐
-* [ ] Russian Doll Envelopes
+## Pattern
 
----
+Heap / Priority Queue
 
-## Grid DP
+Problems
 
-* [ ] Unique Paths
-* [ ] Minimum Path Sum
-* [ ] Triangle
-* [ ] Maximal Square
-
----
-
-## String DP
-
-* [ ] Longest Common Subsequence ⭐
-* [ ] Edit Distance ⭐
-* [ ] Word Break ⭐
-* [ ] Decode Ways
+* Furthest Building
+* Single Threaded CPU
+* Maximum Performance of a Team
+* Top K Frequent Elements
+* K Closest Points
 
 ---
 
-# Phase 7 – Design Problems
+# Week 10 (7 Sep – 13 Sep)
 
-* [ ] LRU Cache ⭐
-* [ ] LFU Cache ⭐
-* [ ] Design Twitter ⭐
-* [ ] Browser History
-* [ ] Snapshot Array
-* [ ] Autocomplete System ⭐
+## Pattern
+
+Linked List
+
+Problems
+
+* Add Two Numbers
+* Copy List with Random Pointer
+* Remove Nth Node
+* Reorder List
+* Reverse Nodes in K Group
 
 ---
 
-# Legend
+# Week 11 (14 Sep – 20 Sep)
 
-⭐ = Frequently asked by FAANG / Top Product Companies.
+## Pattern
+
+Binary Trees (DFS)
 
 ---
 
-# Target
+# Week 12 (21 Sep – 27 Sep)
 
-* Master ~200 high-quality interview questions.
-* Identify patterns quickly.
-* Write clean Java solutions.
-* Explain trade-offs confidently.
-* Be interview-ready for SDE-2 roles.
+## Pattern
+
+Binary Trees (BFS)
+
+---
+
+# Week 13 (28 Sep – 4 Oct)
+
+## Pattern
+
+Binary Search Trees
+
+---
+
+# Week 14 (5 Oct – 11 Oct)
+
+## Pattern
+
+Graphs
+
+DFS
+
+BFS
+
+Union Find
+
+Topological Sort
+
+Shortest Path
+
+---
+
+# Week 15 (12 Oct – 18 Oct)
+
+## Pattern
+
+Backtracking
+
+---
+
+# Week 16 (19 Oct – 25 Oct)
+
+## Pattern
+
+Dynamic Programming
+
+1D DP
+
+2D DP
+
+Knapsack
+
+LIS
+
+Grid DP
+
+String DP
+
+---
+
+# Every Sunday
+
+* Pattern Revision
+* Blind Solve
+* One Mock Interview
+* Solve one unseen similar problem
+* Update GitHub README
