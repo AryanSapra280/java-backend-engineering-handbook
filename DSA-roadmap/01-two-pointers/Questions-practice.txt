@@ -1,0 +1,36 @@
+🟢 Phase 1 – Fundamentals
+Reverse String [done]
+Valid Palindrome [done]
+Merge Sorted Array
+Squares of a Sorted Array
+Two Sum II – Input Array Is Sorted
+Remove Duplicates from Sorted Array
+Remove Element
+Move Zeroes
+🟡 Phase 2 – Intermediate
+Container With Most Water ⭐
+Boats to Save People
+Sort Colors
+Backspace String Compare
+Reverse Vowels of a String
+Is Subsequence
+🟠 Phase 3 – Advanced
+3Sum ⭐
+4Sum
+String Compression
+Next Permutation ⭐
+Remove Duplicates from Sorted Array II
+Sum of Square Numbers
+🔴 Phase 4 – Expert
+Longest Palindromic Substring
+Trapping Rain Water ⭐
+Count Subarrays With Fixed Bounds ⭐
+Push Dominoes
+Total: 24 Problems
+⭐ Must Master (Google / Meta / Uber / Atlassian favorites)
+Two Sum II
+Container With Most Water
+3Sum
+Next Permutation
+Trapping Rain Water
+Count Subarrays With Fixed Bounds
