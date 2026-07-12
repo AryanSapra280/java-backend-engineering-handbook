@@ -1,14 +1,14 @@
 🟢 Phase 1 – Fundamentals
 Reverse String [done]
 Valid Palindrome [done]
-Merge Sorted Array
-Squares of a Sorted Array
-Two Sum II – Input Array Is Sorted
-Remove Duplicates from Sorted Array
-Remove Element
-Move Zeroes
+Merge Sorted Array [solved but with hint, check md file]
+Squares of a Sorted Array [sorted]
+Two Sum II – Input Array Is Sorted [simple, but the intuition is good to understand]
+Remove Duplicates from Sorted Array [done]
+Remove Element [done]
+Move Zeroes [done]
 🟡 Phase 2 – Intermediate
-Container With Most Water ⭐
+Container With Most Water [done][i implemented by keeping the intuition of 2 sum] ⭐
 Boats to Save People
 Sort Colors
 Backspace String Compare
