@@ -1,3 +1,4 @@
+````md
 # Factory Design Pattern
 
 > **Core idea:** Factory Pattern centralizes object creation so that the code using an object does not need to know which concrete class to instantiate.
@@ -16,14 +17,14 @@ if (type == UPI) {
 } else if (type == CARD) {
     return new CardPayment();
 }
-```
+````
 
 everywhere in the application, we move the creation responsibility into a dedicated place:
 
 ```text
 Client
    |
-   ↓
+   v
 Factory
    |
    +---- creates UPI
@@ -37,10 +38,10 @@ The client asks:
 
 The client does not need to know:
 
-- which concrete class to instantiate
-- which constructor to call
-- what dependencies are required
-- how creation should be performed
+* which concrete class to instantiate
+* which constructor to call
+* what dependencies are required
+* how creation should be performed
 
 ---
 
@@ -177,12 +178,12 @@ For three tiny classes and one usage point, this may be perfectly fine.
 
 The problem appears when object creation becomes:
 
-- repeated
-- complicated
-- dependent on many conditions
-- dependent on configuration
-- dependent on multiple constructor arguments
-- spread across many places
+* repeated
+* complicated
+* dependent on many conditions
+* dependent on configuration
+* dependent on multiple constructor arguments
+* spread across many places
 
 ---
 
@@ -218,19 +219,19 @@ Without a Factory:
 
 ```text
 OrderService
-    ↓
-if EMAIL → new EmailNotification()
-if SMS   → new SmsNotification()
+    |
+    +-- if EMAIL -> new EmailNotification()
+    +-- if SMS   -> new SmsNotification()
 
 CampaignService
-    ↓
-if EMAIL → new EmailNotification()
-if SMS   → new SmsNotification()
+    |
+    +-- if EMAIL -> new EmailNotification()
+    +-- if SMS   -> new SmsNotification()
 
 ReminderService
-    ↓
-if EMAIL → new EmailNotification()
-if SMS   → new SmsNotification()
+    |
+    +-- if EMAIL -> new EmailNotification()
+    +-- if SMS   -> new SmsNotification()
 ```
 
 Now changing creation logic requires changes in multiple places.
@@ -348,12 +349,12 @@ Basic structure:
 ```text
                  Client
                    |
-                   ↓
+                   v
                 Factory
                    |
         +----------+----------+
         |          |          |
-        ↓          ↓          ↓
+        v          v          v
      Product A  Product B  Product C
 ```
 
@@ -362,12 +363,12 @@ For our example:
 ```text
 NotificationService
         |
-        ↓
+        v
 NotificationFactory
         |
    +----+----+----+
    |    |    |
-   ↓    ↓    ↓
+   v    v    v
  Email SMS  Push
 ```
 
@@ -540,16 +541,16 @@ The improvement is:
 ```text
 Before:
 
-Service A → if/switch → creation
-Service B → if/switch → creation
-Service C → if/switch → creation
+Service A -> if/switch -> creation
+Service B -> if/switch -> creation
+Service C -> if/switch -> creation
 
 
 After:
 
-Service A ──┐
-Service B ──┼──→ Factory → creation
-Service C ──┘
+Service A --+
+Service B --+--> Factory -> creation
+Service C --+
 ```
 
 The creation decision now has one owner.
@@ -582,7 +583,7 @@ NotificationFactory.create(
         NotificationType.EMAIL);
 ```
 
-This is the main benefit:
+The main benefit is:
 
 > **Encapsulation of object creation.**
 
@@ -590,7 +591,7 @@ This is the main benefit:
 
 # 10. Factory vs Strategy
 
-This distinction is extremely important because you just learned Strategy.
+This distinction is extremely important.
 
 ## Strategy
 
@@ -622,9 +623,11 @@ Answers:
 
 ```text
 PaymentType
-    ↓
+    |
+    v
 Factory
-    ↓
+    |
+    v
 UPIPayment object
 ```
 
@@ -639,13 +642,13 @@ Factory and Strategy can work together:
 ```text
 Request
    |
-   ↓
+   v
 Factory / Registry
    |
-   ↓
+   v
 Strategy object
    |
-   ↓
+   v
 execute()
 ```
 
@@ -661,8 +664,8 @@ strategy.pay(amount);
 Here:
 
 ```text
-Factory → creates/selects Strategy
-Strategy → performs behavior
+Factory  -> creates/selects Strategy
+Strategy -> performs behavior
 ```
 
 ---
@@ -709,7 +712,13 @@ The Registry does:
 return strategyMap.get(type);
 ```
 
-There is no `new`.
+There is no:
+
+```java
+new
+```
+
+during runtime selection.
 
 ---
 
@@ -719,18 +728,22 @@ There is no `new`.
 Factory:
 
 type
- ↓
+ |
+ v
 create
- ↓
+ |
+ v
 new object
 
 
 Registry:
 
 type
- ↓
+ |
+ v
 lookup
- ↓
+ |
+ v
 existing object
 ```
 
@@ -865,8 +878,8 @@ Each concrete creator decides what product to create.
 ```text
 Factory
    |
-   +-- if EMAIL → new Email
-   +-- if SMS → new SMS
+   +-- if EMAIL -> new Email
+   +-- if SMS -> new SMS
 ```
 
 One Factory decides.
@@ -878,9 +891,9 @@ One Factory decides.
 ```text
 Creator
    |
-   +-- EmailCreator → creates Email
+   +-- EmailCreator -> creates Email
    |
-   +-- SmsCreator → creates SMS
+   +-- SmsCreator -> creates SMS
 ```
 
 The subclasses decide.
@@ -906,7 +919,7 @@ Use a Factory when:
 ### 1. Object creation has a decision
 
 ```text
-type → object
+type -> object
 ```
 
 ### 2. Creation logic is repeated
@@ -965,7 +978,7 @@ User user = new User();
 
 does not need:
 
-```java
+```text
 UserFactory
 ```
 
@@ -975,7 +988,7 @@ Bad overengineering:
 
 ```text
 UserFactory
-UserBuilderFactory
+BuilderFactory
 AddressFactory
 StringFactory
 IntegerFactory
@@ -1022,7 +1035,7 @@ case NEW_TYPE:
 
 So a Simple Factory is **not automatically perfectly Open/Closed**.
 
-This is a subtle but important point.
+This is an important point.
 
 Factory can improve separation of concerns without completely eliminating modification.
 
@@ -1118,7 +1131,7 @@ So writing:
 new EmailNotification()
 ```
 
-inside a Factory can actually bypass Spring dependency injection.
+inside a Factory can bypass Spring dependency injection.
 
 Suppose:
 
@@ -1157,7 +1170,7 @@ This is usually undesirable in Spring.
 
 # 20. Spring Strategy vs Traditional Factory
 
-This is where your previous Strategy learning becomes extremely useful.
+This is where Strategy becomes useful.
 
 ### Traditional Factory
 
@@ -1178,10 +1191,10 @@ Spring
    +-- creates Card bean
    +-- creates PayPal bean
             |
-            ↓
+            v
       Registry receives them
             |
-            ↓
+            v
       Map<Type, Strategy>
 ```
 
@@ -1203,51 +1216,7 @@ during runtime selection.
 
 ---
 
-# 21. Factory vs Spring Dependency Injection
-
-This is a critical interview concept.
-
-A Factory solves:
-
-> **How should I decide/create a concrete object?**
-
-Spring DI solves:
-
-> **How should objects be instantiated, configured, wired, and managed?**
-
-They overlap in some areas, but they are not the same abstraction.
-
----
-
-## Factory
-
-```text
-Factory
-   ↓
-create object
-```
-
----
-
-## Spring
-
-```text
-Spring Container
-   ↓
-create beans
-   ↓
-resolve dependencies
-   ↓
-manage lifecycle
-   ↓
-inject beans
-```
-
-If Spring already manages the possible implementations, a Registry/Map of injected beans may be more natural than a Factory that manually calls `new`.
-
----
-
-# 22. Spring Factory Example
+# 21. Spring Factory Example
 
 Suppose we still want a Factory abstraction.
 
@@ -1313,7 +1282,7 @@ This is why terminology matters less than understanding the responsibility.
 
 ---
 
-# 23. Factory + Strategy Together
+# 22. Factory + Strategy Together
 
 This is a very common design.
 
@@ -1374,19 +1343,19 @@ The responsibilities are:
 
 ```text
 Factory
-    ↓
-Which Strategy object?
+    |
+    +-- Which Strategy object?
 
 Strategy
-    ↓
-How should payment happen?
+    |
+    +-- How should payment happen?
 ```
 
 This is a very useful combination.
 
 ---
 
-# 24. But Don't Force Factory + Strategy Together
+# 23. But Don't Force Factory + Strategy Together
 
 They solve different problems.
 
@@ -1438,7 +1407,558 @@ when lookup of already-existing implementations is the problem.
 
 ---
 
-# 25. Real-World Examples
+# 24. Multiple Interfaces and Multiple Factories
+
+This is an important architectural question.
+
+Suppose our application has several completely different abstractions:
+
+```text
+PaymentStrategy
+    |
+    +-- UPI
+    +-- CARD
+    +-- WALLET
+
+
+Notification
+    |
+    +-- EMAIL
+    +-- SMS
+    +-- PUSH
+
+
+FileParser
+    |
+    +-- JSON
+    +-- CSV
+    +-- XML
+```
+
+Should we create one giant factory?
+
+Usually:
+
+> **No.**
+
+Avoid:
+
+```java
+public class ApplicationFactory {
+
+    public Object create(Type type) {
+
+        if (type == UPI) {
+            return new UPIPaymentStrategy();
+        }
+
+        if (type == EMAIL) {
+            return new EmailNotification();
+        }
+
+        if (type == JSON) {
+            return new JsonParser();
+        }
+
+        // 50 more conditions...
+    }
+}
+```
+
+This becomes a **God Factory**.
+
+The Factory now knows about unrelated parts of the application.
+
+---
+
+## Better approach
+
+Group factories around a coherent creation responsibility:
+
+```text
+PaymentFactory
+    |
+    +-- Payment-related objects
+
+
+NotificationFactory
+    |
+    +-- Notification-related objects
+
+
+ParserFactory
+    |
+    +-- Parser-related objects
+```
+
+For example:
+
+```java
+public class PaymentFactory {
+
+    public PaymentStrategy create(
+            PaymentType type) {
+
+        switch (type) {
+
+            case UPI:
+                return new UPIPaymentStrategy();
+
+            case CARD:
+                return new CardPaymentStrategy();
+
+            case WALLET:
+                return new WalletPaymentStrategy();
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+}
+```
+
+And separately:
+
+```java
+public class NotificationFactory {
+
+    public Notification create(
+            NotificationType type) {
+
+        switch (type) {
+
+            case EMAIL:
+                return new EmailNotification();
+
+            case SMS:
+                return new SmsNotification();
+
+            case PUSH:
+                return new PushNotification();
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+}
+```
+
+The principle is:
+
+```text
+One Factory
+    |
+    +-- One coherent creation responsibility
+```
+
+Not:
+
+```text
+One Factory
+    |
+    +-- Everything in the application
+```
+
+---
+
+# 25. What If One Interface Has Many Implementations?
+
+Now consider a different situation.
+
+Suppose:
+
+```text
+PaymentStrategy
+    |
+    +-- UPI
+    +-- CARD
+    +-- WALLET
+    +-- PAYPAL
+    +-- NET_BANKING
+    +-- BNPL
+    +-- ...
+    +-- 100 implementations
+```
+
+A Factory containing:
+
+```java
+switch(type) {
+    case UPI:
+    case CARD:
+    case WALLET:
+    case PAYPAL:
+    // ...
+}
+```
+
+can become difficult to maintain.
+
+This is where the Registry approach becomes very useful.
+
+Instead of:
+
+```java
+if (type == UPI) {
+    return new UPIPaymentStrategy();
+}
+else if (type == CARD) {
+    return new CardPaymentStrategy();
+}
+```
+
+we can use Spring:
+
+```java
+List<PaymentStrategy> strategies
+```
+
+and construct:
+
+```java
+Map<PaymentType, PaymentStrategy>
+```
+
+Then runtime selection becomes:
+
+```java
+return strategyMap.get(type);
+```
+
+---
+
+# 26. Strategy + Registry for Many Implementations
+
+Example:
+
+```java
+public interface PaymentStrategy {
+
+    PaymentType getType();
+
+    void pay(double amount);
+}
+```
+
+Implementation:
+
+```java
+@Component
+public class UPIPaymentStrategy
+        implements PaymentStrategy {
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.UPI;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println(
+                "Paying using UPI");
+    }
+}
+```
+
+Another:
+
+```java
+@Component
+public class CardPaymentStrategy
+        implements PaymentStrategy {
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.CARD;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println(
+                "Paying using Card");
+    }
+}
+```
+
+Registry:
+
+```java
+@Component
+public class PaymentStrategyRegistry {
+
+    private final Map<
+            PaymentType,
+            PaymentStrategy> strategyMap;
+
+    public PaymentStrategyRegistry(
+            List<PaymentStrategy> strategies) {
+
+        this.strategyMap =
+                strategies.stream()
+                        .collect(Collectors.toMap(
+                                PaymentStrategy::getType,
+                                Function.identity()
+                        ));
+    }
+
+    public PaymentStrategy getStrategy(
+            PaymentType type) {
+
+        PaymentStrategy strategy =
+                strategyMap.get(type);
+
+        if (strategy == null) {
+
+            throw new IllegalArgumentException(
+                    "Unsupported payment type: "
+                    + type);
+        }
+
+        return strategy;
+    }
+}
+```
+
+Then:
+
+```java
+PaymentStrategy strategy =
+        registry.getStrategy(type);
+
+strategy.pay(amount);
+```
+
+Adding another implementation:
+
+```java
+@Component
+public class WalletPaymentStrategy
+        implements PaymentStrategy {
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.WALLET;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println(
+                "Paying using Wallet");
+    }
+}
+```
+
+does not require modifying the Registry.
+
+Spring discovers the new bean automatically.
+
+---
+
+# 27. Factory vs Registry for Many Implementations
+
+This gives us a useful progression.
+
+### Small number of implementations
+
+A Simple Factory can be perfectly reasonable:
+
+```text
+PaymentFactory
+      |
+      +-- switch
+      |
+      +-- UPI / CARD / WALLET
+```
+
+Don't over-engineer it.
+
+---
+
+### Many implementations
+
+Consider:
+
+```text
+Spring
+  |
+  +-- List<PaymentStrategy>
+          |
+          v
+      Registry
+          |
+          v
+Map<PaymentType, PaymentStrategy>
+          |
+          v
+      map.get(type)
+```
+
+---
+
+### Completely different interfaces
+
+Use separate creation abstractions:
+
+```text
+PaymentFactory
+NotificationFactory
+ParserFactory
+```
+
+rather than:
+
+```text
+MegaFactory
+```
+
+---
+
+# 28. The Important Architectural Question
+
+Don't ask only:
+
+> "Should I use a Factory?"
+
+Ask:
+
+> **"What is actually varying?"**
+
+If:
+
+```text
+Which object should I CREATE?
+```
+
+think:
+
+```text
+Factory
+```
+
+If:
+
+```text
+Which BEHAVIOR should I use?
+```
+
+think:
+
+```text
+Strategy
+```
+
+If:
+
+```text
+Which EXISTING implementation should I use?
+```
+
+think:
+
+```text
+Registry
+```
+
+If:
+
+```text
+How should I construct this COMPLEX object?
+```
+
+think:
+
+```text
+Builder
+```
+
+---
+
+# 29. Factory Decision Framework
+
+When you encounter a creation problem:
+
+```text
+START
+  |
+  v
+Is object creation trivial?
+  |
+  +-- YES -> use new
+  |
+  +-- NO
+       |
+       v
+Does creation involve choosing
+between multiple concrete classes?
+       |
+       +-- YES -> Factory candidate
+       |
+       v
+Are the objects already Spring-managed?
+       |
+       +-- YES -> consider Registry / DI
+       |
+       v
+Is construction complex with many optional fields?
+       |
+       +-- YES -> Builder candidate
+```
+
+This prevents blindly applying patterns.
+
+---
+
+# 30. Factory + Builder
+
+Factory and Builder can also work together.
+
+Suppose:
+
+```text
+VehicleFactory
+```
+
+decides:
+
+```text
+CAR
+```
+
+and then a Builder handles the complex construction:
+
+```java
+Vehicle car =
+        VehicleFactory.create(
+                VehicleType.CAR);
+```
+
+Internally:
+
+```text
+Factory
+   |
+   +-- chooses CarBuilder
+            |
+            v
+         Builder
+            |
+            v
+       complex Car
+```
+
+So:
+
+```text
+Factory
+    -> WHICH object?
+
+Builder
+    -> HOW to construct it?
+```
+
+---
+
+# 31. Real-World Examples
 
 ## Notification
 
@@ -1448,13 +1968,13 @@ SMS
 PUSH
 ```
 
-Factory:
-
 ```text
 NotificationType
-      ↓
+      |
+      v
 NotificationFactory
-      ↓
+      |
+      v
 Notification object
 ```
 
@@ -1483,9 +2003,11 @@ XML
 
 ```text
 FileType
-   ↓
+   |
+   v
 ParserFactory
-   ↓
+   |
+   v
 CSVParser / JSONParser / XMLParser
 ```
 
@@ -1512,11 +2034,11 @@ BIKE
 
 ---
 
-# 26. LLD Examples
+# 32. LLD Examples
 
 Factory commonly appears in:
 
-### Parking Lot
+## Parking Lot
 
 Vehicle creation:
 
@@ -1526,7 +2048,7 @@ BIKE
 TRUCK
 ```
 
-could be handled through a factory.
+could be handled through a Factory.
 
 ```text
 VehicleFactory
@@ -1538,7 +2060,7 @@ VehicleFactory
 
 ---
 
-### Chess
+## Chess
 
 Creating pieces:
 
@@ -1553,7 +2075,7 @@ PAWN
 
 ---
 
-### Notification System
+## Notification System
 
 ```text
 EMAIL
@@ -1563,7 +2085,7 @@ PUSH
 
 ---
 
-### Payment System
+## Payment System
 
 ```text
 UPI
@@ -1573,7 +2095,7 @@ WALLET
 
 ---
 
-### Document Processing
+## Document Processing
 
 ```text
 PDF
@@ -1583,7 +2105,7 @@ XLSX
 
 ---
 
-# 27. How to Recognize Factory
+# 33. How to Recognize Factory
 
 When solving an LLD problem, ask:
 
@@ -1650,13 +2172,18 @@ Strategy
 
 ---
 
-# 28. Common Mistakes
+# 34. Common Mistakes
 
 ## Mistake 1: Thinking Factory removes all `if-else`
 
 It doesn't.
 
-A Simple Factory may contain the `if/switch`.
+A Simple Factory may contain:
+
+```java
+if
+switch
+```
 
 The improvement is:
 
@@ -1688,21 +2215,76 @@ new User();
 
 ---
 
-## Mistake 3: Factory becoming a God class
+## Mistake 3: Creating one God Factory for the whole application
 
 Bad:
 
 ```text
 ApplicationFactory
-    ↓
-creates 40 unrelated object types
+    |
+    +-- Payment
+    +-- Notification
+    +-- Parser
+    +-- Database
+    +-- Vehicle
+    +-- ...
 ```
 
-Factories should generally have a coherent creation responsibility.
+This creates a central class that knows about unrelated object families.
+
+Prefer:
+
+```text
+PaymentFactory
+NotificationFactory
+ParserFactory
+```
+
+when these are genuinely separate creation responsibilities.
 
 ---
 
-## Mistake 4: Manually using `new` in Spring for managed beans
+## Mistake 4: Assuming every interface needs its own Factory
+
+Not necessarily.
+
+The right question is not:
+
+> "How many interfaces do I have?"
+
+The right question is:
+
+> "Where is object creation a meaningful responsibility?"
+
+One interface with three simple implementations may not need a Factory.
+
+One interface with complicated creation logic may benefit greatly from one.
+
+---
+
+## Mistake 5: Assuming a Factory is always better than a Registry
+
+If Spring already creates all implementations and you simply need:
+
+```text
+type -> existing implementation
+```
+
+then:
+
+```text
+Registry
+```
+
+may be cleaner than:
+
+```text
+Factory
+```
+
+---
+
+## Mistake 6: Manually using `new` in Spring for managed beans
 
 If the class is:
 
@@ -1720,146 +2302,7 @@ can bypass Spring's dependency injection/lifecycle management.
 
 ---
 
-## Mistake 5: Calling a Registry a Factory without understanding the difference
-
-If it does:
-
-```java
-map.get(type)
-```
-
-and returns an existing object, it is conceptually a Registry/lookup mechanism.
-
-If it does:
-
-```java
-new ConcreteProduct()
-```
-
-it is doing creation.
-
----
-
-# 29. Factory vs Builder
-
-These are also frequently confused.
-
-## Factory
-
-Answers:
-
-> Which object should I create?
-
-Example:
-
-```text
-type = CAR
-      ↓
-CarFactory
-      ↓
-Car
-```
-
----
-
-## Builder
-
-Answers:
-
-> How should I construct this complex object step by step?
-
-Example:
-
-```java
-Car car =
-        new Car.Builder()
-                .engine("V8")
-                .color("Black")
-                .sunroof(true)
-                .build();
-```
-
-Mental model:
-
-```text
-Factory
-    ↓
-CHOICE
-
-
-Builder
-    ↓
-CONSTRUCTION
-```
-
----
-
-# 30. Factory vs Abstract Factory
-
-Simple Factory:
-
-```text
-one product hierarchy
-```
-
-Example:
-
-```text
-Notification
-   |
-   +-- Email
-   +-- SMS
-```
-
-Abstract Factory is useful when you need to create **families of related objects**.
-
-Example:
-
-```text
-UI Theme
-
-Windows UI Factory
-    |
-    +-- WindowsButton
-    +-- WindowsCheckbox
-
-Mac UI Factory
-    |
-    +-- MacButton
-    +-- MacCheckbox
-```
-
-The factory creates related products that are designed to work together.
-
----
-
-# 31. Factory Method vs Abstract Factory
-
-### Factory Method
-
-Usually focuses on creating **one product type** through an overridable creation method.
-
-```text
-Creator
-   ↓
-Product
-```
-
-### Abstract Factory
-
-Creates a **family of related products**.
-
-```text
-AbstractFactory
-   |
-   +-- createButton()
-   +-- createCheckbox()
-   +-- createMenu()
-```
-
----
-
-# 32. Interview Questions
+# 35. Interview Questions
 
 ## Q1. What is Factory Pattern?
 
@@ -1906,10 +2349,10 @@ The main benefit is centralizing creation logic.
 
 Because direct construction can:
 
-- spread creation logic
-- couple clients to concrete classes
-- make complex construction visible everywhere
-- make future changes harder
+* spread creation logic
+* couple clients to concrete classes
+* make complex construction visible everywhere
+* make future changes harder
 
 But simple `new` is perfectly fine when creation is trivial and stable.
 
@@ -1933,171 +2376,134 @@ A strong answer:
 
 ---
 
-# 33. Factory and Spring: Senior-Level Thinking
+## Q9. If I have multiple interfaces, should I have one Factory or many?
 
-This is the most important practical section.
+There is no rule that says one Factory per interface.
 
-When you see:
+Group creation responsibilities by **coherent product family**.
 
-```java
-@Component
-class A implements Product {}
-
-@Component
-class B implements Product {}
-
-@Component
-class C implements Product {}
-```
-
-you should immediately think:
+For example:
 
 ```text
-Spring already owns object creation.
+PaymentFactory
+NotificationFactory
+ParserFactory
 ```
 
-So don't blindly write:
-
-```java
-new A()
-new B()
-new C()
-```
-
-inside a Factory.
-
-Instead consider:
+is generally better than:
 
 ```text
-Can Spring inject them?
-
-       ↓
-
-List<Product>
-
-       ↓
-
-Map<Key, Product>
-
-       ↓
-
-Registry lookup
+ApplicationFactory
 ```
 
-If creation itself is complex and requires decisions, a Factory can still be appropriate.
-
-The question is not:
-
-> "Can I use Factory?"
-
-The question is:
-
-> "Where is the creation complexity, and who should own it?"
+which creates every unrelated object in the system.
 
 ---
 
-# 34. Factory Decision Framework
+## Q10. What if one interface has 100 implementations?
 
-When you encounter a creation problem:
+A giant `switch` Factory may become difficult to maintain.
+
+If the implementations are Spring beans and the requirement is simply:
 
 ```text
-START
-  |
-  ↓
-Is object creation trivial?
-  |
-  +-- YES → use new
-  |
-  +-- NO
-       |
-       ↓
-Does creation involve choosing
-between multiple concrete classes?
-       |
-       +-- YES → Factory candidate
-       |
-       ↓
-Are the objects already Spring-managed?
-       |
-       +-- YES → consider Registry / DI
-       |
-       ↓
-Is construction complex with many optional fields?
-       |
-       +-- YES → Builder candidate
+key -> existing implementation
 ```
 
-This prevents blindly applying patterns.
+consider:
+
+```text
+List<Strategy>
+      |
+      v
+Registry
+      |
+      v
+Map<Key, Strategy>
+```
+
+This allows adding a new implementation without modifying the Registry.
 
 ---
 
-# 35. Factory + Builder
+# 36. Senior Engineer Mental Model
 
-Factory and Builder can also work together.
-
-Suppose:
+The important thing is not memorizing:
 
 ```text
-VehicleFactory
+Factory = switch
 ```
 
-decides:
+Instead, think about **responsibility**.
+
+Ask:
+
+> **Who should know how this object is created?**
+
+If the answer is:
 
 ```text
-CAR
+Every Service
+Every Controller
+Every Client
 ```
 
-and then a Builder handles the complex construction:
+you probably have a design problem.
 
-```java
-Vehicle car =
-        VehicleFactory.create(
-                VehicleType.CAR);
-```
-
-Internally:
+Move creation behind an abstraction:
 
 ```text
+Client
+   |
+   v
 Factory
-   ↓
-chooses CarBuilder
-   ↓
-Builder
-   ↓
-constructs complex Car
+   |
+   v
+Concrete Object
 ```
 
-So:
+But if Spring already owns object creation:
 
 ```text
-Factory
-    → WHICH object?
-
-Builder
-    → HOW to construct it?
+Spring
+   |
+   v
+Concrete Objects
+   |
+   v
+Registry
+   |
+   v
+Existing Object
 ```
+
+don't introduce a Factory merely because the word "Factory" sounds appropriate.
 
 ---
 
-# 36. Final Mental Model
+# 37. Final Mental Model
 
 Remember these four questions:
 
 ```text
 1. WHICH OBJECT?
-       ↓
+       |
+       v
      Factory
 
 2. WHICH BEHAVIOR?
-       ↓
+       |
+       v
      Strategy
 
 3. HOW TO BUILD A COMPLEX OBJECT?
-       ↓
+       |
+       v
      Builder
 
 4. WHICH EXISTING OBJECT SHOULD I USE?
-       ↓
+       |
+       v
      Registry
 ```
 
@@ -2105,153 +2511,18 @@ This is an extremely useful LLD mental model.
 
 ---
 
-# 37. Factory in One Diagram
+# 38. One-Line Mental Model
 
 ```text
-                    CLIENT
-                      |
-                      | "I need a Notification"
-                      ↓
-                  FACTORY
-                      |
-               creation decision
-                      |
-             +--------+--------+
-             |        |        |
-             ↓        ↓        ↓
-           Email      SMS      Push
-             |        |        |
-             +--------+--------+
-                      |
-                      ↓
-               Notification
-```
-
-The Client doesn't need to know how the concrete object is constructed.
-
----
-
-# 38. Factory + Strategy Diagram
-
-```text
-                         REQUEST
-                            |
-                            ↓
-                         FACTORY
-                            |
-                    selects/creates
-                            |
-                            ↓
-                    PaymentStrategy
-                            |
-              +-------------+-------------+
-              |             |             |
-              ↓             ↓             ↓
-            UPI           CARD          PAYPAL
-          Strategy       Strategy       Strategy
-              |             |             |
-              +-------------+-------------+
-                            |
-                            ↓
-                         execute()
-```
-
-Factory answers:
-
-```text
-"Which Strategy object?"
-```
-
-Strategy answers:
-
-```text
-"How should payment be performed?"
+Factory  -> "Which object should I CREATE?"
+Strategy -> "Which BEHAVIOR should I use?"
+Registry -> "Which existing object should I USE?"
+Builder  -> "How should I CONSTRUCT this complex object?"
 ```
 
 ---
 
-# 39. Factory + Spring Diagram
-
-```text
-                      SPRING
-                        |
-          +-------------+-------------+
-          |             |             |
-          ↓             ↓             ↓
-       Product A     Product B     Product C
-          |             |             |
-          +-------------+-------------+
-                        |
-                        ↓
-                     Registry
-                        |
-                     map.get()
-                        |
-                        ↓
-                 Existing Object
-```
-
-Versus a traditional Factory:
-
-```text
-                       CLIENT
-                         |
-                         ↓
-                      FACTORY
-                         |
-                   if / switch
-                         |
-              +----------+----------+
-              |          |          |
-              ↓          ↓          ↓
-             new A      new B      new C
-```
-
-The difference is:
-
-```text
-Traditional Factory
-    → creates objects
-
-Spring Registry
-    → selects existing managed objects
-```
-
----
-
-# 40. Final Mental Model
-
-If you remember only one thing:
-
-> **Factory encapsulates the decision and mechanics of object creation so callers don't need to know which concrete class to instantiate.**
-
-And remember the important nuance:
-
-> **A Factory does not necessarily eliminate `if-else`; it primarily gives object creation a single, well-defined owner.**
-
-For Spring:
-
-> **Spring already manages object creation, so if implementations are Spring beans and the problem is runtime selection, a Registry/Map of injected beans is often more appropriate than manually constructing objects inside a Factory.**
-
-The most useful distinction is:
-
-```text
-Factory
-"Create the right object."
-
-Strategy
-"Perform the operation using the selected behavior."
-
-Registry
-"Give me the already-created object for this key."
-
-Builder
-"Construct this complex object step by step."
-```
-
----
-
-# 41. Factory Checklist
+# 39. Factory Checklist
 
 Before using Factory, ask:
 
@@ -2281,11 +2552,15 @@ Before using Factory, ask:
 [ ] If Spring manages them, would a Registry be better?
 
 [ ] Am I creating a Factory unnecessarily?
+
+[ ] Am I creating one giant Factory for unrelated interfaces?
+
+[ ] If I have many implementations, would a Registry be cleaner?
 ```
 
 ---
 
-# 42. Final Interview Summary
+# 40. Final Interview Summary
 
 If asked:
 
@@ -2293,4 +2568,41 @@ If asked:
 
 A strong answer:
 
-> "Factory Pattern encapsulates object creation so that client code doesn't need to know which concrete implementation to instantiate or how it should be constructed. Instead of spreading `new ConcreteClass()` and creation conditionals throughout the application, I centralize that responsibility behind a Factory. A Simple Factory may still contain an if/switch; the key benefit is that creation logic has a single owner. In Spring applications, I also consider whether a Factory is necessary because Spring already manages object creation. If the implementations are Spring beans and I only need runtime selection, injecting them into a Map and using a Registry can be cleaner. Factory is primarily about creation, Strategy is about interchangeable behavior, and Builder is about constructing complex objects."
+> "Factory Pattern encapsulates object creation so that client code doesn't need to know which concrete implementation to instantiate or how it should be constructed. Instead of spreading `new ConcreteClass()` and creation conditionals throughout the application, I centralize that responsibility behind a Factory. A Simple Factory may still contain an if/switch; the key benefit is that creation logic has a single owner. In Spring applications, I also consider whether a Factory is necessary because Spring already manages object creation. If the implementations are Spring beans and I only need runtime selection, injecting them into a Map and using a Registry can be cleaner. Factory is primarily about creation, Strategy is about interchangeable behavior, Registry is about lookup of existing implementations, and Builder is about constructing complex objects."
+
+---
+
+# 41. Final Rule to Remember
+
+```text
+Factory
+    |
+    +-- Creation decision
+    |
+    +-- "Which concrete object?"
+
+Strategy
+    |
+    +-- Behavior decision
+    |
+    +-- "How should the operation behave?"
+
+Registry
+    |
+    +-- Lookup
+    |
+    +-- "Which already-created implementation?"
+
+Builder
+    |
+    +-- Construction
+    |
+    +-- "How do I construct this complex object?"
+```
+
+The goal is **not to use more design patterns**.
+
+The goal is to put each responsibility in the right place.
+
+```
+```
