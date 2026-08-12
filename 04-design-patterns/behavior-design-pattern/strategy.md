@@ -1,621 +1,97 @@
 # Strategy Design Pattern
 
-> **Category:** Behavioral Design Pattern  
-> **Primary Goal:** Encapsulate interchangeable algorithms/behaviors and make them independently replaceable.
+## 1. Intent
 
----
+The **Strategy Design Pattern** defines a family of algorithms/behaviors, encapsulates each one separately, and makes them interchangeable at runtime.
 
-# 1. Intent
+> **Separate "what algorithm/behavior to use" from the object that needs to use it.**
 
-The **Strategy Design Pattern** defines a family of interchangeable algorithms, encapsulates each algorithm in its own class, and allows the algorithm to be selected independently from the object that uses it.
+## 2. Problem
 
-### In simple words
+Suppose a payment system supports UPI, Card, PayPal and Wallet. A naive implementation grows into a large `if-else`/`switch` containing different payment algorithms. As behaviors grow, the service becomes difficult to maintain, test and extend.
 
-> **When a class can perform the same operation in multiple different ways, move those different ways into separate Strategy classes.**
+## 3. Naive Solution
 
-The class using the strategy should not need to know the implementation details of the algorithm.
+```java
+public class PaymentService {
+    public void pay(PaymentType type, double amount) {
+        if (type == PaymentType.UPI) {
+            // UPI logic
+        } else if (type == PaymentType.CARD) {
+            // Card logic
+        } else if (type == PaymentType.PAYPAL) {
+            // PayPal logic
+        }
+    }
+}
+```
 
-### Mental model
+This is fine for tiny/simple variation. It becomes a design smell when the branches represent substantial, independently changing algorithms.
+
+## 4. What Smell / Problem Appears?
+
+- Growing `if-else`/`switch` logic
+- Service knows every concrete behavior
+- Multiple responsibilities in one class
+- Existing class must change whenever a new behavior is added
+- Difficult unit testing
+- Increasing dependencies
+- Manual object creation can bypass Spring dependency injection
+
+## 5. Core Idea
+
+Define a common abstraction and encapsulate each behavior separately.
+
+```java
+public interface PaymentStrategy {
+    void pay(double amount);
+}
+```
+
+```java
+public class UPIPaymentStrategy implements PaymentStrategy {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing UPI payment");
+    }
+}
+```
+
+```java
+public class CardPaymentStrategy implements PaymentStrategy {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing Card payment");
+    }
+}
+```
+
+The caller works with `PaymentStrategy`, not concrete implementations.
+
+## 6. Structure
 
 ```text
 Context
    |
-   | uses
    ↓
-Strategy
+Strategy Interface
    |
    +---- Strategy A
    +---- Strategy B
    +---- Strategy C
 ```
 
-The:
+### Strategy
+Defines the common contract.
 
-```text
-Context  → knows WHAT needs to be done
-Strategy → knows HOW it should be done
-```
+### Concrete Strategy
+Implements one specific behavior.
 
----
-
-# 2. Problem
-
-Consider an e-commerce application.
-
-We need to calculate shipping charges for an order.
-
-The application supports:
-
-- Standard Shipping
-- Express Shipping
-- Same-Day Shipping
-
-A naive implementation might put all the logic inside `OrderService`.
-
-```java
-public class OrderService {
-
-    public double calculateShipping(
-            Order order,
-            String shippingType) {
-
-        if (shippingType.equals("STANDARD")) {
-
-            return 50;
-
-        } else if (shippingType.equals("EXPRESS")) {
-
-            return 150;
-
-        } else if (shippingType.equals("SAME_DAY")) {
-
-            return 300;
-        }
-
-        throw new IllegalArgumentException(
-                "Unsupported shipping type");
-    }
-}
-```
-
-This works initially.
-
-But imagine shipping rules become complicated.
-
-```text
-Standard:
-    base price = 50
-    free above ₹1000
-
-Express:
-    base price = 150
-    additional charge based on distance
-
-Same Day:
-    base price = 300
-    additional charge based on distance/time
-```
-
-Now `OrderService` starts becoming responsible for all of these algorithms.
-
----
-
-# 3. Naive Solution
-
-Let's make the problem more realistic.
-
-```java
-public class OrderService {
-
-    public double calculateShipping(
-            Order order,
-            String shippingType) {
-
-        if (shippingType.equals("STANDARD")) {
-
-            double cost = 50;
-
-            if (order.getTotalAmount() > 1000) {
-                cost = 0;
-            }
-
-            return cost;
-        }
-
-        else if (shippingType.equals("EXPRESS")) {
-
-            double cost = 150;
-
-            if (order.getDistance() > 20) {
-                cost += 100;
-            }
-
-            return cost;
-        }
-
-        else if (shippingType.equals("SAME_DAY")) {
-
-            double cost = 300;
-
-            if (order.getDistance() > 10) {
-                cost += 200;
-            }
-
-            return cost;
-        }
-
-        throw new IllegalArgumentException(
-                "Unsupported shipping type");
-    }
-}
-```
-
-At this point:
-
-```text
-OrderService
-    |
-    +-- Standard Shipping Algorithm
-    |
-    +-- Express Shipping Algorithm
-    |
-    +-- Same-Day Shipping Algorithm
-```
-
-Now suppose we add:
-
-```text
-International Shipping
-Drone Delivery
-Store Pickup
-Premium Delivery
-```
-
-The class keeps growing.
-
----
-
-# 4. What Smell / Problem Appears?
-
-## 4.1 Large Conditional Logic
-
-We have:
-
-```java
-if (...)
-else if (...)
-else if (...)
-else if (...)
-else if (...)
-```
-
-The conditional itself isn't automatically bad.
-
-The problem is that each branch contains a **different algorithm**.
-
----
-
-## 4.2 Single Responsibility Violation
-
-`OrderService` is now responsible for:
-
-```text
-Order processing
-+
-Standard shipping calculation
-+
-Express shipping calculation
-+
-Same-day shipping calculation
-+
-Future shipping calculations
-```
-
-These responsibilities can change independently.
-
----
-
-## 4.3 Open/Closed Principle Problem
-
-Every time we introduce a new shipping algorithm:
-
-```text
-Add International Shipping
-        ↓
-Modify OrderService
-```
-
-Then:
-
-```text
-Add Drone Delivery
-        ↓
-Modify OrderService
-```
-
-The class is continuously being modified.
-
----
-
-## 4.4 Testing Becomes Harder
-
-Testing one algorithm requires creating the entire `OrderService` and testing through conditional branches.
-
-Instead, we'd ideally like:
-
-```text
-Test StandardShippingStrategy independently
-Test ExpressShippingStrategy independently
-Test SameDayShippingStrategy independently
-```
-
----
-
-## 4.5 High Coupling
-
-`OrderService` knows implementation details of every shipping algorithm.
-
-```text
-OrderService
-    |
-    +--> Standard logic
-    +--> Express logic
-    +--> Same Day logic
-```
-
-This creates unnecessary coupling.
-
----
-
-# 5. Core Idea
-
-Identify the behavior that changes:
-
-```text
-Shipping Calculation
-```
-
-Then ask:
-
-> "Are there multiple ways to perform this operation?"
-
-Yes:
-
-```text
-Standard
-Express
-Same Day
-```
-
-So extract the behavior.
-
-```text
-ShippingStrategy
-       |
-       +---- StandardShippingStrategy
-       |
-       +---- ExpressShippingStrategy
-       |
-       +---- SameDayShippingStrategy
-```
-
-Now `OrderService` doesn't implement shipping algorithms.
-
-It simply delegates to the selected strategy.
-
-## Before
-
-```text
-OrderService
-     |
-     +-- Standard algorithm
-     +-- Express algorithm
-     +-- Same Day algorithm
-```
-
-## After
-
-```text
-OrderService
-     |
-     +---- ShippingStrategy
-                |
-                +---- Standard
-                +---- Express
-                +---- Same Day
-```
-
----
-
-# 6. Structure
-
-The Strategy Pattern usually contains three major components.
-
-## 6.1 Strategy
-
-Defines the common operation.
-
-```java
-public interface ShippingStrategy {
-
-    double calculateShipping(Order order);
-}
-```
-
----
-
-## 6.2 Concrete Strategies
-
-Each strategy implements one algorithm.
-
-```text
-ShippingStrategy
-       |
-       +---- StandardShippingStrategy
-       +---- ExpressShippingStrategy
-       +---- SameDayShippingStrategy
-```
-
----
-
-## 6.3 Context
-
-The Context uses the strategy.
-
-```text
-OrderService
-     |
-     +---- ShippingStrategy
-```
-
-The Context doesn't care which implementation it receives.
-
----
-
-## UML-style representation
-
-```text
-                +----------------------+
-                |   ShippingStrategy   |
-                +----------------------+
-                | + calculateShipping |
-                +----------+-----------+
-                           ^
-                           |
-             +-------------+-------------+
-             |             |             |
-             |             |             |
-+-------------------+ +----------------+ +---------------------+
-| StandardShipping  | | ExpressShipping | | SameDayShipping     |
-| Strategy          | | Strategy        | | Strategy            |
-+-------------------+ +----------------+ +---------------------+
-
-                +----------------------+
-                |     OrderService     |
-                +----------------------+
-                | - strategy          |
-                +----------------------+
-                | + calculateShipping |
-                +----------------------+
-```
-
----
-
-# 7. Java Implementation
-
-## 7.1 Order
-
-```java
-public class Order {
-
-    private final double totalAmount;
-    private final double distance;
-
-    public Order(
-            double totalAmount,
-            double distance) {
-
-        this.totalAmount = totalAmount;
-        this.distance = distance;
-    }
-
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public double getDistance() {
-        return distance;
-    }
-}
-```
-
----
-
-## 7.2 Strategy Interface
-
-```java
-public interface ShippingStrategy {
-
-    double calculateShipping(Order order);
-}
-```
-
-This interface represents the common behavior.
-
-Every shipping strategy must answer:
-
-```text
-calculateShipping(Order)
-```
-
----
-
-## 7.3 Standard Shipping Strategy
-
-```java
-public class StandardShippingStrategy
-        implements ShippingStrategy {
-
-    @Override
-    public double calculateShipping(Order order) {
-
-        if (order.getTotalAmount() >= 1000) {
-            return 0;
-        }
-
-        return 50;
-    }
-}
-```
-
----
-
-## 7.4 Express Shipping Strategy
-
-```java
-public class ExpressShippingStrategy
-        implements ShippingStrategy {
-
-    @Override
-    public double calculateShipping(Order order) {
-
-        double cost = 150;
-
-        if (order.getDistance() > 20) {
-            cost += 100;
-        }
-
-        return cost;
-    }
-}
-```
-
----
-
-## 7.5 Same-Day Shipping Strategy
-
-```java
-public class SameDayShippingStrategy
-        implements ShippingStrategy {
-
-    @Override
-    public double calculateShipping(Order order) {
-
-        double cost = 300;
-
-        if (order.getDistance() > 10) {
-            cost += 200;
-        }
-
-        return cost;
-    }
-}
-```
-
----
-
-## 7.6 Context
-
-```java
-public class OrderService {
-
-    private final ShippingStrategy shippingStrategy;
-
-    public OrderService(
-            ShippingStrategy shippingStrategy) {
-
-        this.shippingStrategy = shippingStrategy;
-    }
-
-    public double calculateShipping(Order order) {
-
-        return shippingStrategy.calculateShipping(order);
-    }
-}
-```
-
-Notice that `OrderService` doesn't know:
-
-```text
-Standard
-Express
-Same Day
-```
-
-It only knows:
-
-```java
-ShippingStrategy
-```
-
-This is the decoupling we wanted.
-
----
-
-## 7.7 Client Code
-
-```java
-public class Main {
-
-    public static void main(String[] args) {
-
-        Order order =
-                new Order(1500, 15);
-
-        ShippingStrategy strategy =
-                new StandardShippingStrategy();
-
-        OrderService orderService =
-                new OrderService(strategy);
-
-        double shippingCost =
-                orderService.calculateShipping(order);
-
-        System.out.println(
-                "Shipping cost: " + shippingCost);
-    }
-}
-```
-
-Output:
-
-```text
-Shipping cost: 0.0
-```
-
-Because the order is above ₹1000.
-
----
-
-## 7.8 Changing the Strategy
-
-Change:
-
-```java
-ShippingStrategy strategy =
-        new StandardShippingStrategy();
-```
-
-to:
-
-```java
-ShippingStrategy strategy =
-        new ExpressShippingStrategy();
-```
-
-The `OrderService` doesn't change.
-
-That's the core benefit.
-
----
-
-## 7.9 Runtime Strategy Selection
-
-A strategy can be selected at runtime.
+### Context
+Uses the Strategy through the abstraction.
 
 ```java
 public class PaymentService {
-
     private final PaymentStrategy strategy;
 
     public PaymentService(PaymentStrategy strategy) {
@@ -628,1344 +104,1975 @@ public class PaymentService {
 }
 ```
 
-The selected strategy may come from:
-
-- user input
-- configuration
-- business rules
-- another service
-- a Factory
-- dependency injection
-
-The important part is that the Context does not need to know the internal algorithm.
-
----
-
-# 8. How to Recognize It
-
-When reading an LLD problem, ask these questions.
-
-## Question 1
-
-> Do I have multiple ways of doing the same thing?
-
-Examples:
-
-```text
-Payment
-    UPI
-    Card
-    PayPal
-```
-
-```text
-Notification
-    Email
-    SMS
-    Push
-```
-
-```text
-Routing
-    Fastest
-    Cheapest
-    Shortest
-```
-
-```text
-Pricing
-    Normal
-    Festival
-    Membership
-    Surge
-```
-
-```text
-Parking Allocation
-    Nearest
-    First Available
-    Best Fit
-```
-
-If yes, Strategy may be appropriate.
-
----
-
-## Question 2
-
-> Is the behavior likely to change independently?
-
-For example:
-
-```text
-Shipping rules change frequently.
-
-Order processing does not.
-```
-
-That is a strong Strategy signal.
-
----
-
-## Question 3
-
-> Is there a growing conditional containing different algorithms?
-
-For example:
+## 7. Java Implementation
 
 ```java
-if (type == A) {
-    // 50 lines
-}
-else if (type == B) {
-    // 80 lines
-}
-else if (type == C) {
-    // 100 lines
+public interface PaymentStrategy {
+    void pay(double amount);
 }
 ```
 
-This is a strong candidate.
-
----
-
-## Question 4
-
-> Could I describe the variations as "different ways of doing X"?
-
-Examples:
-
-```text
-Different ways of calculating price
-Different ways of allocating parking
-Different ways of routing
-Different ways of paying
-Different ways of sending notifications
-```
-
-If yes, think Strategy.
-
----
-
-# 9. When to Use
-
-Use Strategy when:
-
-## 9.1 Multiple Algorithms Exist
-
-```text
-Sorting:
-    QuickSort
-    MergeSort
-    HeapSort
-```
-
----
-
-## 9.2 Algorithms Change Independently
-
-For example:
-
-```text
-Pricing algorithm
-```
-
-changes frequently while:
-
-```text
-Order processing
-```
-
-remains stable.
-
----
-
-## 9.3 Conditional Logic Is Growing
-
-Instead of:
-
 ```java
-if (...)
-else if (...)
-else if (...)
-else if (...)
-```
-
-extract each algorithm.
-
----
-
-## 9.4 Runtime Behavior Selection Is Required
-
-For example:
-
-```text
-User chooses:
-    UPI
-
-System chooses:
-    UPIStrategy
-```
-
----
-
-## 9.5 You Want to Add Algorithms Without Modifying Existing Code
-
-For example:
-
-```text
-Current:
-    Standard
-    Express
-
-Later:
-    Drone
-    International
-    Premium
-```
-
-New strategies can be added.
-
----
-
-# 10. When NOT to Use
-
-Strategy should not be used just because it exists.
-
-## 10.1 Only One Algorithm Exists
-
-If there is only:
-
-```java
-calculatePrice()
-```
-
-and there is no meaningful variation, don't create:
-
-```text
-PriceStrategy
-DefaultPriceStrategy
-PriceContext
-Factory
-```
-
-That is unnecessary abstraction.
-
----
-
-## 10.2 Tiny Stable Conditional
-
-This is perfectly acceptable:
-
-```java
-if (isPremium) {
-    return 20;
-}
-
-return 10;
-```
-
-Creating a Strategy hierarchy for this may make the code worse.
-
----
-
-## 10.3 Variations Are Not Actually the Same Behavior
-
-Don't force unrelated things into:
-
-```java
-SomeStrategy
-```
-
-just to satisfy a pattern.
-
-Strategies should represent variations of the same conceptual operation.
-
----
-
-## 10.4 Overengineering
-
-Avoid creating:
-
-```text
-Strategy
-StrategyFactory
-StrategyManager
-StrategyResolver
-StrategyProvider
-StrategyRegistry
-```
-
-when there are only two trivial implementations.
-
-Patterns should reduce complexity, not create it.
-
----
-
-# 11. SOLID Connection
-
-Strategy has strong connections to SOLID.
-
-## 11.1 Single Responsibility Principle
-
-Each Strategy has one responsibility.
-
-```text
-StandardShippingStrategy
-    → standard shipping calculation
-```
-
-```text
-ExpressShippingStrategy
-    → express shipping calculation
-```
-
-Instead of:
-
-```text
-OrderService
-    → order processing
-    → standard calculation
-    → express calculation
-    → same-day calculation
-```
-
----
-
-## 11.2 Open/Closed Principle
-
-We can add:
-
-```java
-public class DroneShippingStrategy
-        implements ShippingStrategy {
-
+public class UPIPaymentStrategy implements PaymentStrategy {
     @Override
-    public double calculateShipping(Order order) {
-        return 500;
+    public void pay(double amount) {
+        System.out.println("Processing UPI payment of " + amount);
     }
 }
 ```
 
-without changing:
-
 ```java
-OrderService
-```
-
-This is a major benefit.
-
----
-
-## 11.3 Dependency Inversion Principle
-
-`OrderService` depends on:
-
-```java
-ShippingStrategy
-```
-
-not:
-
-```java
-StandardShippingStrategy
-```
-
-Therefore:
-
-```text
-OrderService
-      |
-      ↓
-ShippingStrategy
-      ↑
-      |
-Concrete strategies
-```
-
-The high-level module depends on an abstraction.
-
----
-
-## 11.4 Dependency Injection
-
-The strategy is injected through the constructor:
-
-```java
-public OrderService(
-        ShippingStrategy shippingStrategy) {
-
-    this.shippingStrategy = shippingStrategy;
+public class CardPaymentStrategy implements PaymentStrategy {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing Card payment of " + amount);
+    }
 }
 ```
 
-This also makes testing easier.
-
-For example:
-
 ```java
-ShippingStrategy fakeStrategy =
-        order -> 100;
+public class PaymentService {
+    private final PaymentStrategy strategy;
 
-OrderService service =
-        new OrderService(fakeStrategy);
+    public PaymentService(PaymentStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void pay(double amount) {
+        strategy.pay(amount);
+    }
+}
 ```
 
----
+Usage:
 
-# 12. Composition vs Inheritance
+```java
+PaymentStrategy strategy = new UPIPaymentStrategy();
+PaymentService service = new PaymentService(strategy);
+service.pay(500);
+```
+
+The `PaymentService` does not change when the Strategy changes.
+
+## 8. How to Recognize It
+
+Look for:
+
+1. Multiple ways of performing the same conceptual operation.
+2. A growing `if-else`/`switch` based on behavior.
+3. Algorithms that can change independently.
+4. New implementations being added frequently.
+5. A common operation with multiple implementations.
+
+Examples:
+
+```text
+Payment → UPI / Card / PayPal
+Pricing → Regular / Premium / Corporate
+Notification → Email / SMS / Push
+File processing → CSV / JSON / XML
+Parking → Nearest Spot / Cheapest Spot / First Available
+```
+
+## 9. When to Use
+
+Use Strategy when:
+
+- You have interchangeable algorithms.
+- The behavior varies independently of the Context.
+- Conditional logic is growing because of different algorithms.
+- You want each algorithm independently testable.
+- New behaviors are expected to be added.
+- The Context should depend on an abstraction.
+
+## 10. When NOT to Use
+
+Do not create a Strategy for every `if`.
+
+```java
+if (age > 18) {
+    // ...
+}
+```
+
+does not automatically need Strategy.
+
+If there are only two tiny branches and the behavior is trivial, introducing multiple Strategy classes can be over-engineering.
+
+The key question is:
+
+> **Do these branches represent meaningful interchangeable behaviors/algorithms?**
+
+## 11. SOLID Connection
+
+### Single Responsibility Principle
+
+Each Strategy owns one behavior.
+
+```text
+UPIPaymentStrategy → UPI behavior
+CardPaymentStrategy → Card behavior
+```
+
+### Open/Closed Principle
+
+Adding a new Strategy can be done by adding a new implementation rather than changing the Context.
+
+### Dependency Inversion Principle
+
+The Context depends on:
+
+```java
+PaymentStrategy
+```
+
+rather than:
+
+```java
+UPIPaymentStrategy
+```
+
+The high-level code depends on an abstraction.
+
+## 12. Composition vs Inheritance
 
 Strategy primarily uses **composition**.
 
-## Inheritance
-
-Inheritance represents:
-
 ```text
-IS-A
-```
-
-Example:
-
-```text
-Dog IS-A Animal
+PaymentService
+      |
+      | HAS-A
+      ↓
+PaymentStrategy
 ```
 
 ```java
-class Dog extends Animal {
+public class PaymentService {
+    private final PaymentStrategy strategy;
+
+    public PaymentService(PaymentStrategy strategy) {
+        this.strategy = strategy;
+    }
 }
 ```
 
----
+The Context does not become a subclass of each behavior. It is composed with a Strategy.
 
-## Strategy
+This makes behavior replaceable.
 
-Strategy represents:
+## 13. Strategy vs State
 
-```text
-HAS-A
-```
+Both often have a similar class structure, but the intent differs.
 
-Example:
+### Strategy
 
-```text
-OrderService HAS-A ShippingStrategy
-```
-
-```java
-class OrderService {
-
-    private final ShippingStrategy strategy;
-
-}
-```
-
-This is composition.
-
----
-
-## Why composition is useful
-
-With inheritance:
-
-```text
-OrderService
-    |
-    +-- StandardOrderService
-    +-- ExpressOrderService
-    +-- SameDayOrderService
-```
-
-Behavior is tied to the class hierarchy.
-
-With Strategy:
-
-```text
-OrderService
-     |
-     +---- ShippingStrategy
-```
-
-and:
-
-```text
-StandardStrategy
-ExpressStrategy
-SameDayStrategy
-```
-
-The behavior can be replaced independently.
-
-### Mental model
-
-```text
-Inheritance
-    → change behavior through subclass
-
-Strategy
-    → change behavior through composition
-```
-
----
-
-# 13. Strategy vs State
-
-This is one of the most commonly confused pairs.
-
-Structurally, they can look almost identical.
-
-Both may have:
-
-```java
-interface Behavior {
-
-    void execute();
-}
-```
-
-with multiple implementations.
-
-The difference is the **intent**.
-
----
-
-## Strategy
-
-Question:
-
-> **Which algorithm should I use?**
+> Which algorithm/behavior should I use?
 
 Example:
 
 ```text
 Payment
-    |
-    +-- UPI
-    +-- Card
-    +-- PayPal
+ ↓
+UPI Strategy / Card Strategy
 ```
 
-The behavior is selected because we want a particular algorithm.
+### State
 
----
-
-## State
-
-Question:
-
-> **What should I do because my current state is X?**
+> What is the object's current state, and how should its behavior change because of that state?
 
 Example:
 
 ```text
 Order
-
-NEW
  ↓
-PAID
- ↓
-SHIPPED
- ↓
-DELIVERED
+PLACED → SHIPPED → DELIVERED
 ```
 
-The behavior changes because the object's state changes.
-
----
-
-## Strategy
+Mental model:
 
 ```text
-Client chooses behavior
-          ↓
-Strategy
+STRATEGY = choose HOW to do something
+STATE    = current state determines behavior
 ```
 
-## State
-
-```text
-Object state changes
-          ↓
-Behavior changes
-```
-
----
-
-## Example
+## 14. Strategy vs Factory
 
 ### Strategy
 
-```java
-PaymentService service =
-        new PaymentService(
-                new UPIPaymentStrategy());
-```
-
-We intentionally selected UPI.
-
-### State
-
-```java
-order.setState(
-        new ShippedState());
-```
-
-The order's state determines what operations are allowed.
-
----
-
-## Quick distinction
-
-```text
-Strategy → "How should I do this?"
-
-State    → "What should I do in my current state?"
-```
-
----
-
-# 14. Strategy vs Factory
-
-Strategy and Factory solve different problems.
-
-## Strategy
-
-Responsible for:
-
-> **Encapsulating behavior.**
+Encapsulates interchangeable behavior.
 
 ```text
 PaymentStrategy
-    |
-    +-- UPI
-    +-- Card
-    +-- PayPal
+   +-- UPI
+   +-- Card
+   +-- PayPal
 ```
 
----
+### Factory
 
-## Factory
-
-Responsible for:
-
-> **Creating/selecting an object.**
+Usually focuses on object creation/selection.
 
 ```text
-PaymentType
-     |
-     ↓
-PaymentStrategyFactory
-     |
-     +-- UPI Strategy
-     +-- Card Strategy
-     +-- PayPal Strategy
+PaymentFactory
+      ↓
+create(type)
+      ↓
+object
 ```
 
----
-
-## They can work together
-
-A common design is:
+They can work together:
 
 ```text
-Client
-  |
+Request
   ↓
-Factory
-  |
+Factory / Registry
   ↓
 Strategy
-  |
   ↓
 execute()
 ```
 
-Example:
+In Spring, however, the container can create the Strategy objects, so a Registry may only need to select an already-existing bean.
+
+## 15. Strategy Pattern in Spring Boot
+
+A textbook implementation might use:
 
 ```java
-public class ShippingStrategyFactory {
-
-    public static ShippingStrategy getStrategy(
-            String type) {
-
-        switch (type) {
-
-            case "STANDARD":
-                return new StandardShippingStrategy();
-
-            case "EXPRESS":
-                return new ExpressShippingStrategy();
-
-            case "SAME_DAY":
-                return new SameDayShippingStrategy();
-
-            default:
-                throw new IllegalArgumentException(
-                        "Unsupported shipping type");
-        }
-    }
+if (type == UPI) {
+    strategy = new UPIPaymentStrategy();
+} else if (type == CARD) {
+    strategy = new CardPaymentStrategy();
 }
 ```
 
-Client:
+In Spring Boot, a better production-oriented approach is often:
+
+```text
+Spring creates and manages Strategy beans
+              ↓
+Registry receives all Strategies
+              ↓
+Registry builds lookup Map
+              ↓
+Runtime request selects existing Strategy
+              ↓
+Strategy executes behavior
+```
+
+### 15.1 Make Strategies Spring Beans
 
 ```java
-ShippingStrategy strategy =
-        ShippingStrategyFactory
-                .getStrategy("EXPRESS");
-
-OrderService service =
-        new OrderService(strategy);
-```
-
-Factory handles:
-
-```text
-Which object?
-```
-
-Strategy handles:
-
-```text
-How should the behavior execute?
-```
-
----
-
-# 15. Real-World Examples
-
-## Payment
-
-```text
-PaymentStrategy
-    ├── UPI
-    ├── Credit Card
-    ├── Debit Card
-    └── PayPal
-```
-
-## Notification
-
-```text
-NotificationStrategy
-    ├── Email
-    ├── SMS
-    └── Push
-```
-
-## Routing
-
-```text
-RoutingStrategy
-    ├── ShortestRoute
-    ├── FastestRoute
-    └── CheapestRoute
-```
-
-## Discount
-
-```text
-DiscountStrategy
-    ├── NoDiscount
-    ├── FestivalDiscount
-    ├── MembershipDiscount
-    └── BulkDiscount
-```
-
-## Compression
-
-```text
-CompressionStrategy
-    ├── Zip
-    ├── GZip
-    └── Brotli
-```
-
-## Storage
-
-```text
-StorageStrategy
-    ├── LocalStorage
-    ├── S3Storage
-    └── AzureStorage
-```
-
----
-
-# 16. LLD Examples
-
-Strategy appears frequently in LLD problems.
-
-## 16.1 Parking Lot
-
-One strong candidate is:
-
-```text
-Parking Spot Allocation
-```
-
-Different algorithms:
-
-```text
-Nearest Spot
-First Available
-Best Fit
-```
-
-Design:
-
-```text
-ParkingSpotAllocationStrategy
-            |
-            +---- NearestSpotStrategy
-            +---- FirstAvailableStrategy
-            +---- BestFitStrategy
-```
-
-Example interface:
-
-```java
-public interface ParkingSpotAllocationStrategy {
-
-    ParkingSpot findSpot(
-            Vehicle vehicle,
-            List<ParkingSpot> spots);
-}
-```
-
-Example implementation:
-
-```java
-public class FirstAvailableStrategy
-        implements ParkingSpotAllocationStrategy {
+@Component
+public class UPIPaymentStrategy implements PaymentStrategy {
 
     @Override
-    public ParkingSpot findSpot(
-            Vehicle vehicle,
-            List<ParkingSpot> spots) {
+    public PaymentType getType() {
+        return PaymentType.UPI;
+    }
 
-        for (ParkingSpot spot : spots) {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing UPI payment");
+    }
+}
+```
 
-            if (spot.isAvailable()
-                    && spot.canFit(vehicle)) {
+```java
+@Component
+public class CardPaymentStrategy implements PaymentStrategy {
 
-                return spot;
-            }
+    @Override
+    public PaymentType getType() {
+        return PaymentType.CARD;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing Card payment");
+    }
+}
+```
+
+## 16. Why Not Just Use if-else-if in Spring?
+
+A naive Spring implementation would still be tightly coupled:
+
+```java
+public class PaymentService {
+    public void pay(PaymentType type, double amount) {
+        if (type == PaymentType.UPI) {
+            new UPIPaymentStrategy().pay(amount);
+        } else if (type == PaymentType.CARD) {
+            new CardPaymentStrategy().pay(amount);
+        }
+    }
+}
+```
+
+Problems:
+
+1. `PaymentService` knows every Strategy.
+2. `PaymentService` creates Strategy objects.
+3. Manual `new` bypasses Spring dependency injection.
+4. Adding a Strategy requires changing the service.
+5. Strategy dependencies become difficult to wire manually.
+
+For example:
+
+```java
+@Component
+public class UPIPaymentStrategy implements PaymentStrategy {
+
+    private final UpiGateway gateway;
+
+    public UPIPaymentStrategy(UpiGateway gateway) {
+        this.gateway = gateway;
+    }
+}
+```
+
+If the service manually does `new UPIPaymentStrategy(...)`, it is taking over object creation that Spring should manage.
+
+## 17. Let Spring Inject All Strategies
+
+Spring can inject all beans implementing an interface:
+
+```java
+@Service
+public class PaymentStrategyRegistry {
+
+    private final List<PaymentStrategy> strategies;
+
+    public PaymentStrategyRegistry(
+            List<PaymentStrategy> strategies) {
+        this.strategies = strategies;
+    }
+}
+```
+
+If Spring has:
+
+```text
+UPIPaymentStrategy
+CardPaymentStrategy
+PayPalPaymentStrategy
+```
+
+then Spring can inject:
+
+```text
+List<PaymentStrategy>
+
+[
+    UPIPaymentStrategy object,
+    CardPaymentStrategy object,
+    PayPalPaymentStrategy object
+]
+```
+
+Spring is responsible for creating and wiring the beans. The Registry is responsible for selecting the correct one.
+
+## 18. Build a Strategy Registry
+
+Define a business key:
+
+```java
+public enum PaymentType {
+    UPI,
+    CARD,
+    PAYPAL
+}
+```
+
+Strategy interface:
+
+```java
+public interface PaymentStrategy {
+    PaymentType getType();
+    void pay(double amount);
+}
+```
+
+UPI:
+
+```java
+@Component
+public class UPIPaymentStrategy implements PaymentStrategy {
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.UPI;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing UPI payment");
+    }
+}
+```
+
+Card:
+
+```java
+@Component
+public class CardPaymentStrategy implements PaymentStrategy {
+
+    @Override
+    public PaymentType getType() {
+        return PaymentType.CARD;
+    }
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing Card payment");
+    }
+}
+```
+
+## 19. Convert the List into a Map
+
+```java
+@Service
+public class PaymentStrategyRegistry {
+
+    private final Map<PaymentType, PaymentStrategy>
+            paymentStrategyMap;
+
+    public PaymentStrategyRegistry(
+            List<PaymentStrategy> strategies) {
+
+        this.paymentStrategyMap =
+                strategies.stream()
+                        .collect(Collectors.toMap(
+                                PaymentStrategy::getType,
+                                Function.identity()
+                        ));
+    }
+
+    public PaymentStrategy getStrategy(
+            PaymentType type) {
+
+        PaymentStrategy strategy =
+                paymentStrategyMap.get(type);
+
+        if (strategy == null) {
+            throw new IllegalArgumentException(
+                    "Unsupported payment type: " + type);
         }
 
-        return null;
+        return strategy;
     }
 }
 ```
 
-Context:
+## 20. Understanding `toMap()`
+
+This:
 
 ```java
-public class ParkingLot {
+strategies.stream()
+    .collect(Collectors.toMap(
+        PaymentStrategy::getType,
+        Function.identity()
+    ));
+```
 
-    private final ParkingSpotAllocationStrategy strategy;
+is essentially the same as:
 
-    public ParkingLot(
-            ParkingSpotAllocationStrategy strategy) {
+```java
+Map<PaymentType, PaymentStrategy> map =
+        new HashMap<>();
 
-        this.strategy = strategy;
-    }
+for (PaymentStrategy strategy : strategies) {
 
-    public ParkingSpot findSpot(
-            Vehicle vehicle,
-            List<ParkingSpot> spots) {
+    PaymentType key = strategy.getType();
+    PaymentStrategy value = strategy;
 
-        return strategy.findSpot(vehicle, spots);
-    }
+    map.put(key, value);
 }
 ```
 
-The important reasoning is:
+### `PaymentStrategy::getType`
 
-> Parking spot allocation has multiple interchangeable algorithms, so isolate that changing behavior behind a Strategy abstraction.
-
----
-
-## 16.2 Payment System
-
-```text
-PaymentStrategy
-    ├── UPI
-    ├── Card
-    └── PayPal
-```
-
----
-
-## 16.3 Ride Sharing
-
-Driver matching:
-
-```text
-DriverMatchingStrategy
-    ├── NearestDriver
-    ├── HighestRatedDriver
-    └── CheapestDriver
-```
-
----
-
-## 16.4 E-commerce Pricing
-
-```text
-PricingStrategy
-    ├── RegularPricing
-    ├── FestivalPricing
-    ├── MembershipPricing
-    └── DynamicPricing
-```
-
----
-
-## 16.5 Food Delivery
-
-Delivery assignment:
-
-```text
-DeliveryAssignmentStrategy
-    ├── NearestDeliveryPartner
-    ├── LeastBusyPartner
-    └── HighestRatedPartner
-```
-
----
-
-# 17. Interview Questions
-
-## Q1. What is Strategy Pattern?
-
-> Strategy is a behavioral design pattern used when multiple interchangeable algorithms exist for the same operation. Each algorithm is encapsulated behind a common interface, and the Context delegates the operation to the selected strategy.
-
----
-
-## Q2. Why not just use if-else?
-
-> If the conditional logic is small and stable, if-else is perfectly fine. Strategy becomes useful when the branches represent substantial algorithms that change independently, are reused, or are expected to grow.
-
----
-
-## Q3. What principles does Strategy support?
-
-Mainly:
-
-```text
-Single Responsibility Principle
-Open/Closed Principle
-Dependency Inversion Principle
-```
-
----
-
-## Q4. Does Strategy use composition or inheritance?
-
-Composition.
+Equivalent to:
 
 ```java
-class Context {
-
-    private Strategy strategy;
-}
+strategy -> strategy.getType()
 ```
 
----
+It determines the Map key.
 
-## Q5. Can Strategy be selected at runtime?
+### `Function.identity()`
 
-Yes.
+Equivalent to:
 
 ```java
-PaymentStrategy strategy;
-
-if (paymentType.equals("UPI")) {
-    strategy = new UPIStrategy();
-} else {
-    strategy = new CardStrategy();
-}
+strategy -> strategy
 ```
 
-The selection mechanism itself may be extracted into a Factory or another component.
+It returns the Strategy object itself, so it becomes the Map value.
 
----
-
-## Q6. Difference between Strategy and State?
+Therefore:
 
 ```text
-Strategy → different algorithms
-State    → different behavior based on current state
+UPIPaymentStrategy
+       ↓ getType()
+      UPI
 ```
 
----
-
-## Q7. Can Factory and Strategy be used together?
-
-Yes.
-
-Factory can select/create the appropriate Strategy.
+produces:
 
 ```text
-Factory
+UPI → UPIPaymentStrategy object
+```
+
+Final map:
+
+```text
+UPI    → UPIPaymentStrategy
+CARD   → CardPaymentStrategy
+PAYPAL → PayPalPaymentStrategy
+```
+
+Runtime lookup:
+
+```java
+PaymentStrategy strategy =
+        paymentStrategyMap.get(PaymentType.UPI);
+```
+
+returns the existing `UPIPaymentStrategy` bean.
+
+## 21. Complete Spring Runtime Flow
+
+### Application Startup
+
+```text
+Spring starts
+     ↓
+Component scanning
+     ↓
+Finds Strategy beans
+     ↓
+Creates Strategy objects
+     ↓
+Finds PaymentStrategyRegistry
+     ↓
+Sees List<PaymentStrategy> dependency
+     ↓
+Collects all matching Strategy beans
+     ↓
+Injects List<PaymentStrategy>
+     ↓
+Registry constructor runs
+     ↓
+List is converted into Map
+     ↓
+Registry is ready
+```
+
+Map:
+
+```text
+UPI    → UPI Strategy bean
+CARD   → Card Strategy bean
+PAYPAL → PayPal Strategy bean
+```
+
+### Runtime Request
+
+Suppose:
+
+```http
+POST /payments?type=UPI&amount=500
+```
+
+Flow:
+
+```text
+HTTP Request
+     ↓
+Embedded Server
+     ↓
+DispatcherServlet
+     ↓
+PaymentController
+     ↓
+PaymentService
+     ↓
+PaymentStrategyRegistry
+     ↓
+paymentStrategyMap.get(UPI)
+     ↓
+UPIPaymentStrategy bean
+     ↓
+strategy.pay(500)
+     ↓
+UPI Gateway / Business Logic
+     ↓
+Response
+```
+
+## 22. Startup vs Runtime
+
+### Startup
+
+Spring is doing:
+
+```text
+Scan Components
+      ↓
+Create Strategy Beans
+      ↓
+Find all PaymentStrategy beans
+      ↓
+Inject List<PaymentStrategy>
+      ↓
+Create Registry
+      ↓
+Registry builds Map
+```
+
+### Runtime
+
+The request does:
+
+```text
+Request
    ↓
-Strategy
+Controller
+   ↓
+Service
+   ↓
+Registry
+   ↓
+Map.get(type)
+   ↓
+Existing Strategy Bean
    ↓
 execute()
 ```
 
----
+With the default Spring singleton scope, the same Strategy bean instance is normally reused across requests.
 
-## Q8. Does Strategy always require an interface?
+## 23. Who Does What?
 
-Not strictly.
+This is the most useful Spring mental model:
 
-The important concept is the abstraction that allows interchangeable behavior.
-
-In Java, an interface is usually the cleanest implementation.
-
----
-
-## Q9. Biggest benefit?
-
-Decoupling changing algorithms from stable business logic.
-
----
-
-## Q10. Biggest disadvantage?
-
-More classes and abstractions.
-
-Strategy can be overengineering when the behavior is trivial and unlikely to change.
-
----
-
-# 18. Common Mistakes
-
-## Mistake 1 — "Strategy = Interface + Multiple Classes"
-
-Not enough.
-
-The implementations must represent **interchangeable behavior**.
-
----
-
-## Mistake 2 — Using Strategy for Every If-Else
-
-Don't.
-
-```java
-if (age > 18) {
-    ...
-}
+```text
+                 SPRING
+                   |
+                   | Creates + wires
+                   ↓
+          Strategy Implementations
+                   |
+                   | Injects all implementations
+                   ↓
+                REGISTRY
+                   |
+                   | Builds lookup map
+                   ↓
+             Map<Key, Strategy>
+                   |
+                   | Runtime lookup
+                   ↓
+                SERVICE
+                   |
+                   | execute()
+                   ↓
+                STRATEGY
+                   |
+                   ↓
+             Business Logic
 ```
 
-doesn't automatically mean Strategy.
+### Spring
 
-Ask:
+> Which Strategy objects exist, and how should their dependencies be wired?
 
-> Is this actually a different algorithm?
+### Registry
 
----
+> Given this business key, which existing Strategy should I return?
 
-## Mistake 3 — Keeping Algorithms Inside Context
+### Strategy
 
-Bad:
+> How should this operation actually be performed?
+
+## 24. Adding a New Strategy
+
+Add:
 
 ```java
-class PaymentService {
+@Component
+public class WalletPaymentStrategy
+        implements PaymentStrategy {
 
-    private PaymentStrategy strategy;
+    @Override
+    public PaymentType getType() {
+        return PaymentType.WALLET;
+    }
 
-    public void pay() {
-
-        if (strategy instanceof UPIStrategy) {
-            // UPI algorithm
-        }
-
-        if (strategy instanceof CardStrategy) {
-            // Card algorithm
-        }
+    @Override
+    public void pay(double amount) {
+        System.out.println("Processing Wallet payment");
     }
 }
 ```
 
-Now the Context still knows concrete implementations.
+You do not need to modify the Controller, Service, or Registry selection logic.
 
-You have defeated the purpose of Strategy.
+Spring discovers the bean, injects it into the Strategy list, and the Registry includes:
 
-Prefer:
-
-```java
-strategy.pay();
+```text
+WALLET → WalletPaymentStrategy
 ```
 
----
+This is the practical Spring version of making Strategy extensible.
 
-## Mistake 4 — Strategy Selection Everywhere
+## 25. Duplicate Keys
+
+If two Strategies return the same key:
+
+```text
+UPIPaymentStrategy       → UPI
+AnotherUPIStrategy       → UPI
+```
+
+then:
+
+```java
+Collectors.toMap(
+    PaymentStrategy::getType,
+    Function.identity()
+)
+```
+
+throws an exception because duplicate Map keys are not allowed by this overload.
+
+This is often desirable because two Strategies claiming the same business key is usually a configuration/design error.
+
+If duplicates are intentionally allowed:
+
+```java
+Collectors.toMap(
+    PaymentStrategy::getType,
+    Function.identity(),
+    (existing, replacement) -> replacement
+)
+```
+
+This keeps the replacement value, but should not be used blindly because it can hide configuration mistakes.
+
+## 26. Real-World Examples
+
+### Payment
+
+```text
+UPI
+Card
+PayPal
+Wallet
+NetBanking
+```
+
+### Notification
+
+```text
+Email
+SMS
+Push
+WhatsApp
+```
+
+### Pricing
+
+```text
+RegularCustomerPricing
+PremiumCustomerPricing
+CorporatePricing
+FestivalPricing
+```
+
+### Tax Calculation
+
+```text
+IndiaTaxStrategy
+USATaxStrategy
+UKTaxStrategy
+```
+
+### File Processing
+
+```text
+CSVProcessor
+JSONProcessor
+XMLProcessor
+ParquetProcessor
+```
+
+### Loan Calculation
+
+```text
+HomeLoanStrategy
+PersonalLoanStrategy
+CarLoanStrategy
+```
+
+## 27. LLD Examples
+
+Strategy commonly appears in:
+
+- Parking Lot
+- Payment System
+- Notification System
+- E-commerce pricing
+- Ride-sharing fare calculation
+- Food delivery pricing
+- Tax calculation
+- File processing
+- Authentication
+- Discount calculation
+- Shipping calculation
+- Route selection
+- Compression
+- Sorting
+
+### Parking Lot Example
+
+```text
+Parking Spot Selection
+        |
+        +-- NearestSpotStrategy
+        +-- CheapestSpotStrategy
+        +-- FirstAvailableSpotStrategy
+```
+
+Pricing could also use Strategy:
+
+```text
+Pricing
+   |
+   +-- HourlyPricingStrategy
+   +-- WeekendPricingStrategy
+   +-- DynamicPricingStrategy
+```
+
+## 28. Interview Questions
+
+### Q1. What is Strategy Pattern?
+
+> Strategy Pattern defines a family of interchangeable algorithms, encapsulates each algorithm behind a common interface, and allows the behavior to be selected independently from the Context that uses it.
+
+### Q2. Why use Strategy instead of if-else?
+
+Because Strategy:
+
+- separates behaviors
+- reduces conditional complexity
+- improves maintainability
+- improves testability
+- supports extensibility
+- follows composition
+
+### Q3. Is Strategy based on inheritance?
+
+The implementations implement a common interface, but the Context uses **composition**.
+
+```text
+Context HAS-A Strategy
+```
+
+### Q4. Strategy vs State?
+
+Strategy selects an algorithm/behavior. State represents the current state of an object and changes behavior because of that state.
+
+### Q5. Strategy vs Factory?
+
+Factory focuses on object creation/selection. Strategy encapsulates interchangeable behavior. They can be used together.
+
+### Q6. How would you implement Strategy in Spring Boot?
+
+> Define a Strategy interface, make each implementation a Spring bean, inject all implementations as a List or Map, build a registry keyed by a business identifier, and retrieve the appropriate Strategy at runtime.
+
+### Q7. Why inject `List<PaymentStrategy>`?
+
+Because Spring can automatically provide all beans implementing the interface.
+
+### Q8. Why convert the List into a Map?
+
+To make runtime selection a direct lookup:
+
+```java
+map.get(type)
+```
+
+instead of repeatedly searching through the list.
+
+## 29. Common Mistakes
+
+### Mistake 1: Creating Strategy objects inside the Context
 
 Bad:
 
 ```java
-if (type.equals("UPI")) {
-    new UPIStrategy();
-}
-
-if (type.equals("CARD")) {
-    new CardStrategy();
+if (type == UPI) {
+    new UPIPaymentStrategy();
 }
 ```
 
-repeated across multiple services.
+In Spring, prefer letting Spring manage the Strategy beans.
 
-Instead, centralize selection using:
+### Mistake 2: Making every `if` a Strategy
+
+Not every conditional needs Strategy. The branches should represent meaningful interchangeable behaviors.
+
+### Mistake 3: Creating a giant Strategy
+
+If the Strategy implementation still contains all the original `if-else` logic, the design has not actually separated the behavior.
+
+### Mistake 4: Putting business logic in the Registry
+
+The Registry should primarily answer:
 
 ```text
-Factory
-Registry
-Dependency Injection
-Configuration
+Which Strategy?
 ```
 
-depending on the problem.
+The Strategy should answer:
 
----
+```text
+How do we perform the behavior?
+```
 
-## Mistake 5 — Confusing Strategy with State
+### Mistake 5: Confusing Strategy with Factory
 
 Remember:
 
 ```text
+Factory:
+"Which object should I create?"
+
 Strategy:
-    Which algorithm should I use?
-
-State:
-    What should I do because I am currently in this state?
+"How should I perform this behavior?"
 ```
 
----
+### Mistake 6: Over-engineering
 
-## Mistake 6 — Creating Too Many Layers
+Do not introduce Strategy, Factory and Registry simply because you know the patterns. Use them when the problem actually contains meaningful variation.
 
-Avoid unnecessary abstractions such as:
+## 30. Final Mental Model
+
+Without Strategy:
 
 ```text
+PaymentService
+   |
+   +-- if UPI
+   +-- else if CARD
+   +-- else if PAYPAL
+   +-- else if WALLET
+```
+
+The service knows everything.
+
+With Strategy:
+
+```text
+                    PaymentService
+                          |
+                          ↓
+                  PaymentStrategy
+                          |
+             +------------+------------+
+             |            |            |
+             ↓            ↓            ↓
+           UPI           CARD        PAYPAL
+        Strategy       Strategy      Strategy
+```
+
+The service only knows the abstraction.
+
+### Textbook Strategy
+
+```text
+Context
+   |
+   ↓
 Strategy
-StrategyFactory
-StrategyManager
-StrategyResolver
-StrategyProvider
-StrategyRegistry
+   |
+   +-- Concrete Strategy A
+   +-- Concrete Strategy B
+   +-- Concrete Strategy C
 ```
 
-unless the system actually requires them.
+### Spring Strategy
+
+```text
+                    Spring
+                      |
+             creates + manages
+                      |
+          +-----------+-----------+
+          |           |           |
+          ↓           ↓           ↓
+        UPI          CARD       PAYPAL
+      Strategy      Strategy    Strategy
+          \           |           /
+           \          |          /
+            +---------+---------+
+                      |
+                      ↓
+             List<PaymentStrategy>
+                      |
+                      ↓
+             Strategy Registry
+                      |
+                      ↓
+          Map<PaymentType, Strategy>
+                      |
+                      ↓
+                Runtime lookup
+                      |
+                      ↓
+             Selected Strategy
+                      |
+                      ↓
+                  execute()
+```
+
+## 31. Senior Engineer Mental Model
+
+When solving an LLD problem, do not start by asking:
+
+> "Which Design Pattern should I use?"
+
+Instead ask:
+
+### Question 1
+
+> Is there behavior that varies?
+
+Example:
+
+```text
+UPI vs Card
+```
+
+### Question 2
+
+> Is that variation substantial enough to deserve separate classes?
+
+If yes, Strategy may be appropriate.
+
+### Question 3
+
+> Does the Context need to know the concrete implementation?
+
+Ideally, no. It should depend on the interface.
+
+### Question 4
+
+> How will the Strategy be selected?
+
+Possible mechanisms:
+
+```text
+Simple caller selection
+Factory
+Registry
+Spring List/Map injection
+Configuration
+```
+
+### Question 5
+
+> Who creates the Strategy?
+
+Plain Java:
+
+```text
+Caller / Factory
+```
+
+Spring:
+
+```text
+Spring Container
+```
+
+### Question 6
+
+> Who decides which Strategy to execute?
+
+Usually the caller/service/registry, depending on the architecture.
+
+## 32. One-Line Mental Model
+
+> **Strategy = encapsulate different ways of doing the same thing behind a common interface, then choose the behavior without changing the object that uses it.**
+
+In Spring:
+
+> **Let Spring create and manage the Strategy beans, inject all implementations, build a registry/map for runtime lookup, and let the service execute the selected Strategy.**
+
+## 33. Strategy Pattern Checklist
+
+```text
+[ ] Do I have multiple algorithms/behaviors?
+
+[ ] Are those behaviors interchangeable?
+
+[ ] Are they substantial enough to deserve separate classes?
+
+[ ] Can I define a common interface?
+
+[ ] Can the Context depend on the interface instead of implementations?
+
+[ ] Can I remove a growing if-else/switch?
+
+[ ] Does each Strategy have one clear responsibility?
+
+[ ] How will the Strategy be selected?
+
+[ ] If using Spring, can the implementations be Spring beans?
+
+[ ] Can Spring inject List<Strategy> or Map<Key, Strategy>?
+
+[ ] Should I build a Registry?
+
+[ ] Is a Factory actually needed, or does Spring already create the objects?
+
+[ ] Am I over-engineering the problem?
+```
+
+## 34. Final Interview Summary
+
+> "Strategy Pattern is useful when we have multiple interchangeable ways of performing an operation. I define a common Strategy interface and move each algorithm into its own implementation. The Context depends only on the interface, so it doesn't need to know the concrete implementations. This removes growing conditional logic and makes the system easier to extend and test.
+>
+> In Spring Boot, I would typically make the Strategy implementations Spring beans. Spring can inject all implementations as a List or Map. I can build a registry keyed by something like an enum or business identifier and perform a runtime lookup. Spring handles object creation and dependency injection, while the registry handles strategy selection and the strategy itself handles the business behavior."
+
 
 ---
 
-## Mistake 7 — Ignoring the Context
+# 37. Spring Injection: What Actually Happens?
 
-Strategy is not just a collection of algorithms.
+A common question is:
 
-The Context is important because it owns the stable workflow and delegates the variable part.
+> "If all my Strategies are Spring Beans, why doesn't Spring itself automatically choose the correct Strategy at runtime?"
+
+The answer is:
+
+> **Spring manages dependency injection, but Spring does not know your business rule for choosing a Strategy.**
+
+Spring knows:
+
+```text
+There are 3 beans implementing PaymentStrategy.
+```
+
+Spring does **not** automatically know:
+
+```text
+If paymentType = UPI → choose UPIPaymentStrategy
+If paymentType = CARD → choose CardPaymentStrategy
+```
+
+That mapping is **business/application logic**.
+
+So we usually build a Registry.
 
 ---
 
-# 19. Final Mental Model
+## 37.1 What Spring Knows
 
-The easiest way to remember Strategy:
+Suppose we have:
 
-```text
-                    PROBLEM
-                       |
-                       ↓
-             Multiple ways to do X
-                       |
-                       ↓
-             Do these algorithms
-             change independently?
-                       |
-                      YES
-                       |
-                       ↓
-             Extract the behavior
-                       |
-                       ↓
-              Strategy Interface
-                       |
-          +------------+------------+
-          |            |            |
-          ↓            ↓            ↓
-      Strategy A   Strategy B   Strategy C
-          \            |            /
-           \           |           /
-            +----------+----------+
-                       |
-                       ↓
-                    Context
+```java
+@Component
+public class UPIPaymentStrategy
+        implements PaymentStrategy {
+}
 ```
 
-The Context should know:
-
-```text
-WHAT needs to happen
+```java
+@Component
+public class CardPaymentStrategy
+        implements PaymentStrategy {
+}
 ```
 
-The Strategy should know:
+```java
+@Component
+public class PayPalPaymentStrategy
+        implements PaymentStrategy {
+}
+```
+
+Spring's container knows:
 
 ```text
-HOW it happens
+PaymentStrategy beans:
+
+1. UPIPaymentStrategy
+2. CardPaymentStrategy
+3. PayPalPaymentStrategy
 ```
+
+If we ask Spring for:
+
+```java
+List<PaymentStrategy>
+```
+
+Spring can inject all of them.
 
 ---
 
-# The One Sentence to Remember
+## 37.2 What Spring Does NOT Know
 
-> **Use Strategy when a behavior or algorithm can vary independently and you want those variations to be interchangeable.**
-
----
-
-# The One Question to Ask in LLD
-
-Whenever you read a problem, ask:
-
-> **"Do I have multiple ways of performing the same operation?"**
-
-If yes, investigate Strategy.
-
-Examples:
+Suppose the request contains:
 
 ```text
-How do I pay?
-    → UPI / Card / PayPal
-
-How do I calculate shipping?
-    → Standard / Express / Same Day
-
-How do I find a parking spot?
-    → Nearest / First Available / Best Fit
-
-How do I calculate discount?
-    → Regular / Festival / Membership
-
-How do I find a driver?
-    → Nearest / Highest Rated / Least Busy
+paymentType = CARD
 ```
 
----
-
-# Strategy Pattern — Quick Revision
+Spring does not automatically infer:
 
 ```text
-CATEGORY
-    Behavioral
+CARD → CardPaymentStrategy
+```
 
-PURPOSE
-    Encapsulate interchangeable algorithms
+because that is our application's business mapping.
 
-KEY IDEA
-    Separate changing behavior from stable logic
+We explicitly define it:
 
-MAIN COMPONENTS
-    1. Strategy
-    2. Concrete Strategy
-    3. Context
+```java
+@Override
+public PaymentType getType() {
+    return PaymentType.CARD;
+}
+```
 
-USES
-    Multiple algorithms
-    Runtime behavior selection
-    Growing conditional logic
-    Independently changing behavior
+Then our Registry can build:
 
-MAIN SOLID CONNECTION
-    SRP
-    OCP
-    DIP
-
-DESIGN STYLE
-    Composition
-
-KEY DIFFERENCE
-    Strategy → choose algorithm
-    State    → behavior changes with state
-    Factory  → creates/selects object
-
-CORE QUESTION
-    "Do I have multiple ways of performing the same operation?"
+```text
+CARD → CardPaymentStrategy
 ```
 
 ---
 
-# Strategy Pattern in One Diagram
+# 38. Who Calls the Registry?
+
+The flow is:
 
 ```text
-                         CLIENT
-                           |
-                           | chooses
-                           ↓
-                  +-------------------+
-                  |     Strategy      |
-                  +-------------------+
-                           ^
-                           |
-              +------------+------------+
-              |            |            |
-              |            |            |
-      +---------------+ +---------+ +-------------+
-      | Strategy A    | |Strategy B| | Strategy C |
-      +---------------+ +---------+ +-------------+
-              ^            ^            ^
-              |            |            |
-              +------------+------------+
-                           |
-                           |
-                    +-------------+
-                    |   Context   |
-                    +-------------+
-                    |             |
-                    | uses        |
-                    | Strategy    |
-                    +-------------+
+Client
+   ↓
+Controller
+   ↓
+PaymentService
+   ↓
+PaymentStrategyRegistry
+   ↓
+Selected PaymentStrategy
+   ↓
+execute()
+```
+
+For example:
+
+```java
+@RestController
+public class PaymentController {
+
+    private final PaymentService paymentService;
+
+    public PaymentController(
+            PaymentService paymentService) {
+
+        this.paymentService = paymentService;
+    }
+
+    @PostMapping("/payments")
+    public void pay(
+            @RequestParam PaymentType type,
+            @RequestParam double amount) {
+
+        paymentService.pay(type, amount);
+    }
+}
+```
+
+The Service calls the Registry:
+
+```java
+@Service
+public class PaymentService {
+
+    private final PaymentStrategyRegistry registry;
+
+    public PaymentService(
+            PaymentStrategyRegistry registry) {
+
+        this.registry = registry;
+    }
+
+    public void pay(
+            PaymentType type,
+            double amount) {
+
+        PaymentStrategy strategy =
+                registry.getStrategy(type);
+
+        strategy.pay(amount);
+    }
+}
+```
+
+Important:
+
+> **Spring does not call the Registry because it knows that it is a Strategy Registry.**
+
+Spring creates and injects the Registry because it is a Spring bean.
+
+Your application code calls:
+
+```java
+registry.getStrategy(type);
+```
+
+when a business request arrives.
+
+---
+
+# 39. Who Builds the HashMap?
+
+Another important question is:
+
+> "Who is calling the Registry and sending it the HashMap?"
+
+There are actually two separate operations.
+
+## Step 1 — Spring injects the List
+
+Spring creates all Strategy beans.
+
+Then it sees:
+
+```java
+public PaymentStrategyRegistry(
+        List<PaymentStrategy> strategies)
+```
+
+Spring automatically constructs the list:
+
+```text
+strategies
+    |
+    +-- UPIPaymentStrategy object
+    +-- CardPaymentStrategy object
+    +-- PayPalPaymentStrategy object
+```
+
+and passes that List to the Registry constructor.
+
+## Step 2 — Registry builds the Map
+
+Inside our own constructor:
+
+```java
+public PaymentStrategyRegistry(
+        List<PaymentStrategy> strategies) {
+
+    this.paymentStrategyMap =
+            strategies.stream()
+                    .collect(Collectors.toMap(
+                            PaymentStrategy::getType,
+                            Function.identity()
+                    ));
+}
+```
+
+**Our Registry code** builds the HashMap.
+
+Spring does not know that we want a payment-type-to-strategy map.
+
+Conceptually:
+
+```java
+Map<PaymentType, PaymentStrategy> map =
+        new HashMap<>();
+
+for (PaymentStrategy strategy : strategies) {
+
+    PaymentType key =
+            strategy.getType();
+
+    map.put(key, strategy);
+}
+```
+
+So:
+
+```text
+Spring
+  |
+  | injects List
+  ↓
+Registry
+  |
+  | builds Map
+  ↓
+Map<PaymentType, PaymentStrategy>
 ```
 
 ---
 
-# Final Takeaway
+# 40. Understanding `Collectors.toMap()` Completely
 
-Do not memorize:
+Consider:
 
-> "Strategy is an interface with multiple implementations."
+```java
+this.paymentStrategyMap =
+        strategies.stream()
+                .collect(Collectors.toMap(
+                        PaymentStrategy::getType,
+                        Function.identity()
+                ));
+```
 
-Memorize the **reasoning**:
+Suppose:
 
 ```text
-Something is changing
+strategies = [
+    UPI Strategy,
+    Card Strategy,
+    PayPal Strategy
+]
+```
+
+### `PaymentStrategy::getType`
+
+This is equivalent to:
+
+```java
+strategy -> strategy.getType()
+```
+
+It determines the **key**.
+
+### `Function.identity()`
+
+This is equivalent to:
+
+```java
+strategy -> strategy
+```
+
+It determines the **value**.
+
+Therefore:
+
+```text
+UPI    → UPI Strategy
+CARD   → Card Strategy
+PAYPAL → PayPal Strategy
+```
+
+The full expression is essentially:
+
+```java
+Map<PaymentType, PaymentStrategy> map =
+        new HashMap<>();
+
+for (PaymentStrategy strategy : strategies) {
+
+    PaymentType type =
+            strategy.getType();
+
+    map.put(type, strategy);
+}
+```
+
+---
+
+# 41. Complete Spring Startup Flow
+
+At application startup:
+
+```text
+1. Spring starts
         ↓
-The changing part is a behavior/algorithm
+2. Component scanning happens
         ↓
-There are multiple ways to perform it
+3. Spring discovers the Strategy classes
         ↓
-Those ways can vary independently
+4. Spring creates Strategy bean instances
         ↓
-Extract them behind an abstraction
+5. Spring discovers PaymentStrategyRegistry
         ↓
-Let the Context delegate to the selected Strategy
+6. Registry requires List<PaymentStrategy>
+        ↓
+7. Spring finds ALL PaymentStrategy beans
+        ↓
+8. Spring creates the List
+        ↓
+9. Spring calls Registry constructor
+        ↓
+10. Registry receives the List
+        ↓
+11. Registry code builds the Map
+        ↓
+12. Registry stores the Map
+        ↓
+13. Application finishes startup
 ```
 
-That reasoning is what will allow you to recognize Strategy in an unfamiliar LLD problem.
+The key distinction is:
+
+```text
+Spring
+  ↓
+creates + injects objects
+
+Registry
+  ↓
+builds business-key lookup map
+```
 
 ---
 
-# Next Pattern
+# 42. Complete Runtime Request Flow
 
-After Strategy, continue with:
+Suppose the application is already running.
 
-```text
-1. Strategy   ✓
-2. Factory
-3. Builder
-4. Singleton
-5. State
+The client sends:
+
+```http
+POST /payments
+paymentType=CARD
+amount=500
 ```
 
-After all five patterns are understood, apply them to the **Parking Lot LLD** and identify which patterns are genuinely useful rather than forcing every pattern into the design.
+The runtime flow is:
+
+```text
+Client
+  ↓
+HTTP Request
+  ↓
+DispatcherServlet
+  ↓
+PaymentController
+  ↓
+PaymentService
+  ↓
+PaymentStrategyRegistry
+  ↓
+paymentStrategyMap.get(CARD)
+  ↓
+CardPaymentStrategy object
+  ↓
+strategy.pay(500)
+  ↓
+Card business logic
+  ↓
+Response
+```
+
+Notice what does **NOT** happen:
+
+```text
+Spring does NOT search all beans for every request.
+Spring does NOT create a new CardPaymentStrategy for every request.
+Spring does NOT decide that CARD means CardPaymentStrategy.
+```
+
+Instead:
+
+```text
+Spring startup
+    ↓
+creates + wires objects
+
+Application runtime
+    ↓
+Registry performs lookup
+```
+
+---
+
+# 43. Spring `List<Strategy>` Injection Is Not Runtime Strategy Selection
+
+This distinction is extremely important.
+
+When we write:
+
+```java
+public PaymentStrategyRegistry(
+        List<PaymentStrategy> strategies)
+```
+
+we are saying:
+
+> "Spring, give me all beans that implement `PaymentStrategy`."
+
+We are NOT saying:
+
+> "Spring, choose the Strategy based on my business key."
+
+Spring provides the objects.
+
+Our code decides how to organize and select them.
+
+Therefore:
+
+```text
+Dependency Injection
+        ≠
+Business Strategy Selection
+```
+
+They are separate responsibilities.
+
+---
+
+# 44. Who Does What?
+
+A strong mental model is:
+
+```text
+                 SPRING
+                   |
+                   | Creates + wires
+                   ↓
+          Strategy Implementations
+                   |
+                   | Injects all implementations
+                   ↓
+                REGISTRY
+                   |
+                   | Builds lookup map
+                   ↓
+             Map<Key, Strategy>
+                   |
+                   | Runtime lookup
+                   ↓
+                SERVICE
+                   |
+                   | execute()
+                   ↓
+                STRATEGY
+                   |
+                   ↓
+             Business Logic
+```
+
+### Spring
+
+> "Which Strategy objects exist, and how should their dependencies be wired?"
+
+### Registry
+
+> "Given this business key, which existing Strategy should I return?"
+
+### Strategy
+
+> "How should this operation actually be performed?"
+
+---
+
+# 45. Runtime Lookup vs Object Creation
+
+This is an important distinction between Factory and Registry.
+
+### Factory
+
+> "Which object should I create?"
+
+```text
+type
+ ↓
+Factory
+ ↓
+new object
+```
+
+### Registry
+
+> "Which already-existing object should I use?"
+
+```text
+type
+ ↓
+Registry
+ ↓
+existing Strategy
+```
+
+In Spring:
+
+```text
+Spring
+  ↓
+creates Strategy beans
+
+Registry
+  ↓
+selects existing Strategy bean
+
+Strategy
+  ↓
+executes behavior
+```
+
+Therefore, do not automatically call every Strategy Registry a Factory.
+
+---
+
+# 46. What If We Inject `Map` Directly?
+
+Spring can also inject a Map of beans:
+
+```java
+private final Map<String, PaymentStrategy> strategies;
+
+public PaymentService(
+        Map<String, PaymentStrategy> strategies) {
+
+    this.strategies = strategies;
+}
+```
+
+Spring can provide keys based on bean names:
+
+```text
+"upiPaymentStrategy"    → UPI Strategy
+"cardPaymentStrategy"   → Card Strategy
+"payPalPaymentStrategy" → PayPal Strategy
+```
+
+This is useful when bean names are the lookup keys.
+
+However, if the business key is:
+
+```text
+PaymentType.UPI
+PaymentType.CARD
+PaymentType.PAYPAL
+```
+
+then explicitly building:
+
+```java
+Map<PaymentType, PaymentStrategy>
+```
+
+is often clearer because the Map represents the actual business mapping.
+
+---
+
+# 47. Strategy Without Spring vs Strategy With Spring
+
+## Without Spring
+
+```text
+Controller
+   ↓
+Service
+   ↓
+Factory
+   ↓
+new UPIStrategy()
+```
+
+The application explicitly creates objects.
+
+## With Spring
+
+```text
+Application Startup
+        ↓
+Spring creates all Strategies
+        ↓
+Spring injects them
+        ↓
+Registry builds lookup map
+
+Runtime
+        ↓
+Controller
+        ↓
+Service
+        ↓
+Registry
+        ↓
+Existing Strategy Bean
+```
+
+Spring removes object-creation and wiring boilerplate.
+
+It does **not** remove the need for business selection logic.
+
+---
+
+# 48. Senior Engineer Takeaway
+
+The most important mental model is:
+
+> **Strategy Pattern solves behavior variation. Spring Dependency Injection solves object creation and wiring. A Registry solves runtime lookup/selection.**
+
+These are three different concerns.
+
+```text
+                    STRATEGY PATTERN
+                          |
+                          ↓
+              "How can behavior vary?"
+                          |
+                          ↓
+                Strategy Interface
+                          |
+             +------------+------------+
+             |            |            |
+             ↓            ↓            ↓
+           UPI          CARD         PAYPAL
+
+
+                    SPRING DI
+                          |
+                          ↓
+              "Who creates the objects?"
+                          |
+                          ↓
+                  Spring Container
+                          |
+                          ↓
+                 Strategy Beans
+
+
+                    REGISTRY
+                          |
+                          ↓
+             "Which one do I use?"
+                          |
+                          ↓
+             Map<PaymentType, Strategy>
+                          |
+                          ↓
+                    map.get(type)
+```
+
+This separation is one of the most useful things to understand when moving from textbook Design Patterns to real Spring Boot LLD/code.
+
+---
+
+# 49. Questions You Should Be Able to Answer
+
+### 1. Why can't Spring automatically decide which Strategy to use?
+
+Because Spring knows bean types and dependencies, but it does not know the application's business mapping between a runtime value such as `PaymentType.CARD` and a particular Strategy.
+
+### 2. Who creates the Strategy objects?
+
+Spring creates them when they are Spring-managed beans such as `@Component`.
+
+### 3. Who injects `List<PaymentStrategy>`?
+
+Spring's dependency injection container.
+
+### 4. Who builds the `HashMap`?
+
+Our Registry code, typically in its constructor or initialization logic.
+
+### 5. Who calls the Registry?
+
+Our application code, usually the Service layer, during request processing.
+
+### 6. Who selects the Strategy?
+
+The Registry performs the business-key lookup.
+
+### 7. Who executes the actual behavior?
+
+The selected Concrete Strategy.
+
+### 8. Does Spring create a new Strategy for every request?
+
+Not by default. Spring beans are singleton-scoped by default, so the same bean instance is normally reused.
+
+### 9. Does the Registry create Strategy objects?
+
+No. In this design it receives existing Spring-managed Strategy objects and indexes them.
+
+### 10. Why use a Map?
+
+To make runtime selection simple and direct:
+
+```java
+strategyMap.get(paymentType);
+```
+
+---
+
+# 50. Final Spring Strategy Diagram
+
+```text
+                         APPLICATION STARTUP
+                                |
+                                ↓
+                         Spring Container
+                                |
+               +----------------+----------------+
+               |                |                |
+               ↓                ↓                ↓
+          UPI Bean          Card Bean        PayPal Bean
+               \                |                /
+                \               |               /
+                 +--------------+--------------+
+                                |
+                                ↓
+                    List<PaymentStrategy>
+                                |
+                                ↓
+                    PaymentStrategyRegistry
+                                |
+                                | build map
+                                ↓
+                 Map<PaymentType, PaymentStrategy>
+                                |
+                 +--------------+--------------+
+                 |              |              |
+                UPI            CARD          PAYPAL
+                 |              |              |
+                 ↓              ↓              ↓
+                UPI            Card          PayPal
+              Strategy       Strategy       Strategy
+
+
+                         RUNTIME REQUEST
+                                |
+                                ↓
+                            Controller
+                                |
+                                ↓
+                             Service
+                                |
+                                ↓
+                            Registry
+                                |
+                         map.get(type)
+                                |
+                                ↓
+                       Selected Strategy
+                                |
+                                ↓
+                            execute()
+                                |
+                                ↓
+                         Business Logic
+                                |
+                                ↓
+                            Response
+```
+For implementation check: https://github.com/AryanSapra280/design-patterns/tree/develop/designpatterns/src/main/java/com/designpatterns/designpatterns/designPatterns/strategy
