@@ -1,0 +1,1696 @@
+# Topic 8 — Java 8 Features — DEEP DIVE
+
+> **Questions only — no answers.**
+> Target: **4–7 year Java Backend Engineer**
+> Focus: Lambda → Functional Interfaces → Method References → Streams → Optional → Interface enhancements → internals → performance → parallel streams → production scenarios.
+
+---
+
+# A. Java 8 Overview
+
+1394. 🟢 What major features were introduced in Java 8?
+
+1395. 🟢 Why was Java 8 considered such an important Java release?
+
+1396. 🟢 What problem did lambda expressions solve?
+
+1397. 🟢 What problem did the Stream API solve?
+
+1398. 🟢 Why were default methods introduced in interfaces?
+
+1399. 🟢 Why was Optional introduced?
+
+1400. 🟢 What is the relationship between lambdas, functional interfaces, and the Stream API?
+
+1401. 🟡 Which Java 8 features have had the biggest impact on backend development?
+
+1402. 🟡 Which Java 8 features are commonly used in Spring Boot applications?
+
+1403. 🔴 What design philosophy drove the functional programming features introduced in Java 8?
+
+---
+
+# B. Lambda Expressions
+
+1404. 🟢 What is a lambda expression?
+
+1405. 🟢 Why were lambda expressions introduced?
+
+1406. 🟢 What is the syntax of a lambda expression?
+
+1407. 🟢 Explain:
+
+```java
+(x, y) -> x + y
+```
+
+1408. 🟢 What does the `->` operator represent?
+
+1409. 🟢 Can a lambda have zero parameters?
+
+1410. 🟢 Can a lambda have one parameter?
+
+1411. 🟢 When can parentheses around a single lambda parameter be omitted?
+
+1412. 🟢 Can a lambda have multiple parameters?
+
+1413. 🟢 Can a lambda contain multiple statements?
+
+1414. 🟢 When are braces required in a lambda?
+
+1415. 🟢 When is `return` required inside a lambda?
+
+1416. 🟡 Can a lambda expression have an explicit parameter type?
+
+1417. 🟡 Can you mix implicit and explicit parameter types in the same lambda?
+
+1418. 🟡 What is target typing in lambda expressions?
+
+1419. 🟢 Can a lambda exist without a target type?
+
+1420. 🔴 Why does this fail?
+
+```java
+var operation = (x, y) -> x + y;
+```
+
+1421. 🟡 How does the compiler determine the parameter types of a lambda?
+
+1422. 🟡 Can lambda parameters have annotations?
+
+1423. 🟡 Can a lambda throw checked exceptions?
+
+1424. 🔴 What determines whether a lambda can throw a checked exception?
+
+1425. 🟡 Can a lambda capture local variables?
+
+1426. 🟢 What does "effectively final" mean?
+
+1427. 🟢 Why must captured local variables be final or effectively final?
+
+1428. 🔴 Why can't a lambda modify a captured local variable?
+
+1429. 🟡 Can a lambda modify a mutable object referenced by a captured variable?
+
+1430. 🔴 Explain the difference between modifying the variable and modifying the object referenced by the variable.
+
+1431. 🟡 Can a lambda access instance variables?
+
+1432. 🟡 Can a lambda access static variables?
+
+1433. 🟡 What does `this` mean inside a lambda?
+
+1434. 🟢 How is `this` inside a lambda different from `this` inside an anonymous inner class?
+
+1435. 🔴 Why does a lambda not introduce a new `this` scope?
+
+1436. 🟡 Can a lambda access `super`?
+
+1437. 🔴 How does variable capture work conceptually?
+
+1438. 🔴 What happens if a captured variable is modified after the lambda is created?
+
+1439. 🟡 Are lambda expressions objects?
+
+1440. 🔴 How are lambda expressions represented at runtime?
+
+1441. 🔴 What is `invokedynamic`?
+
+1442. 🔴 Why did Java use `invokedynamic` for lambdas instead of generating an anonymous class for every lambda?
+
+1443. 🔴 What is `LambdaMetafactory`?
+
+1444. 🔴 Does every lambda expression create a new object every time it executes?
+
+1445. 🔴 Can the JVM optimize lambda allocation?
+
+---
+
+# C. Lambda vs Anonymous Inner Class
+
+1446. 🟢 What is the difference between a lambda and an anonymous inner class?
+
+1447. 🟡 When can an anonymous inner class be replaced by a lambda?
+
+1448. 🟡 Can every anonymous inner class be replaced with a lambda?
+
+1449. 🔴 Why can a lambda target only a functional interface?
+
+1450. 🟡 How is `this` different in an anonymous inner class?
+
+1451. 🟡 How is `this` different in a lambda?
+
+1452. 🟡 Can an anonymous inner class have multiple methods?
+
+1453. 🟢 Can a lambda represent multiple abstract methods?
+
+1454. 🔴 Why not?
+
+1455. 🟡 How does variable capture differ between lambdas and anonymous classes?
+
+1456. 🔴 What bytecode-level differences exist between lambdas and anonymous inner classes?
+
+1457. 🔴 What are the performance considerations when choosing between them?
+
+---
+
+# D. Functional Interfaces
+
+1458. 🟢 What is a functional interface?
+
+1459. 🟢 What is the definition of a functional interface?
+
+1460. 🟢 How many abstract methods can a functional interface contain?
+
+1461. 🟢 Can a functional interface contain default methods?
+
+1462. 🟢 Can a functional interface contain static methods?
+
+1463. 🟢 Can a functional interface override methods from Object?
+
+1464. 🟡 Why don't methods inherited from Object count toward the single abstract method requirement?
+
+1465. 🟢 What is `@FunctionalInterface`?
+
+1466. 🟡 Is `@FunctionalInterface` mandatory?
+
+1467. 🟡 What happens if an interface annotated with `@FunctionalInterface` has two abstract methods?
+
+1468. 🟢 Name the major built-in functional interfaces introduced in Java 8.
+
+1469. 🟢 What is `Predicate<T>`?
+
+1470. 🟢 What is `Function<T, R>`?
+
+1471. 🟢 What is `Consumer<T>`?
+
+1472. 🟢 What is `Supplier<T>`?
+
+1473. 🟢 What is `UnaryOperator<T>`?
+
+1474. 🟢 What is `BinaryOperator<T>`?
+
+1475. 🟢 What is `BiFunction<T, U, R>`?
+
+1476. 🟢 What is `BiPredicate<T, U>`?
+
+1477. 🟢 What is `BiConsumer<T, U>`?
+
+1478. 🟡 What is the difference between Function and Consumer?
+
+1479. 🟡 What is the difference between Function and Supplier?
+
+1480. 🟡 What is the difference between Predicate and Function?
+
+1481. 🟡 What is the difference between UnaryOperator and Function?
+
+1482. 🟡 What is the difference between BinaryOperator and BiFunction?
+
+1483. 🟡 Why do primitive-specialized functional interfaces exist?
+
+1484. 🟢 What are `IntPredicate`, `IntFunction`, `IntConsumer`, and `IntSupplier`?
+
+1485. 🟡 Why can primitive-specialized functional interfaces improve performance?
+
+1486. 🔴 What boxing/unboxing overhead can occur when using generic functional interfaces with primitives?
+
+---
+
+# E. Function Composition
+
+1487. 🟢 What does `Function.andThen()` do?
+
+1488. 🟢 What does `Function.compose()` do?
+
+1489. 🟡 What is the difference between `andThen()` and `compose()`?
+
+1490. 🟢 What does `Predicate.and()` do?
+
+1491. 🟢 What does `Predicate.or()` do?
+
+1492. 🟢 What does `Predicate.negate()` do?
+
+1493. 🟡 Do Predicate composition methods use short-circuit evaluation?
+
+1494. 🟢 What does `Consumer.andThen()` do?
+
+1495. 🔴 What happens if the first function in an `andThen()` chain throws an exception?
+
+1496. 🔴 How would you compose multiple business validation rules using Predicate?
+
+1497. 🔴 How would you design reusable Function pipelines in a backend application?
+
+---
+
+# F. Method References
+
+1498. 🟢 What is a method reference?
+
+1499. 🟢 Why were method references introduced?
+
+1500. 🟢 What is the syntax of a method reference?
+
+1501. 🟢 What are the four types of method references?
+
+1502. 🟢 What is a static method reference?
+
+1503. 🟢 What is an instance method reference on a particular object?
+
+1504. 🟢 What is an instance method reference on an arbitrary object of a type?
+
+1505. 🟢 What is a constructor reference?
+
+1506. 🟡 Explain:
+
+```java
+String::toUpperCase
+```
+
+1507. 🟡 Explain:
+
+```java
+String::length
+```
+
+1508. 🟡 Explain:
+
+```java
+System.out::println
+```
+
+1509. 🟡 Explain:
+
+```java
+ArrayList::new
+```
+
+1510. 🟡 How is `String::length` related to:
+
+```java
+s -> s.length()
+```
+
+1511. 🟡 How is `System.out::println` related to:
+
+```java
+x -> System.out.println(x)
+```
+
+1512. 🔴 When can a method reference become ambiguous due to overloaded methods?
+
+1513. 🔴 How does target typing resolve method-reference overloads?
+
+1514. 🔴 How do constructor references work with generic types?
+
+---
+
+# G. Default Methods in Interfaces
+
+1515. 🟢 What is a default method?
+
+1516. 🟢 Why were default methods introduced?
+
+1517. 🟡 Why did Java need default methods for interface evolution?
+
+1518. 🟢 Can an interface contain implementation code?
+
+1519. 🟢 Can an interface have multiple default methods?
+
+1520. 🟡 Can an implementing class override a default method?
+
+1521. 🟡 What happens when a class doesn't override a default method?
+
+1522. 🟢 Can an interface contain static methods?
+
+1523. 🟡 Can interface static methods be inherited?
+
+1524. 🔴 What happens when two interfaces provide the same default method?
+
+1525. 🟢 What is the diamond problem with default methods?
+
+1526. 🔴 How does Java resolve conflicting default methods?
+
+1527. 🟡 What happens when a class and interface both define the same method?
+
+1528. 🟡 Which one takes precedence?
+
+1529. 🔴 Explain the rule:
+
+> Class wins over interface.
+
+1530. 🔴 How can you explicitly invoke an interface's default method?
+
+1531. 🔴 Explain:
+
+```java
+InterfaceName.super.method()
+```
+
+1532. 🟡 Can one interface inherit conflicting default methods from two parent interfaces?
+
+1533. 🔴 How would you resolve that conflict?
+
+1534. 🟡 Can an interface default method be private?
+
+1535. 🟡 Can an interface have private methods?
+
+1536. 🔴 Why were private interface methods introduced in later Java versions?
+
+---
+
+# H. Stream API Fundamentals
+
+1537. 🟢 What is the Stream API?
+
+1538. 🟢 What problem does Stream API solve?
+
+1539. 🟢 What is a Stream?
+
+1540. 🟢 Is a Stream a data structure?
+
+1541. 🟢 Does a Stream store data?
+
+1542. 🟢 What is the difference between a Collection and a Stream?
+
+1543. 🟢 Can a Stream be reused?
+
+1544. 🟢 What happens if you try to reuse a consumed Stream?
+
+1545. 🟡 Why are Streams lazy?
+
+1546. 🟢 What is a stream pipeline?
+
+1547. 🟢 What are the three major parts of a stream pipeline?
+
+1548. 🟢 What are source, intermediate operations, and terminal operations?
+
+1549. 🟢 What is an intermediate operation?
+
+1550. 🟢 What is a terminal operation?
+
+1551. 🟢 Which operations are intermediate?
+
+1552. 🟢 Which operations are terminal?
+
+1553. 🟡 What does lazy evaluation mean in Streams?
+
+1554. 🔴 Why was laziness important in the design of the Stream API?
+
+1555. 🟡 When does a stream actually execute its operations?
+
+1556. 🔴 Why does creating a Stream pipeline not immediately process the elements?
+
+---
+
+# I. Creating Streams
+
+1557. 🟢 How can you create a Stream from a Collection?
+
+1558. 🟢 How can you create a Stream from an array?
+
+1559. 🟢 How can you create a Stream using `Stream.of()`?
+
+1560. 🟢 How can you create an empty Stream?
+
+1561. 🟢 How can you create a Stream using `Stream.builder()`?
+
+1562. 🟢 How can you create an infinite Stream?
+
+1563. 🟢 What does `Stream.iterate()` do?
+
+1564. 🟢 What does `Stream.generate()` do?
+
+1565. 🟡 What is the difference between `iterate()` and `generate()`?
+
+1566. 🟡 How can you limit an infinite Stream?
+
+1567. 🔴 What happens if an infinite Stream is passed to a terminal operation that never terminates?
+
+1568. 🟡 What is `IntStream`?
+
+1569. 🟡 What is `LongStream`?
+
+1570. 🟡 What is `DoubleStream`?
+
+1571. 🔴 Why were primitive streams introduced?
+
+1572. 🟡 What is the difference between `Stream<Integer>` and `IntStream`?
+
+1573. 🔴 How does boxing affect Stream performance?
+
+---
+
+# J. Intermediate Operations
+
+1574. 🟢 What does `filter()` do?
+
+1575. 🟢 What does `map()` do?
+
+1576. 🟢 What does `flatMap()` do?
+
+1577. 🟢 What does `distinct()` do?
+
+1578. 🟢 What does `sorted()` do?
+
+1579. 🟢 What does `peek()` do?
+
+1580. 🟢 What does `limit()` do?
+
+1581. 🟢 What does `skip()` do?
+
+1582. 🟢 What does `mapToInt()` do?
+
+1583. 🟢 What does `mapToLong()` do?
+
+1584. 🟢 What does `mapToDouble()` do?
+
+1585. 🟢 What does `boxed()` do?
+
+1586. 🟡 Which Stream operations are stateless?
+
+1587. 🟡 Which Stream operations are stateful?
+
+1588. 🟢 Is `filter()` stateless?
+
+1589. 🟢 Is `map()` stateless?
+
+1590. 🟡 Is `distinct()` stateful?
+
+1591. 🟡 Is `sorted()` stateful?
+
+1592. 🔴 Why are `sorted()` and `distinct()` considered stateful operations?
+
+1593. 🔴 How can stateful operations affect memory consumption?
+
+1594. 🔴 How can stateful operations affect parallel stream performance?
+
+---
+
+# K. Terminal Operations
+
+1595. 🟢 What does `forEach()` do?
+
+1596. 🟢 What does `forEachOrdered()` do?
+
+1597. 🟢 What does `collect()` do?
+
+1598. 🟢 What does `reduce()` do?
+
+1599. 🟢 What does `count()` do?
+
+1600. 🟢 What does `min()` do?
+
+1601. 🟢 What does `max()` do?
+
+1602. 🟢 What does `findFirst()` do?
+
+1603. 🟢 What does `findAny()` do?
+
+1604. 🟢 What does `anyMatch()` do?
+
+1605. 🟢 What does `allMatch()` do?
+
+1606. 🟢 What does `noneMatch()` do?
+
+1607. 🟢 What does `toArray()` do?
+
+1608. 🟡 Which terminal operations are short-circuiting?
+
+1609. 🟡 What is short-circuit evaluation in Streams?
+
+1610. 🔴 Why can `findAny()` be more useful than `findFirst()` in parallel processing?
+
+1611. 🔴 What ordering guarantees does `findFirst()` provide?
+
+1612. 🔴 What ordering guarantees does `findAny()` provide?
+
+---
+
+# L. Stream Lazy Evaluation — VERY IMPORTANT
+
+1613. 🟢 Are intermediate operations executed immediately?
+
+1614. 🟢 When are intermediate operations executed?
+
+1615. 🔴 Explain the execution order of:
+
+```java
+stream
+    .filter(...)
+    .map(...)
+    .filter(...)
+    .forEach(...);
+```
+
+1616. 🔴 Does Stream process all elements through `filter`, then all through `map`, or does it process element-by-element?
+
+1617. 🔴 What is operation fusion in Streams?
+
+1618. 🔴 How can lazy evaluation avoid unnecessary work?
+
+1619. 🟡 What happens when a short-circuiting terminal operation is introduced?
+
+1620. 🔴 Why can this pipeline process fewer elements than expected?
+
+```java
+stream
+    .filter(...)
+    .map(...)
+    .limit(5)
+    .collect(...);
+```
+
+1621. 🔴 How does the position of `filter()`, `map()`, `sorted()`, and `limit()` affect performance?
+
+1622. 🔴 Why is this potentially inefficient?
+
+```java
+stream
+    .map(...)
+    .filter(...)
+```
+
+compared with:
+
+```java
+stream
+    .filter(...)
+    .map(...)
+```
+
+1623. 🔴 How would you optimize a complex Stream pipeline?
+
+---
+
+# M. map vs flatMap
+
+1624. 🟢 What is the difference between `map()` and `flatMap()`?
+
+1625. 🟢 When should you use `map()`?
+
+1626. 🟢 When should you use `flatMap()`?
+
+1627. 🟡 Explain the output type difference between map and flatMap.
+
+1628. 🟡 Why can `map()` produce nested Streams?
+
+1629. 🔴 Explain:
+
+```java
+List<List<Integer>>
+```
+
+and how `flatMap()` can convert it into:
+
+```java
+Stream<Integer>
+```
+
+1630. 🟡 How can flatMap be used to flatten nested collections?
+
+1631. 🟡 How can flatMap be used with Optional?
+
+1632. 🔴 How can flatMap be used to process nested domain objects?
+
+1633. 🔴 Give a backend example involving:
+
+```text
+Customer -> Orders -> Items
+```
+
+where flatMap is useful.
+
+---
+
+# N. filter
+
+1634. 🟢 What does `filter()` do?
+
+1635. 🟢 What type of functional interface does `filter()` accept?
+
+1636. 🟡 Can filter modify the original collection?
+
+1637. 🟡 Can multiple filters be chained?
+
+1638. 🟡 What happens if a filter predicate throws an exception?
+
+1639. 🔴 Is filter guaranteed to preserve encounter order?
+
+1640. 🔴 How does filter behave in parallel streams?
+
+1641. 🔴 How would you combine multiple predicates efficiently?
+
+---
+
+# O. map / mapToX
+
+1642. 🟢 What does `map()` do?
+
+1643. 🟡 Does `map()` modify the source collection?
+
+1644. 🟢 What is one-to-one transformation?
+
+1645. 🟡 What happens if the mapping function returns `null`?
+
+1646. 🟡 How does `mapToInt()` differ from `map()`?
+
+1647. 🟡 When should you use primitive mapping operations?
+
+1648. 🔴 What boxing/unboxing costs can occur in numeric Stream pipelines?
+
+---
+
+# P. distinct
+
+1649. 🟢 What does `distinct()` do?
+
+1650. 🟡 How does `distinct()` determine duplicates?
+
+1651. 🔴 What role do `equals()` and `hashCode()` play in `distinct()`?
+
+1652. 🟡 What happens if the objects have incorrect `equals()`/`hashCode()` implementations?
+
+1653. 🔴 How much state can distinct potentially maintain?
+
+1654. 🔴 Why can distinct be expensive for large streams?
+
+1655. 🔴 How does distinct behave in ordered vs unordered streams?
+
+---
+
+# Q. sorted
+
+1656. 🟢 What does `sorted()` do?
+
+1657. 🟢 How does `sorted()` determine ordering?
+
+1658. 🟢 How do you provide a custom Comparator?
+
+1659. 🟡 Is sorted a stateful operation?
+
+1660. 🔴 Why must sorted buffer elements?
+
+1661. 🔴 What are the memory implications of sorting a large Stream?
+
+1662. 🟡 What happens if the elements are not Comparable?
+
+1663. 🔴 How does sorted behave in parallel streams?
+
+1664. 🔴 How can you sort by multiple fields?
+
+---
+
+# R. peek
+
+1665. 🟢 What does `peek()` do?
+
+1666. 🟢 Why was `peek()` introduced?
+
+1667. 🟡 Is `peek()` a terminal operation?
+
+1668. 🟡 Is `peek()` guaranteed to execute?
+
+1669. 🔴 Why should `peek()` generally not be used for business logic?
+
+1670. 🔴 How can lazy evaluation make `peek()` appear to "not work"?
+
+1671. 🟡 Is `peek()` appropriate for debugging Stream pipelines?
+
+1672. 🔴 What problems can side effects inside `peek()` create?
+
+---
+
+# S. reduce — VERY IMPORTANT
+
+1673. 🟢 What is `reduce()`?
+
+1674. 🟢 Why is reduce called a reduction operation?
+
+1675. 🟢 What is an accumulator?
+
+1676. 🟢 What is an identity value?
+
+1677. 🟡 Explain the three common forms of `reduce()`.
+
+1678. 🟡 What is the difference between:
+
+```java
+reduce(BinaryOperator<T>)
+```
+
+and:
+
+```java
+reduce(identity, accumulator)
+```
+
+1679. 🟡 What does the identity value represent?
+
+1680. 🔴 What properties should an accumulator satisfy?
+
+1681. 🔴 Why must reduction operations be associative for reliable parallel execution?
+
+1682. 🔴 What can go wrong if a reduction operation is not associative?
+
+1683. 🟡 What is the difference between reduce and collect?
+
+1684. 🔴 When should you prefer collect over reduce?
+
+1685. 🔴 Why is using mutable containers with reduce generally problematic?
+
+1686. 🔴 How does reduce behave in parallel streams?
+
+1687. 🔴 What is the combiner in the three-argument reduce?
+
+1688. 🔴 When is the combiner used?
+
+1689. 🔴 What happens if the identity/accumulator/combiner contracts are violated?
+
+---
+
+# T. Collectors — VERY IMPORTANT
+
+1690. 🟢 What is a Collector?
+
+1691. 🟢 What does `Collectors.toList()` do?
+
+1692. 🟢 What does `Collectors.toSet()` do?
+
+1693. 🟢 What does `Collectors.toMap()` do?
+
+1694. 🟢 What does `Collectors.joining()` do?
+
+1695. 🟢 What does `Collectors.groupingBy()` do?
+
+1696. 🟢 What does `Collectors.partitioningBy()` do?
+
+1697. 🟡 What is the difference between groupingBy and partitioningBy?
+
+1698. 🟡 What happens if `Collectors.toMap()` encounters duplicate keys?
+
+1699. 🟢 How do you provide a merge function to `toMap()`?
+
+1700. 🔴 What happens if your merge function itself has side effects?
+
+1701. 🟡 What is the difference between:
+
+```java
+Collectors.toList()
+Collectors.toSet()
+```
+
+1702. 🟡 Does `Collectors.toList()` guarantee a specific List implementation?
+
+1703. 🔴 Why should you avoid depending on the concrete collection type returned by `toList()`?
+
+1704. 🟡 What does `Collectors.mapping()` do?
+
+1705. 🟡 What does `Collectors.filtering()` do?
+
+1706. 🟡 What does `Collectors.flatMapping()` do?
+
+1707. 🟡 What does `Collectors.counting()` do?
+
+1708. 🟡 What does `Collectors.summingInt()` do?
+
+1709. 🟡 What does `Collectors.averagingInt()` do?
+
+1710. 🟡 What does `Collectors.maxBy()` do?
+
+1711. 🟡 What does `Collectors.minBy()` do?
+
+1712. 🟡 What does `Collectors.collectingAndThen()` do?
+
+1713. 🔴 How would you make a collected result unmodifiable?
+
+1714. 🟡 What does `Collectors.reducing()` do?
+
+1715. 🔴 How is `Collectors.reducing()` different from Stream.reduce()?
+
+---
+
+# U. groupingBy — DEEP DIVE
+
+1716. 🟢 What does `groupingBy()` do?
+
+1717. 🟢 How do you group employees by department?
+
+1718. 🟡 What is the downstream Collector in groupingBy?
+
+1719. 🟡 How can you count elements within each group?
+
+1720. 🟡 How can you sum a field within each group?
+
+1721. 🟡 How can you find the maximum element in each group?
+
+1722. 🟡 How can you map each group to another representation?
+
+1723. 🔴 What is the difference between:
+
+```java
+groupingBy(classifier)
+```
+
+and:
+
+```java
+groupingBy(classifier, downstream)
+```
+
+1724. 🔴 What is the difference between:
+
+```java
+groupingBy()
+groupingByConcurrent()
+```
+
+1725. 🔴 What happens internally during groupingBy?
+
+1726. 🔴 What are the memory implications of grouping millions of records?
+
+1727. 🔴 How would you group a large dataset without causing excessive memory consumption?
+
+---
+
+# V. partitioningBy
+
+1728. 🟢 What does `partitioningBy()` do?
+
+1729. 🟢 How is partitioningBy different from groupingBy?
+
+1730. 🟡 Why does partitioningBy produce boolean-based partitions?
+
+1731. 🟡 What happens if no elements satisfy the predicate?
+
+1732. 🟡 Can partitioningBy accept a downstream collector?
+
+1733. 🔴 When is partitioningBy more expressive than manually maintaining two lists?
+
+---
+
+# W. toMap — DEEP DIVE
+
+1734. 🟢 What does `Collectors.toMap()` do?
+
+1735. 🟢 How do you convert a List of users into `Map<Id, User>`?
+
+1736. 🟡 What happens when duplicate keys occur?
+
+1737. 🟡 How do you resolve duplicate keys?
+
+1738. 🟡 What is the merge function?
+
+1739. 🔴 What happens if the merge function returns `null`?
+
+1740. 🟡 How can you specify the Map implementation used by `toMap()`?
+
+1741. 🔴 When would you choose LinkedHashMap as the map supplier?
+
+1742. 🔴 What concurrency considerations exist when collecting into a Map?
+
+---
+
+# X. Stream Ordering
+
+1743. 🟢 What is encounter order?
+
+1744. 🟡 Which streams have an encounter order?
+
+1745. 🟡 Does ArrayList stream have encounter order?
+
+1746. 🟡 Does HashSet stream have a guaranteed encounter order?
+
+1747. 🟡 Does LinkedHashSet stream preserve encounter order?
+
+1748. 🟡 Does TreeSet stream have sorted encounter order?
+
+1749. 🟡 What does `unordered()` do?
+
+1750. 🔴 When can removing ordering improve parallel Stream performance?
+
+1751. 🔴 What happens to `forEach()` ordering in a parallel stream?
+
+1752. 🟢 What does `forEachOrdered()` guarantee?
+
+1753. 🔴 Why can `forEachOrdered()` reduce parallelism benefits?
+
+---
+
+# Y. Stream Short-Circuiting
+
+1754. 🟢 What is a short-circuiting operation?
+
+1755. 🟢 Which intermediate operations can short-circuit?
+
+1756. 🟢 Which terminal operations can short-circuit?
+
+1757. 🟡 How does `limit()` short-circuit processing?
+
+1758. 🟡 How does `anyMatch()` short-circuit processing?
+
+1759. 🟡 How does `findFirst()` short-circuit processing?
+
+1760. 🟡 How does `findAny()` short-circuit processing?
+
+1761. 🔴 Does short-circuiting guarantee that every upstream operation stops instantly?
+
+1762. 🔴 How does short-circuiting work in parallel streams?
+
+---
+
+# Z. Stream Pipeline Execution — VERY DEEP
+
+1763. 🔴 Explain how a sequential Stream pipeline is executed internally.
+
+1764. 🔴 Does each intermediate operation create a new collection?
+
+1765. 🔴 Why doesn't:
+
+```java
+filter()
+map()
+filter()
+```
+
+create intermediate collections?
+
+1766. 🔴 What is a Stream pipeline stage?
+
+1767. 🔴 What role do `Sink` objects play internally?
+
+1768. 🔴 What is a Spliterator?
+
+1769. 🔴 How does a Stream use a Spliterator?
+
+1770. 🔴 What is the relationship between Spliterator and Iterator?
+
+1771. 🔴 What does `tryAdvance()` do?
+
+1772. 🔴 What does `forEachRemaining()` do?
+
+1773. 🔴 What does `trySplit()` do?
+
+1774. 🔴 Why is `trySplit()` important for parallel streams?
+
+1775. 🔴 What Spliterator characteristics exist?
+
+1776. 🔴 What do `ORDERED`, `SORTED`, `DISTINCT`, `SIZED`, and `SUBSIZED` mean?
+
+1777. 🔴 How can Spliterator characteristics influence Stream execution?
+
+1778. 🔴 How would you implement a custom Spliterator?
+
+1779. 🔴 When would a custom Spliterator be useful in a backend application?
+
+---
+
+# AA. Parallel Streams — VERY IMPORTANT
+
+1780. 🟢 What is a parallel Stream?
+
+1781. 🟢 How do you create a parallel Stream?
+
+1782. 🟢 What is the difference between `stream()` and `parallelStream()`?
+
+1783. 🟢 How can you convert a sequential Stream into a parallel Stream?
+
+1784. 🟢 How can you convert a parallel Stream back into sequential mode?
+
+1785. 🟡 What mechanism does Java use to execute parallel Streams?
+
+1786. 🟡 What is ForkJoinPool?
+
+1787. 🟡 Which ForkJoinPool does parallel Stream normally use?
+
+1788. 🔴 Why does the common ForkJoinPool matter in backend applications?
+
+1789. 🟡 What is work stealing?
+
+1790. 🔴 How does work stealing help parallel Stream execution?
+
+1791. 🔴 How does Spliterator enable parallel processing?
+
+1792. 🟡 When can parallel Streams improve performance?
+
+1793. 🟡 When can parallel Streams make performance worse?
+
+1794. 🔴 Why can parallel Streams be slower for small datasets?
+
+1795. 🔴 Why can parallel Streams be harmful for I/O-bound operations?
+
+1796. 🔴 Why should blocking database calls generally not be placed blindly inside parallel Streams?
+
+1797. 🔴 How can parallel Streams affect application-wide thread resources?
+
+1798. 🔴 Why is the common ForkJoinPool a potential concern in server applications?
+
+1799. 🟡 Can you configure the ForkJoinPool used by parallel Streams?
+
+1800. 🔴 What are the risks of relying on the common ForkJoinPool for application-specific workloads?
+
+1801. 🔴 How would you benchmark a parallel Stream properly?
+
+---
+
+# AB. Stream Thread Safety and Side Effects
+
+1802. 🟢 Are Streams thread-safe?
+
+1803. 🟢 Can multiple threads safely operate on the same Stream?
+
+1804. 🟡 What are side effects in Stream operations?
+
+1805. 🟡 Why should Stream operations generally be stateless?
+
+1806. 🔴 What problems can occur when modifying an external collection inside `forEach()`?
+
+1807. 🔴 Why is this dangerous?
+
+```java
+List<Integer> result = new ArrayList<>();
+
+numbers.parallelStream()
+       .forEach(result::add);
+```
+
+1808. 🔴 How would you safely collect parallel Stream results?
+
+1809. 🟡 Can synchronized collections completely solve Stream side-effect problems?
+
+1810. 🔴 Why can synchronization still make a parallel pipeline slower?
+
+1811. 🔴 Why is shared mutable state particularly dangerous in parallel Streams?
+
+---
+
+# AC. Optional — FUNDAMENTALS
+
+1812. 🟢 What is Optional?
+
+1813. 🟢 Why was Optional introduced?
+
+1814. 🟢 What problem does Optional attempt to solve?
+
+1815. 🟢 How do you create an Optional?
+
+1816. 🟢 What is `Optional.of()`?
+
+1817. 🟢 What is `Optional.ofNullable()`?
+
+1818. 🟢 What is `Optional.empty()`?
+
+1819. 🟡 What happens if `Optional.of(null)` is called?
+
+1820. 🟡 What happens if `Optional.ofNullable(null)` is called?
+
+1821. 🟢 What is `isPresent()`?
+
+1822. 🟢 What is `isEmpty()`?
+
+1823. 🟢 What does `get()` do?
+
+1824. 🟡 Why can calling `get()` be dangerous?
+
+1825. 🟢 What does `orElse()` do?
+
+1826. 🟢 What does `orElseGet()` do?
+
+1827. 🟢 What does `orElseThrow()` do?
+
+1828. 🟡 What is the difference between `orElse()` and `orElseGet()`?
+
+1829. 🔴 Why can `orElse()` cause unnecessary work even when the Optional contains a value?
+
+1830. 🟡 What is the difference between `orElseThrow()` and `get()`?
+
+---
+
+# AD. Optional — DEEP DIVE
+
+1831. 🟢 What does `map()` do on Optional?
+
+1832. 🟢 What does `flatMap()` do on Optional?
+
+1833. 🟢 What does `filter()` do on Optional?
+
+1834. 🟡 What happens when Optional.map's mapper returns null?
+
+1835. 🟡 How is Optional.flatMap different from Optional.map?
+
+1836. 🔴 How can Optional.flatMap prevent nested Optionals?
+
+1837. 🟡 What does `or()` do on Optional?
+
+1838. 🟡 What does `ifPresent()` do?
+
+1839. 🟡 What does `ifPresentOrElse()` do?
+
+1840. 🟡 What does `stream()` on Optional do?
+
+1841. 🔴 How can Optional.stream() be used with Stream pipelines?
+
+1842. 🟡 Can Optional contain another Optional?
+
+1843. 🔴 Why might nested Optional types be a design smell?
+
+1844. 🟡 Should Optional be used as a method parameter?
+
+1845. 🟡 Should Optional be used as a class field?
+
+1846. 🟡 Should Optional be used as an entity field?
+
+1847. 🔴 Why is Optional generally intended primarily for return types?
+
+1848. 🔴 What serialization concerns exist with Optional fields?
+
+1849. 🔴 Can Optional replace every possible null check?
+
+1850. 🔴 When should you avoid Optional?
+
+---
+
+# AE. OptionalInt / OptionalLong / OptionalDouble
+
+1851. 🟢 What are OptionalInt, OptionalLong, and OptionalDouble?
+
+1852. 🟡 Why do primitive Optional variants exist?
+
+1853. 🟡 How are they different from `Optional<Integer>`?
+
+1854. 🔴 What boxing overhead do primitive Optional variants avoid?
+
+1855. 🟡 When would you use OptionalInt instead of Optional<Integer>?
+
+---
+
+# AF. Stream + Optional
+
+1856. 🟢 How can Stream.findFirst() return Optional?
+
+1857. 🟢 Why doesn't findFirst simply return null?
+
+1858. 🟡 How can Optional be used to safely process a potentially missing Stream result?
+
+1859. 🔴 How would you find a user by ID and transform the result using Optional?
+
+1860. 🔴 How would you flatten a Stream of Optional values?
+
+1861. 🟡 What problem does `Optional.stream()` solve?
+
+---
+
+# AG. Primitive Streams
+
+1862. 🟢 What is IntStream?
+
+1863. 🟢 What is LongStream?
+
+1864. 🟢 What is DoubleStream?
+
+1865. 🟡 What is `range()`?
+
+1866. 🟡 What is `rangeClosed()`?
+
+1867. 🟡 What is the difference between range and rangeClosed?
+
+1868. 🟡 How do you calculate sum using IntStream?
+
+1869. 🟡 How do you calculate average?
+
+1870. 🟡 What does `summaryStatistics()` provide?
+
+1871. 🟡 What is `IntSummaryStatistics`?
+
+1872. 🔴 Why can primitive streams be significantly more efficient for numeric workloads?
+
+---
+
+# AH. Stream Performance
+
+1873. 🟢 Are Streams always faster than loops?
+
+1874. 🟢 Are Streams always slower than loops?
+
+1875. 🟡 What overhead can Streams introduce?
+
+1876. 🟡 What overhead can lambda expressions introduce?
+
+1877. 🔴 How can boxing affect Stream performance?
+
+1878. 🔴 How can excessive intermediate operations affect performance?
+
+1879. 🔴 How can stateful operations affect performance?
+
+1880. 🔴 How can unnecessary sorting affect performance?
+
+1881. 🔴 How can unnecessary distinct operations affect performance?
+
+1882. 🔴 How can poor Stream pipeline ordering affect performance?
+
+1883. 🔴 When would you prefer a traditional loop over a Stream?
+
+1884. 🔴 How would you benchmark Stream vs loop performance?
+
+1885. 🔴 Why should you avoid making performance conclusions from simplistic microbenchmarks?
+
+1886. 🔴 What role does JMH play in Java performance benchmarking?
+
+---
+
+# AI. Stream API — Tricky Output Questions
+
+1887. 🟢 What is the output?
+
+```java
+List<Integer> list = List.of(1, 2, 3, 4);
+
+list.stream()
+    .filter(x -> x % 2 == 0)
+    .forEach(System.out::println);
+```
+
+1888. 🟡 What is the output?
+
+```java
+List<Integer> list = List.of(1, 2, 3);
+
+list.stream()
+    .map(x -> x * 2)
+    .filter(x -> x > 2)
+    .forEach(System.out::println);
+```
+
+1889. 🟡 What happens?
+
+```java
+Stream<Integer> stream = Stream.of(1, 2, 3);
+
+stream.count();
+stream.forEach(System.out::println);
+```
+
+1890. 🟡 What happens?
+
+```java
+Stream<Integer> stream =
+    Stream.of(1, 2, 3)
+          .filter(x -> {
+              System.out.println(x);
+              return x > 1;
+          });
+```
+
+1891. 🔴 Why doesn't the code in question 1890 print anything?
+
+1892. 🟡 What happens?
+
+```java
+Stream.of(1, 2, 3, 4, 5)
+      .filter(x -> {
+          System.out.println("filter " + x);
+          return x % 2 == 0;
+      })
+      .map(x -> {
+          System.out.println("map " + x);
+          return x * 2;
+      })
+      .findFirst();
+```
+
+1893. 🔴 In question 1892, exactly how many times is each operation executed?
+
+1894. 🔴 Why does the execution order differ from a naive "stage-by-stage" interpretation?
+
+1895. 🟡 What happens?
+
+```java
+Stream.of(1, 2, 3)
+      .map(x -> {
+          System.out.println(x);
+          return x * 2;
+      })
+      .limit(1)
+      .count();
+```
+
+1896. 🟡 What happens?
+
+```java
+List<Integer> result =
+    Stream.of(1, 2, 2, 3, 3)
+          .distinct()
+          .toList();
+```
+
+1897. 🔴 What happens if the same Stream is used in two terminal operations?
+
+1898. 🟡 What happens?
+
+```java
+Optional<Integer> result =
+    Stream.of(1, 2, 3)
+          .filter(x -> x > 10)
+          .findFirst();
+
+System.out.println(result);
+```
+
+1899. 🟡 What happens?
+
+```java
+Optional<String> result =
+    Optional.of("Java")
+            .map(String::toUpperCase);
+
+System.out.println(result);
+```
+
+1900. 🟡 What happens?
+
+```java
+String result =
+    Optional.of("Java")
+            .map(String::toUpperCase)
+            .orElse("Default");
+```
+
+1901. 🔴 What is printed?
+
+```java
+String result =
+    Optional.of("Java")
+            .orElse(expensiveOperation());
+```
+
+1902. 🔴 What is printed?
+
+```java
+String result =
+    Optional.of("Java")
+            .orElseGet(() -> expensiveOperation());
+```
+
+---
+
+# AJ. Advanced Stream Scenarios
+
+1903. 🔴 How would you process a list of millions of records using Streams without unnecessary intermediate allocations?
+
+1904. 🔴 How would you prevent a Stream pipeline from holding too much state in memory?
+
+1905. 🔴 How would you process nested collections efficiently?
+
+1906. 🔴 How would you group transactions by customer and calculate total transaction amount?
+
+1907. 🔴 How would you find the highest-value transaction for every customer?
+
+1908. 🔴 How would you find duplicate transaction IDs using Streams?
+
+1909. 🔴 How would you find the first duplicate element?
+
+1910. 🔴 How would you partition transactions into successful and failed transactions?
+
+1911. 🔴 How would you convert a list of entities into a Map keyed by ID?
+
+1912. 🔴 How would you handle duplicate IDs while converting a list into a Map?
+
+1913. 🔴 How would you flatten:
+
+```text
+Customer -> Accounts -> Transactions
+```
+
+into a single transaction Stream?
+
+1914. 🔴 How would you safely handle null values in a Stream pipeline?
+
+1915. 🔴 How would you combine Optional and Stream to avoid nested null checks?
+
+1916. 🔴 How would you process only the first N matching records?
+
+1917. 🔴 How would you process records in batches using Stream operations?
+
+1918. 🔴 Would you use Streams for database pagination? Why or why not?
+
+1919. 🔴 What problems can occur if you keep a database transaction open while consuming a Stream?
+
+1920. 🔴 How would you process a large database result set without loading the entire dataset into memory?
+
+---
+
+# AK. Parallel Stream Production Scenarios
+
+1921. 🔴 A backend API uses `parallelStream()` to call another microservice for every record. What problems could occur?
+
+1922. 🔴 A parallel Stream performs database calls for 10,000 records. What could happen to the database?
+
+1923. 🔴 How can parallel Streams contribute to connection-pool exhaustion?
+
+1924. 🔴 How can parallel Streams contribute to thread-pool contention?
+
+1925. 🔴 Why can parallel Streams be dangerous in request-processing code?
+
+1926. 🔴 When might parallel Streams be appropriate for CPU-bound calculations?
+
+1927. 🔴 What characteristics should a workload have before you consider parallel Streams?
+
+1928. 🔴 How would you compare parallel Stream performance against an explicitly managed ExecutorService?
+
+1929. 🔴 When would you prefer CompletableFuture over parallelStream?
+
+1930. 🔴 How would you isolate application-specific asynchronous workloads from the common ForkJoinPool?
+
+---
+
+# AL. Java 8 Functional Programming Design
+
+1931. 🟡 What does functional programming mean in Java?
+
+1932. 🟡 Is Java a purely functional programming language?
+
+1933. 🟡 What is a pure function?
+
+1934. 🟡 What is referential transparency?
+
+1935. 🟡 What are side effects?
+
+1936. 🔴 Why are pure functions easier to reason about?
+
+1937. 🔴 How do immutability and functional programming complement each other?
+
+1938. 🔴 How do Streams encourage declarative programming?
+
+1939. 🔴 What is the difference between imperative and declarative collection processing?
+
+1940. 🔴 When can a functional/declarative solution be less readable than an imperative solution?
+
+---
+
+# AM. Java 8 Interview Drill Chains
+
+## Lambda Drill
+
+1941. 🟢 What is a lambda?
+
+1942. 🟢 Why was it introduced?
+
+1943. 🟢 What is a functional interface?
+
+1944. 🟡 Why does a lambda require a target type?
+
+1945. 🟡 What is effectively final?
+
+1946. 🔴 How does lambda variable capture work?
+
+1947. 🔴 What is `invokedynamic`?
+
+1948. 🔴 How is a lambda represented at runtime?
+
+---
+
+## Stream Drill
+
+1949. 🟢 What is Stream API?
+
+1950. 🟢 Stream vs Collection?
+
+1951. 🟢 What are intermediate and terminal operations?
+
+1952. 🟡 What is lazy evaluation?
+
+1953. 🟡 What is short-circuiting?
+
+1954. 🔴 Explain internal Stream pipeline execution.
+
+1955. 🔴 What is Spliterator?
+
+1956. 🔴 How does parallel Stream use Spliterator?
+
+1957. 🔴 How does ForkJoinPool execute parallel streams?
+
+---
+
+## map vs flatMap Drill
+
+1958. 🟢 Difference between map and flatMap?
+
+1959. 🟡 Give an example.
+
+1960. 🟡 What happens with nested collections?
+
+1961. 🔴 How does flatMap help with nested domain objects?
+
+---
+
+## reduce Drill
+
+1962. 🟢 What is reduce?
+
+1963. 🟡 What is identity?
+
+1964. 🟡 What is accumulator?
+
+1965. 🔴 What is combiner?
+
+1966. 🔴 Why must reduction operations be associative?
+
+1967. 🔴 How does parallel reduce work?
+
+---
+
+## Collectors Drill
+
+1968. 🟢 What is Collector?
+
+1969. 🟢 What is groupingBy?
+
+1970. 🟢 What is partitioningBy?
+
+1971. 🟡 What is downstream Collector?
+
+1972. 🟡 What happens with duplicate keys in toMap?
+
+1973. 🔴 How does groupingBy work internally?
+
+1974. 🔴 What happens when grouping millions of records?
+
+---
+
+## Optional Drill
+
+1975. 🟢 Why Optional?
+
+1976. 🟢 `of()` vs `ofNullable()`?
+
+1977. 🟢 `orElse()` vs `orElseGet()`?
+
+1978. 🟡 map vs flatMap?
+
+1979. 🟡 Why is `get()` discouraged?
+
+1980. 🔴 Should Optional be used as an entity field?
+
+1981. 🔴 How does Optional interact with Streams?
+
+---
+
+# AN. Final Java 8 Checklist
+
+Before moving forward, make sure you can answer:
+
+* [ ] Java 8 major features
+* [ ] Lambda expressions
+* [ ] Lambda syntax
+* [ ] Target typing
+* [ ] Variable capture
+* [ ] Effectively final
+* [ ] Lambda `this`
+* [ ] Lambda runtime representation
+* [ ] `invokedynamic`
+* [ ] LambdaMetafactory
+* [ ] Anonymous class vs lambda
+* [ ] Functional interfaces
+* [ ] `@FunctionalInterface`
+* [ ] Predicate
+* [ ] Function
+* [ ] Consumer
+* [ ] Supplier
+* [ ] UnaryOperator
+* [ ] BinaryOperator
+* [ ] BiFunction
+* [ ] BiPredicate
+* [ ] BiConsumer
+* [ ] Primitive functional interfaces
+* [ ] Function composition
+* [ ] Method references
+* [ ] Constructor references
+* [ ] Default methods
+* [ ] Interface static methods
+* [ ] Default-method conflicts
+* [ ] Interface evolution
+* [ ] Stream API
+* [ ] Collection vs Stream
+* [ ] Stream lifecycle
+* [ ] Stream pipeline
+* [ ] Lazy evaluation
+* [ ] Intermediate operations
+* [ ] Terminal operations
+* [ ] Stateless operations
+* [ ] Stateful operations
+* [ ] filter
+* [ ] map
+* [ ] flatMap
+* [ ] distinct
+* [ ] sorted
+* [ ] peek
+* [ ] limit
+* [ ] skip
+* [ ] reduce
+* [ ] collect
+* [ ] Collectors
+* [ ] groupingBy
+* [ ] partitioningBy
+* [ ] toMap
+* [ ] merge functions
+* [ ] Collector downstream operations
+* [ ] Stream ordering
+* [ ] Encounter order
+* [ ] Short-circuiting
+* [ ] Stream internals
+* [ ] Spliterator
+* [ ] Sink
+* [ ] tryAdvance
+* [ ] trySplit
+* [ ] Parallel Streams
+* [ ] ForkJoinPool
+* [ ] Work stealing
+* [ ] Common pool
+* [ ] Parallel Stream performance
+* [ ] Stream side effects
+* [ ] Thread-safety concerns
+* [ ] Optional
+* [ ] Optional.of
+* [ ] Optional.ofNullable
+* [ ] Optional.empty
+* [ ] orElse
+* [ ] orElseGet
+* [ ] orElseThrow
+* [ ] Optional map
+* [ ] Optional flatMap
+* [ ] Optional filter
+* [ ] Optional.stream
+* [ ] OptionalInt
+* [ ] Primitive Streams
+* [ ] Boxing/unboxing
+* [ ] Stream performance
+* [ ] Stream vs loop
+* [ ] Production Stream scenarios
+* [ ] Parallel Stream production pitfalls
+* [ ] Tricky output questions
+* [ ] Interviewer follow-up chains
+
+# END OF TOPIC 8
+
+**Next: Topic 9 — Java 9–17 / Modern Java — DEEP DIVE**
+
+This will cover **Java 9 modules, private interface methods, collection factory methods, `var`, try-with-resources improvements, Java 10/11 features, `String` enhancements, `HttpClient`, `isBlank`/`lines`/`strip`, Java 12–14 switch expressions, Java 14 records, Java 15 text blocks, Java 16 pattern matching for `instanceof`, Java 17 sealed classes, pattern matching, records, and modern Java interview traps.**

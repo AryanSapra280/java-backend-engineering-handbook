@@ -1,0 +1,500 @@
+# Topic 2 — Java Language Fundamentals
+
+We’ll keep the same approach: **questions only**, deep enough for a ~5-year Java backend interview. This topic is deliberately broad because interviewers often use “basic Java” questions to drill into JVM behavior, type system, initialization, and tricky outputs.
+
+---
+
+## A. Java Basics & Features
+
+1. 🟢 What are the key features of Java?
+2. 🟢 Why is Java platform-independent?
+3. 🟢 What does “Write Once, Run Anywhere” mean?
+4. 🟢 Is Java completely object-oriented? Why or why not?
+5. 🟡 Why does Java support primitive data types if it is object-oriented?
+6. 🟢 What is bytecode?
+7. 🟢 What is the role of the Java compiler?
+8. 🟢 What is `javac`?
+9. 🟢 What is the difference between source code, bytecode and machine code?
+10. 🟡 Why doesn't Java compile directly into native machine code?
+11. 🔴 What happens from the moment you execute `javac Test.java` until `Test.class` is produced?
+12. 🔴 What happens when you execute `java Test`?
+13. 🔴 What happens if the JVM cannot find the requested class?
+14. 🔴 What happens if the class file was compiled with a newer Java version than the JVM supports?
+15. 🟡 What is the classpath?
+16. 🔴 How does the JVM locate a class using the classpath?
+17. 🔴 What is the difference between compile-time errors and runtime errors?
+18. 🟡 Why can the same Java bytecode behave differently on different operating systems?
+
+---
+
+# B. JDK, JRE & JVM
+
+19. 🟢 What is the JDK?
+20. 🟢 What is the JRE?
+21. 🟢 What is the JVM?
+22. 🟢 What is the difference between JDK, JRE and JVM?
+23. 🟡 What components are included in a JDK?
+24. 🟡 What components are required to run a Java application?
+25. 🔴 Is JRE still distributed separately in modern Java versions?
+26. 🔴 Does the JVM itself provide platform independence?
+27. 🔴 Why does Java need a different JVM implementation for different operating systems?
+28. 🔴 Can the same JVM execute bytecode generated from different programming languages?
+29. 🔴 What other languages can run on the JVM?
+30. 🔴 What is the relationship between JVM specification and a specific JVM implementation such as HotSpot?
+
+---
+
+# C. Primitive Data Types
+
+31. 🟢 What are the eight primitive data types in Java?
+32. 🟢 What is the difference between primitive and reference types?
+33. 🟢 What is the size/range of each primitive numeric type?
+34. 🟡 Why is the size of Java primitive types generally fixed?
+35. 🟡 What is the default value of each primitive type when used as an instance field?
+36. 🟡 Do local variables have default values?
+37. 🔴 Why does Java require local variables to be definitely assigned before use?
+38. 🟢 What is the difference between `int` and `Integer`?
+39. 🟡 What is the default type of an integer literal?
+40. 🟡 What is the default type of a decimal literal?
+41. 🟡 How do you represent a `long` literal?
+42. 🟡 How do you represent a `float` literal?
+43. 🟡 What is the difference between `float` and `double`?
+44. 🟡 Why can floating-point arithmetic produce unexpected results?
+45. 🔴 Why should `double` generally not be used for exact monetary calculations?
+46. 🔴 What is the difference between `float`, `double` and `BigDecimal` for financial calculations?
+47. 🟢 What is the range of `byte`, `short`, `int` and `long`?
+48. 🔴 Why does integer overflow not normally throw an exception?
+49. 🔴 What happens when an integer arithmetic operation overflows?
+50. 🔴 What happens when integer division by zero occurs?
+51. 🔴 What happens when floating-point division by zero occurs?
+52. 🔴 What are `NaN`, positive infinity and negative infinity?
+53. 🔴 Can `NaN == NaN` be true?
+54. 🔴 Why can floating-point `0.0` and `-0.0` behave differently in some operations?
+
+---
+
+# D. Wrapper Classes & Autoboxing
+
+55. 🟢 What are wrapper classes?
+56. 🟢 Why do we need wrapper classes?
+57. 🟢 What is autoboxing?
+58. 🟢 What is unboxing?
+59. 🟡 When does Java automatically perform boxing?
+60. 🟡 When does Java automatically perform unboxing?
+61. 🔴 What happens internally when an `int` is assigned to an `Integer`?
+62. 🔴 What happens when an `Integer` containing `null` is assigned to an `int`?
+63. 🔴 What exception can occur during automatic unboxing of `null`?
+64. 🟡 Why can wrapper objects be `null` while primitives cannot?
+65. 🔴 Explain Integer caching.
+66. 🔴 Which Integer values are typically cached?
+67. 🔴 Is Integer caching guaranteed by the Java specification in the same way for every value?
+68. 🔴 Predict the result of comparing two Integer objects using `==`.
+69. 🔴 Why can `Integer a = 100; Integer b = 100; a == b` produce a different result from using `1000`?
+70. 🔴 Can the Integer cache behavior be configured?
+71. 🔴 Does similar caching exist for other wrapper types?
+72. 🔴 What happens when wrapper objects participate in arithmetic expressions?
+73. 🔴 Can excessive boxing/unboxing affect application performance?
+74. 🔴 How can boxing create unnecessary object allocations in a high-throughput application?
+
+---
+
+# E. Type Conversion & Casting
+
+75. 🟢 What is type casting?
+76. 🟢 What is widening conversion?
+77. 🟢 What is narrowing conversion?
+78. 🟢 Which primitive conversions happen automatically?
+79. 🟡 Why is widening generally safe?
+80. 🟡 Why can narrowing lose information?
+81. 🔴 What happens when you cast a large `long` to an `int`?
+82. 🔴 What happens when you cast a `double` to an `int`?
+83. 🔴 How does Java handle the fractional part during floating-point to integer conversion?
+84. 🔴 What happens when you cast `NaN` to an integer?
+85. 🔴 What happens when you cast infinity to an integer?
+86. 🟢 What is upcasting?
+87. 🟢 What is downcasting?
+88. 🟡 Is upcasting implicit?
+89. 🟡 Is downcasting implicit?
+90. 🔴 When does downcasting throw `ClassCastException`?
+91. 🟡 What is `instanceof`?
+92. 🔴 What happens when `instanceof` is used with `null`?
+93. 🔴 How can `instanceof` and pattern matching simplify safe casting in modern Java?
+
+---
+
+# F. `==`, `equals()` & Object References
+
+94. 🟢 What is the difference between `==` and `equals()`?
+95. 🟢 How does `==` behave with primitives?
+96. 🟢 How does `==` behave with object references?
+97. 🟢 What does `equals()` represent conceptually?
+98. 🟡 Is `equals()` always the same as `==`?
+99. 🔴 Why does `Object.equals()` behave like reference equality?
+100. 🔴 When should a class override `equals()`?
+101. 🔴 What problems occur if `equals()` is implemented incorrectly?
+102. 🔴 How does `equals()` relate to `hashCode()`?
+103. 🔴 Why can two different objects have the same hash code?
+104. 🔴 Can two equal objects have different hash codes?
+105. 🔴 What happens if `equals()` is overridden but `hashCode()` isn't?
+
+---
+
+# G. Strings — Language-Level Fundamentals
+
+106. 🟢 Why is `String` a special class in Java?
+107. 🟢 Why is String immutable?
+108. 🟢 What is the String pool?
+109. 🟢 What happens when you write:
+
+```java
+String s = "Java";
+```
+
+110. 🟡 What happens when you write:
+
+```java
+String s = new String("Java");
+```
+
+111. 🟡 How many String objects can potentially be involved in `new String("Java")`?
+112. 🟢 What is String interning?
+113. 🟡 What does `intern()` do?
+114. 🔴 What happens when `intern()` is called on a dynamically constructed String?
+115. 🔴 What is the difference between compile-time and runtime String concatenation?
+116. 🔴 What happens with:
+
+```java
+String s = "Ja" + "va";
+```
+
+117. 🔴 What happens with:
+
+```java
+String a = "Ja";
+String b = "va";
+String s = a + b;
+```
+
+118. 🔴 Predict the output of String comparisons involving literals, `new String()` and `intern()`.
+119. 🔴 Why can two Strings with the same characters have different identities?
+120. 🔴 How does String immutability help with security?
+121. 🔴 How does String immutability help with caching?
+122. 🔴 How does String immutability help with thread safety?
+
+---
+
+# H. StringBuilder & StringBuffer
+
+123. 🟢 What is StringBuilder?
+124. 🟢 What is StringBuffer?
+125. 🟢 StringBuilder vs StringBuffer?
+126. 🟡 Why is StringBuilder generally faster?
+127. 🟡 Is StringBuilder thread-safe?
+128. 🟡 Is StringBuffer thread-safe?
+129. 🔴 How does StringBuilder store its characters internally?
+130. 🔴 What happens when StringBuilder capacity is exceeded?
+131. 🔴 How does StringBuilder grow its internal buffer?
+132. 🟡 What is the difference between StringBuilder's capacity and length?
+133. 🔴 What is the time complexity of repeated `append()` operations?
+134. 🔴 Why is String concatenation inside a loop potentially expensive?
+135. 🔴 How would you efficiently construct a million-character String?
+136. 🔴 When would StringBuffer still be appropriate?
+
+---
+
+# I. `final`, `finally` & `finalize`
+
+137. 🟢 What is the difference between `final`, `finally` and `finalize()`?
+138. 🟢 What does `final` mean for a variable?
+139. 🟢 What does `final` mean for a method?
+140. 🟢 What does `final` mean for a class?
+141. 🟡 Can a final variable be initialized in a constructor?
+142. 🟡 What is a blank final variable?
+143. 🔴 Is a final reference immutable?
+144. 🔴 Can the state of an object referenced by a final variable change?
+145. 🔴 What is the difference between final reference and immutable object?
+146. 🟢 What is `finally`?
+147. 🟡 When does `finally` execute?
+148. 🔴 Are there situations where `finally` does not execute?
+149. 🔴 What happens when `return` exists inside `try` and `finally`?
+150. 🔴 What happens when `finally` itself contains `return`?
+151. 🔴 What happens when `System.exit()` is called?
+152. 🟡 What was `finalize()` intended for?
+153. 🔴 Why was finalization deprecated/removed from modern Java practices?
+154. 🔴 Why is relying on finalization dangerous for resource management?
+155. 🟢 What should be used instead of finalization for managing resources?
+
+---
+
+# J. Pass-by-Value & Reference Semantics
+
+156. 🟢 Is Java pass-by-value or pass-by-reference?
+157. 🟢 Explain Java's pass-by-value behavior with primitives.
+158. 🟢 Explain Java's pass-by-value behavior with object references.
+159. 🟡 Why do people sometimes incorrectly say Java is pass-by-reference?
+160. 🔴 What exactly is passed when an object is supplied as a method argument?
+161. 🔴 What happens if a method changes a field of an object passed as an argument?
+162. 🔴 What happens if the method assigns a completely new object to the parameter?
+163. 🔴 Can a method change the caller's reference variable?
+164. 🔴 Predict the output of a program that modifies an object and then reassigns the reference.
+165. 🔴 How would you explain Java reference semantics to an interviewer using a simple example?
+
+---
+
+# K. Static Members
+
+166. 🟢 What is a static variable?
+167. 🟢 What is a static method?
+168. 🟡 When should a member be static?
+169. 🟡 Can a static method directly access instance variables?
+170. 🟡 Can an instance method access static variables?
+171. 🟡 Can a static method access `this`?
+172. 🔴 Why can't a static method use `this`?
+173. 🟡 Can static methods be overridden?
+174. 🔴 What is method hiding?
+175. 🔴 Predict the output when a static method is defined in both superclass and subclass.
+176. 🔴 Are static fields shared across all objects of a class?
+177. 🔴 When is a static field initialized?
+178. 🔴 When is a static initialization block executed?
+179. 🔴 What happens if a static initialization block throws an exception?
+180. 🔴 What happens if static initialization fails?
+181. 🔴 How can excessive use of static state create problems in backend applications?
+
+---
+
+# L. Initialization Order
+
+182. 🟢 What is an instance initialization block?
+183. 🟢 What is a static initialization block?
+184. 🟡 When does a static block execute?
+185. 🟡 When does an instance initialization block execute?
+186. 🟢 What is the initialization order within a class?
+187. 🔴 What is the initialization order across a superclass and subclass?
+188. 🔴 Which executes first: superclass static initialization or subclass static initialization?
+189. 🔴 Which executes first: superclass instance initialization or subclass instance initialization?
+190. 🔴 Where do instance field initializers fit relative to instance initialization blocks?
+191. 🔴 Where does the constructor execute relative to instance field initialization?
+192. 🔴 Predict the output of a program containing static fields, static blocks, instance fields, instance blocks and constructors.
+193. 🔴 What happens if a static field is initialized by calling a method?
+194. 🔴 What happens if that method accesses another static field that hasn't been initialized yet?
+195. 🔴 How can initialization order create subtle production bugs?
+
+---
+
+# M. Access Modifiers
+
+196. 🟢 What are Java's access modifiers?
+197. 🟢 Explain `private`.
+198. 🟢 Explain package-private/default access.
+199. 🟢 Explain `protected`.
+200. 🟢 Explain `public`.
+201. 🟡 What is the difference between package-private and protected?
+202. 🟡 How does protected access behave across packages?
+203. 🔴 Why can a subclass in another package access a protected member through inheritance but not necessarily through an arbitrary superclass reference?
+204. 🔴 Can a top-level class be private?
+205. 🔴 Can a top-level class be protected?
+206. 🟡 Which access modifier provides the strongest encapsulation?
+207. 🔴 How would you use package-private classes to enforce module boundaries?
+
+---
+
+# N. Packages & Imports
+
+208. 🟢 What is a package?
+209. 🟢 Why do we use packages?
+210. 🟡 What is the purpose of an `import` statement?
+211. 🟡 Does importing a class load it into memory?
+212. 🔴 What happens if two imported packages contain classes with the same simple name?
+213. 🟡 Can you import static members?
+214. 🔴 What is static import?
+215. 🔴 What problems can excessive static imports create?
+216. 🟡 What is the fully qualified class name?
+217. 🔴 How does package naming affect class loading?
+218. 🔴 Can two classes with the same simple name exist in different packages?
+
+---
+
+# O. Nested, Inner & Anonymous Classes
+
+219. 🟢 What is a nested class?
+220. 🟢 What is a static nested class?
+221. 🟢 What is an inner class?
+222. 🟡 Static nested class vs inner class?
+223. 🟡 Can an inner class access private members of its outer class?
+224. 🔴 How does an inner class maintain a relationship with its enclosing object?
+225. 🔴 Can a static nested class access non-static members of the outer class directly?
+226. 🟡 What is a local class?
+227. 🟡 What is an anonymous class?
+228. 🟡 When would you use an anonymous class?
+229. 🔴 Anonymous class vs lambda?
+230. 🔴 Can an anonymous class extend a class and implement an interface?
+231. 🔴 What happens if an inner class escapes the lifetime of its outer object?
+232. 🔴 How can inner classes contribute to memory retention?
+
+---
+
+# P. Enums
+
+233. 🟢 What is an enum?
+234. 🟢 Why should enums be preferred over integer constants in many cases?
+235. 🟡 Can an enum contain fields?
+236. 🟡 Can an enum contain methods?
+237. 🟡 Can an enum have a constructor?
+238. 🔴 Why are enum constructors effectively private?
+239. 🟡 Can an enum implement an interface?
+240. 🟡 Can an enum extend another class?
+241. 🔴 Why can't an enum extend an arbitrary class?
+242. 🔴 How are enum constants represented internally?
+243. 🔴 Can enum constants have different implementations of the same method?
+244. 🟡 When would you use `EnumMap` or `EnumSet`?
+
+---
+
+# Q. Varargs
+
+245. 🟢 What are varargs?
+246. 🟢 How do you declare a varargs parameter?
+247. 🟡 How are varargs represented internally?
+248. 🟡 Can a method have more than one varargs parameter?
+249. 🔴 Why must the varargs parameter be the last parameter?
+250. 🟡 Can you call a varargs method with zero arguments?
+251. 🟡 Can you pass an array to a varargs method?
+252. 🔴 What happens when `null` is passed to a varargs method?
+253. 🔴 How does varargs participate in overloaded method resolution?
+254. 🔴 Why can varargs introduce ambiguous method calls?
+255. 🔴 What performance overhead can varargs introduce?
+
+---
+
+# R. Tricky Output-Based Questions
+
+256. 🔴 Predict the output involving Integer caching and `==`.
+257. 🔴 Predict the output involving String literals and `new String()`.
+258. 🔴 Predict the output involving `intern()`.
+259. 🔴 Predict the output involving compile-time String concatenation.
+260. 🔴 Predict the output involving runtime String concatenation.
+261. 🔴 Predict the output involving `final` references and mutable objects.
+262. 🔴 Predict the output involving superclass and subclass static methods.
+263. 🔴 Predict the output involving static initialization blocks.
+264. 🔴 Predict the output involving instance initialization blocks.
+265. 🔴 Predict the output involving superclass/subclass constructor execution.
+266. 🔴 Predict the output when `return` appears in both `try` and `finally`.
+267. 🔴 Predict the output when a method modifies an object and then reassigns its parameter.
+268. 🔴 Predict the output involving overloaded methods and primitive widening.
+269. 🔴 Predict the output involving overloaded methods and boxing.
+270. 🔴 Predict the output involving overloaded methods and varargs.
+271. 🔴 Predict the output when `null` is passed to overloaded methods.
+272. 🔴 Predict the output involving `Integer`, `Long`, `Number` and `Object` overloads.
+273. 🔴 Predict the output involving `char`, `int` and String concatenation.
+274. 🔴 Predict the result of arithmetic involving `byte`, `short` and `char`.
+275. 🔴 Predict the result of integer overflow.
+276. 🔴 Predict the result of floating-point division by zero.
+277. 🔴 Predict the result of `NaN` comparisons.
+
+---
+
+# S. Backend-Oriented Fundamentals
+
+278. 🟢 Why should monetary values generally not be represented using `double`?
+279. 🟡 When would you use `BigDecimal`?
+280. 🔴 What problems can careless use of `BigDecimal` constructors create?
+281. 🟢 Why should immutable objects be preferred for shared configuration?
+282. 🟡 Why is String immutability useful when handling authentication credentials or security-sensitive values?
+283. 🟡 What problems can static mutable state create in a web application?
+284. 🔴 Why can static mutable state cause issues when multiple requests execute concurrently?
+285. 🔴 How can object allocation affect a high-throughput REST service?
+286. 🔴 How can excessive boxing affect a Java backend service?
+287. 🔴 How can careless String concatenation affect service performance?
+288. 🔴 Why should a backend developer understand Java reference semantics when designing DTOs and domain objects?
+289. 🔴 What Java language mistakes can cause unexpected memory retention?
+290. 🔴 What Java language features can introduce thread-safety problems even before explicitly using multithreading?
+291. 🔴 A backend API suddenly creates millions of short-lived objects. What Java-level areas would you investigate?
+292. 🔴 A service has unexpectedly high GC activity despite apparently low business traffic. Which Java language-level behaviors could contribute?
+
+---
+
+# 🔥 Interviewer Drill Chains
+
+## Drill 1 — Integer
+
+293. 🟢 What is autoboxing?
+294. 🟡 What happens internally during autoboxing?
+295. 🟡 What is Integer caching?
+296. 🔴 Why does `==` behave differently for different Integer values?
+297. 🔴 Is Integer caching guaranteed?
+298. 🔴 What happens when an Integer is `null` and used in arithmetic?
+299. 🔴 How can boxing affect performance?
+300. 🔴 How would you detect excessive boxing in production?
+
+## Drill 2 — String
+
+301. 🟢 Why is String immutable?
+302. 🟡 What is the String pool?
+303. 🟡 What does `new String()` do?
+304. 🔴 What does `intern()` do?
+305. 🔴 How does compile-time concatenation differ from runtime concatenation?
+306. 🔴 Why is String immutability useful for HashMap keys?
+307. 🔴 Why is String immutability useful for security?
+308. 🔴 How can excessive String creation affect GC?
+
+## Drill 3 — Pass-by-value
+
+309. 🟢 Is Java pass-by-value?
+310. 🟡 What exactly is passed when an object is supplied to a method?
+311. 🔴 Why can the method modify the object's state?
+312. 🔴 Why can't the method replace the caller's reference?
+313. 🔴 Show an example where both modification and reassignment happen.
+314. 🔴 How does this distinction matter when designing Java APIs?
+
+## Drill 4 — Initialization
+
+315. 🟢 What is a static block?
+316. 🟡 When does it execute?
+317. 🟡 What executes first in superclass/subclass initialization?
+318. 🔴 What is the complete initialization order?
+319. 🔴 What happens if initialization fails?
+320. 🔴 How can initialization order create production bugs?
+
+## Drill 5 — Overloading
+
+321. 🟢 What is method overloading?
+322. 🟡 When is overload resolution performed?
+323. 🔴 How does primitive widening affect overload selection?
+324. 🔴 How does boxing affect overload selection?
+325. 🔴 How does varargs affect overload selection?
+326. 🔴 Which conversion gets priority?
+327. 🔴 What happens when `null` is passed?
+328. 🔴 What happens when two overloads are equally specific?
+329. 🔴 How would you debug an unexpected overload selection?
+
+---
+
+# Topic 2 Completion Checklist
+
+Before moving to the next topic, you should be comfortable answering questions around:
+
+* Java compilation and execution
+* JDK/JRE/JVM
+* Primitive/reference types
+* Boxing/unboxing
+* Integer caching
+* Type conversion/casting
+* `==` vs `equals()`
+* String pool and interning
+* StringBuilder/StringBuffer
+* `final` / `finally` / `finalize`
+* Pass-by-value
+* Static members
+* Initialization order
+* Access modifiers
+* Packages
+* Nested/inner classes
+* Enums
+* Varargs
+* Tricky Java output questions
+
+**Next topic after this:**
+
+# Topic 3 — Exception Handling
+
+Send me **“next”** when you're ready.

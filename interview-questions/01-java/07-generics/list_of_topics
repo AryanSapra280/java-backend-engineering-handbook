@@ -1,0 +1,1510 @@
+Absolutely! 🔥 **Next up: Generics.** This is a topic interviewers often start with basic syntax and then drill into **type erasure, wildcards, PECS, bounds, generic methods, invariance, heap pollution, bridge methods, and tricky compilation questions**.
+
+# Topic 7 — Java Generics — DEEP DIVE
+
+> **Questions only — no answers.**
+> Target: **4–7 years Java Backend Engineer**
+> Progression: fundamentals → type system → wildcards → bounds → internals → type erasure → advanced traps → production scenarios.
+
+---
+
+# A. Generics Fundamentals
+
+976. 🟢 What are Generics in Java?
+
+977. 🟢 Why were Generics introduced?
+
+978. 🟢 What problems did Generics solve?
+
+979. 🟢 What are the advantages of using Generics?
+
+980. 🟢 What is type safety?
+
+981. 🟢 How do Generics provide compile-time type safety?
+
+982. 🟢 What is the difference between compile-time type checking and runtime type checking?
+
+983. 🟢 What problems can occur when using raw collections?
+
+984. 🟢 How did Java collections work before Generics were introduced?
+
+985. 🟢 What is a parameterized type?
+
+986. 🟢 What is a type parameter?
+
+987. 🟢 What is a type argument?
+
+988. 🟢 What is the difference between `T` and `String` in:
+
+```java
+List<T>
+List<String>
+```
+
+989. 🟢 What does `List<String>` mean?
+
+990. 🟢 What does `List<Integer>` mean?
+
+991. 🟢 Can primitive types be used directly as generic type arguments?
+
+992. 🟢 Why can't you write `List<int>`?
+
+993. 🟢 How do wrapper classes solve the primitive-type limitation?
+
+994. 🟡 What is the relationship between Generics and autoboxing?
+
+995. 🟡 What is the difference between a generic class and a parameterized class?
+
+996. 🟡 What is a raw type?
+
+997. 🟢 Why should raw types generally be avoided?
+
+998. 🟡 What is the difference between:
+
+```java
+List list;
+List<Object> list;
+List<?> list;
+```
+
+999. 🔴 Why are `List<Object>` and `List<?>` fundamentally different?
+
+1000. 🟡 What happens when you assign a parameterized collection to a raw collection?
+
+---
+
+# B. Generic Classes
+
+1001. 🟢 How do you create a generic class?
+
+1002. 🟢 Explain:
+
+```java
+class Box<T> {
+    private T value;
+}
+```
+
+1003. 🟢 What does `T` represent in a generic class?
+
+1004. 🟢 Can a generic class have multiple type parameters?
+
+1005. 🟡 Explain:
+
+```java
+class Pair<K, V> {
+    K key;
+    V value;
+}
+```
+
+1006. 🟡 What naming conventions are commonly used for generic type parameters?
+
+1007. 🟢 Can a generic class have static fields of type `T`?
+
+1008. 🔴 Why can't a static field directly use the class's type parameter?
+
+1009. 🟡 Can a generic class have static methods?
+
+1010. 🔴 Can a static method use the class's generic type parameter?
+
+1011. 🟡 Can a generic class extend another generic class?
+
+1012. 🟡 Can a generic class implement a generic interface?
+
+1013. 🟡 Can a generic class have overloaded constructors?
+
+1014. 🟡 Can a generic class have bounded type parameters?
+
+1015. 🔴 Explain:
+
+```java
+class Box<T extends Number>
+```
+
+1016. 🟡 Can a generic type parameter have multiple bounds?
+
+1017. 🔴 Explain:
+
+```java
+<T extends Number & Comparable<T>>
+```
+
+1018. 🔴 What restrictions apply when specifying multiple bounds?
+
+1019. 🔴 Why must a class bound appear before interface bounds?
+
+---
+
+# C. Generic Methods
+
+1020. 🟢 What is a generic method?
+
+1021. 🟢 How is a generic method different from a generic class?
+
+1022. 🟢 Explain:
+
+```java
+public <T> T identity(T value)
+```
+
+1023. 🟡 Why is `<T>` declared before the return type?
+
+1024. 🟡 Can a non-generic class contain generic methods?
+
+1025. 🟢 Can a generic class contain generic methods?
+
+1026. 🟡 Can a generic method have multiple type parameters?
+
+1027. 🟡 Explain:
+
+```java
+public <K, V> V getValue(K key, V value)
+```
+
+1028. 🟡 How does Java infer the type argument of a generic method?
+
+1029. 🟡 What is type inference?
+
+1030. 🟡 What happens if Java cannot infer the generic type?
+
+1031. 🟡 Can you explicitly specify the type argument of a generic method?
+
+1032. 🔴 Explain explicit type witnesses in Java.
+
+1033. 🟡 What is the diamond operator?
+
+1034. 🟢 Explain:
+
+```java
+List<String> list = new ArrayList<>();
+```
+
+1035. 🟡 How does the compiler infer the type inside `<>`?
+
+1036. 🔴 How has generic type inference evolved in modern Java?
+
+---
+
+# D. Generic Interfaces
+
+1037. 🟢 How do you define a generic interface?
+
+1038. 🟢 Explain:
+
+```java
+interface Repository<T> {
+    T findById(long id);
+}
+```
+
+1039. 🟡 How can a class implement a generic interface?
+
+1040. 🟡 Can a class implement the same generic interface with different type arguments?
+
+1041. 🔴 Why can't a class implement:
+
+```java
+Repository<String>
+Repository<Integer>
+```
+
+at the same time?
+
+1042. 🟡 Can a generic interface extend another generic interface?
+
+1043. 🟡 Can an interface have generic methods without itself being generic?
+
+1044. 🟡 How are generic repository interfaces useful in backend applications?
+
+1045. 🔴 How would you design a type-safe generic repository abstraction?
+
+---
+
+# E. Generic Invariance — VERY IMPORTANT
+
+1046. 🟢 What does invariance mean in Java Generics?
+
+1047. 🟢 Is `List<String>` a subtype of `List<Object>`?
+
+1048. 🟢 Why is `List<String>` not assignable to `List<Object>`?
+
+1049. 🔴 Why would allowing `List<String>` to be assigned to `List<Object>` break type safety?
+
+1050. 🟡 Explain the following:
+
+```java
+List<String> strings = new ArrayList<>();
+List<Object> objects = strings;
+```
+
+1051. 🔴 What dangerous operation would become possible if the above assignment were allowed?
+
+1052. 🟢 Is `ArrayList<String>` a subtype of `List<String>`?
+
+1053. 🟢 Is `List<String>` a subtype of `Collection<String>`?
+
+1054. 🟢 Is `List<String>` a subtype of `Iterable<String>`?
+
+1055. 🔴 Explain how generic type invariance differs from ordinary class inheritance.
+
+1056. 🟡 Is `List<Integer>` a subtype of `List<? extends Number>`?
+
+1057. 🟡 Is `List<Double>` a subtype of `List<? extends Number>`?
+
+1058. 🟡 Is `List<Number>` a subtype of `List<? extends Number>`?
+
+1059. 🔴 Explain the type relationships among:
+
+```text
+List<Integer>
+List<Number>
+List<? extends Number>
+List<? super Integer>
+List<?>
+```
+
+---
+
+# F. Wildcards
+
+1060. 🟢 What is a wildcard in Java Generics?
+
+1061. 🟢 What does `?` mean?
+
+1062. 🟢 What is an unbounded wildcard?
+
+1063. 🟢 What does `List<?>` represent?
+
+1064. 🟡 What can you safely read from `List<?>`?
+
+1065. 🟡 What can you safely add to `List<?>`?
+
+1066. 🔴 Why can you add `null` to `List<?>` but not a normal object?
+
+1067. 🟢 What is an upper-bounded wildcard?
+
+1068. 🟢 What does `? extends Number` mean?
+
+1069. 🟡 What can you read from `List<? extends Number>`?
+
+1070. 🟡 What can you add to `List<? extends Number>`?
+
+1071. 🔴 Why can't you safely add an `Integer` to `List<? extends Number>`?
+
+1072. 🟢 What is a lower-bounded wildcard?
+
+1073. 🟢 What does `? super Integer` mean?
+
+1074. 🟡 What can you add to `List<? super Integer>`?
+
+1075. 🟡 What type do you get when reading from `List<? super Integer>`?
+
+1076. 🔴 Why is the read type effectively `Object` from `List<? super Integer>`?
+
+1077. 🟢 What does PECS stand for?
+
+1078. 🟢 Explain the "Producer Extends, Consumer Super" rule.
+
+1079. 🟡 Why is `? extends` suitable for producers?
+
+1080. 🟡 Why is `? super` suitable for consumers?
+
+1081. 🔴 Give a real example where `? extends` is required.
+
+1082. 🔴 Give a real example where `? super` is required.
+
+1083. 🔴 Explain why this method is useful:
+
+```java
+static double sum(List<? extends Number> list)
+```
+
+1084. 🔴 Explain why this method is useful:
+
+```java
+static void addIntegers(List<? super Integer> list)
+```
+
+1085. 🟡 What is the difference between:
+
+```java
+List<Object>
+List<?>
+```
+
+1086. 🟡 What is the difference between:
+
+```java
+List<? extends Number>
+List<Number>
+```
+
+1087. 🟡 What is the difference between:
+
+```java
+List<? super Integer>
+List<Integer>
+```
+
+1088. 🔴 When should you prefer a type parameter `<T>` over a wildcard `?`?
+
+---
+
+# G. Wildcard Capture
+
+1089. 🔴 What is wildcard capture?
+
+1090. 🔴 What is capture conversion?
+
+1091. 🟡 Why can't you directly add an element to `List<?>`?
+
+1092. 🔴 How does the compiler internally reason about the unknown type represented by `?`?
+
+1093. 🔴 How can a helper method resolve certain wildcard-capture problems?
+
+1094. 🔴 Explain the difference between:
+
+```java
+void process(List<?> list)
+```
+
+and
+
+```java
+<T> void process(List<T> list)
+```
+
+1095. 🔴 When are these two method signatures effectively equivalent from a caller's perspective?
+
+1096. 🔴 When does a named type parameter provide more expressive power than `?`?
+
+1097. 🔴 What does "capture of ?" mean in compiler error messages?
+
+---
+
+# H. Bounded Type Parameters
+
+1098. 🟢 What is a bounded type parameter?
+
+1099. 🟢 Explain:
+
+```java
+<T extends Number>
+```
+
+1100. 🟢 What does `extends` mean when used with a generic type parameter?
+
+1101. 🟡 Can a generic type parameter use `super` as a bound?
+
+1102. 🔴 Why are lower bounds available for wildcards but not type parameters?
+
+1103. 🟡 Can a type parameter extend a class?
+
+1104. 🟡 Can a type parameter extend an interface?
+
+1105. 🟡 Can a type parameter have multiple bounds?
+
+1106. 🔴 Explain:
+
+```java
+<T extends Number & Comparable<T>>
+```
+
+1107. 🔴 What methods can you safely invoke on `T` in:
+
+```java
+<T extends Number>
+```
+
+1108. 🟡 Why can you call Number methods on `T`?
+
+1109. 🔴 What happens if a bound itself is generic?
+
+1110. 🔴 Explain recursive/self-referential generic bounds.
+
+1111. 🔴 What is F-bounded polymorphism?
+
+1112. 🔴 Explain:
+
+```java
+<T extends Comparable<T>>
+```
+
+1113. 🔴 Where is `T extends Comparable<T>` commonly useful?
+
+---
+
+# I. Generic Type Erasure — VERY IMPORTANT
+
+1114. 🟢 What is type erasure?
+
+1115. 🟢 Why does Java use type erasure?
+
+1116. 🟢 What happens to generic type information after compilation?
+
+1117. 🟡 Are Java Generics implemented using runtime reified types?
+
+1118. 🟡 What does "Generics are mostly a compile-time feature" mean?
+
+1119. 🔴 How does the compiler translate generic code through type erasure?
+
+1120. 🔴 What does:
+
+```java
+List<String>
+```
+
+look like conceptually at runtime?
+
+1121. 🟡 What is the erased form of:
+
+```java
+<T extends Number>
+```
+
+1122. 🔴 What is the erasure of an unbounded type parameter?
+
+1123. 🔴 What is the erasure of a bounded type parameter?
+
+1124. 🟡 Why is the first bound important for type erasure?
+
+1125. 🔴 How does type erasure preserve backward compatibility?
+
+1126. 🔴 Why could Java not simply introduce reified Generics without compatibility concerns?
+
+1127. 🟡 What is the difference between compile-time generic type information and runtime class information?
+
+1128. 🔴 Can reflection see generic information?
+
+1129. 🔴 If generic type information is erased, how can reflection sometimes retrieve generic signatures?
+
+1130. 🔴 What is stored in class-file metadata for generic declarations?
+
+---
+
+# J. Restrictions Caused by Type Erasure
+
+1131. 🟢 Can you create:
+
+```java
+new T()
+```
+
+inside a generic class?
+
+1132. 🔴 Why can't Java directly instantiate `T`?
+
+1133. 🟡 Can you create:
+
+```java
+new T[10]
+```
+
+?
+
+1134. 🔴 Why can't you create generic arrays directly?
+
+1135. 🟢 Can you use `instanceof List<String>`?
+
+1136. 🔴 Why is:
+
+```java
+obj instanceof List<String>
+```
+
+illegal?
+
+1137. 🟡 Can you use:
+
+```java
+obj instanceof List<?>
+```
+
+?
+
+1138. 🟡 Can you cast to:
+
+```java
+List<String>
+```
+
+?
+
+1139. 🔴 What is an unchecked cast?
+
+1140. 🔴 Why does the compiler issue an unchecked warning for certain generic casts?
+
+1141. 🟡 Can generic classes extend `Throwable`?
+
+1142. 🔴 Why can't you create generic subclasses of `Throwable`?
+
+1143. 🟡 Can you overload methods only by changing their generic type arguments?
+
+1144. 🔴 Why are these methods illegal?
+
+```java
+void process(List<String> list)
+void process(List<Integer> list)
+```
+
+1145. 🔴 How does type erasure cause the method signature collision?
+
+1146. 🟡 Can two methods differ only by generic return type?
+
+1147. 🔴 Why can't method overloading depend only on return type?
+
+---
+
+# K. Raw Types
+
+1148. 🟢 What is a raw type?
+
+1149. 🟢 Why were raw types retained in Java?
+
+1150. 🟡 What is the difference between:
+
+```java
+List
+List<Object>
+List<?>
+```
+
+1151. 🔴 Why is assigning a parameterized collection to a raw collection dangerous?
+
+1152. 🟡 What is heap pollution?
+
+1153. 🔴 How can raw types cause heap pollution?
+
+1154. 🟡 What happens when a raw collection is used to insert an incompatible type?
+
+1155. 🔴 When does the resulting problem become visible?
+
+1156. 🟡 Why does the compiler sometimes issue an unchecked warning instead of an error?
+
+1157. 🔴 How should you handle legacy APIs that expose raw types?
+
+---
+
+# L. Heap Pollution
+
+1158. 🟢 What is heap pollution?
+
+1159. 🟡 How can heap pollution occur despite Java Generics?
+
+1160. 🟡 Can heap pollution happen through raw types?
+
+1161. 🟡 Can heap pollution happen through unchecked casts?
+
+1162. 🟡 Can heap pollution happen through generic varargs?
+
+1163. 🔴 Explain how heap pollution can cause a `ClassCastException` far away from the original problem.
+
+1164. 🔴 Why can heap pollution make debugging difficult?
+
+1165. 🔴 What is the purpose of `@SafeVarargs`?
+
+1166. 🟡 When can `@SafeVarargs` be used?
+
+1167. 🔴 Why does `@SafeVarargs` suppress warnings rather than make unsafe code safe?
+
+---
+
+# M. Generic Arrays
+
+1168. 🟢 Why are generic arrays problematic in Java?
+
+1169. 🟡 Why can you create:
+
+```java
+List<String>[] 
+```
+
+only with restrictions?
+
+1170. 🔴 Why does Java prohibit direct creation of generic arrays?
+
+1171. 🟡 What is the difference between array covariance and generic invariance?
+
+1172. 🔴 Why does Java allow:
+
+```java
+Number[] numbers = new Integer[10];
+```
+
+but not:
+
+```java
+List<Number> numbers = new ArrayList<Integer>();
+```
+
+?
+
+1173. 🔴 How can array covariance cause `ArrayStoreException`?
+
+1174. 🔴 Why did Java choose invariant Generics while arrays remain covariant?
+
+1175. 🟡 What is the recommended alternative to generic arrays?
+
+1176. 🔴 When might `ArrayList<T>` be preferable to `T[]`?
+
+---
+
+# N. Generic Varargs
+
+1177. 🟢 What is a varargs parameter?
+
+1178. 🟡 Why are generic varargs potentially unsafe?
+
+1179. 🔴 Explain:
+
+```java
+void process(List<String>... lists)
+```
+
+1180. 🔴 What happens to generic varargs after type erasure?
+
+1181. 🔴 How can generic varargs create heap pollution?
+
+1182. 🟡 What warning does the compiler produce for unsafe generic varargs?
+
+1183. 🟢 What is `@SafeVarargs`?
+
+1184. 🔴 Under what conditions is it safe to use `@SafeVarargs`?
+
+1185. 🔴 Why can't arbitrary methods be annotated with `@SafeVarargs`?
+
+1186. 🔴 What risks exist if `@SafeVarargs` is applied incorrectly?
+
+---
+
+# O. Bridge Methods
+
+1187. 🔴 What is a bridge method?
+
+1188. 🔴 Why does the Java compiler generate bridge methods?
+
+1189. 🔴 How are bridge methods related to type erasure?
+
+1190. 🔴 Explain bridge methods using a generic interface implementation.
+
+1191. 🔴 What happens when a generic method is overridden with a more specific type?
+
+1192. 🔴 Why might you see a synthetic bridge method when inspecting bytecode?
+
+1193. 🟡 What does the `ACC_BRIDGE` flag indicate?
+
+1194. 🟡 What does the `ACC_SYNTHETIC` flag indicate?
+
+1195. 🔴 How do bridge methods preserve polymorphism after type erasure?
+
+1196. 🔴 How can bridge methods affect reflection?
+
+---
+
+# P. Generic Inheritance
+
+1197. 🟢 Can a generic class extend a non-generic class?
+
+1198. 🟢 Can a generic class extend a generic class?
+
+1199. 🟡 Explain:
+
+```java
+class Child<T> extends Parent<T>
+```
+
+1200. 🟡 Can the child bind the parent's generic parameter to a concrete type?
+
+1201. 🟡 Explain:
+
+```java
+class StringChild extends Parent<String>
+```
+
+1202. 🔴 What happens to inherited generic methods after type erasure?
+
+1203. 🟡 Can a subclass change the generic type argument of its parent?
+
+1204. 🔴 Why can a class not inherit the same generic interface with two different type arguments?
+
+1205. 🔴 Explain the inheritance relationship between:
+
+```java
+ArrayList<String>
+List<String>
+Collection<String>
+Iterable<String>
+```
+
+1206. 🟡 What does generic type substitution mean?
+
+---
+
+# Q. Nested Generic Types
+
+1207. 🟢 Can nested classes be generic?
+
+1208. 🟡 Can a static nested class use the outer class's type parameter?
+
+1209. 🔴 Why can a static nested class not directly access the enclosing instance's generic type parameter?
+
+1210. 🟡 Can an inner class introduce its own type parameter?
+
+1211. 🟡 Explain:
+
+```java
+class Outer<T> {
+    class Inner<U> {}
+}
+```
+
+1212. 🔴 What is the type of:
+
+```java
+Outer<String>.Inner<Integer>
+```
+
+1213. 🔴 How does generic information behave with nested generic types after erasure?
+
+---
+
+# R. Generic Methods and Overloading
+
+1214. 🟢 Can generic methods be overloaded?
+
+1215. 🟡 Can two methods differ by their generic type parameters?
+
+1216. 🔴 Why are these potentially signature-equivalent after erasure?
+
+```java
+<T> void process(T value)
+<U> void process(U value)
+```
+
+1217. 🟡 Can a generic method and non-generic method be overloaded?
+
+1218. 🔴 How does Java choose between overloaded generic methods?
+
+1219. 🟡 How does type inference interact with method overloading?
+
+1220. 🔴 What are ambiguous generic method invocations?
+
+---
+
+# S. Generic Constructors
+
+1221. 🟢 Can constructors be generic?
+
+1222. 🟡 Can a non-generic class have a generic constructor?
+
+1223. 🟡 Can a generic class have a constructor with its own type parameter?
+
+1224. 🔴 Explain the difference between class-level and constructor-level type parameters.
+
+1225. 🔴 What happens when a constructor declares:
+
+```java
+<T> MyClass(T value)
+```
+
+?
+
+1226. 🟡 Can constructor type inference occur with the diamond operator?
+
+---
+
+# T. Type Inference
+
+1227. 🟢 What is generic type inference?
+
+1228. 🟢 What is the diamond operator's relationship with type inference?
+
+1229. 🟡 What is target typing?
+
+1230. 🔴 How does Java infer types from method arguments?
+
+1231. 🔴 How does Java infer types from the expected return type?
+
+1232. 🟡 What is the difference between Java 7 and Java 8 type inference improvements?
+
+1233. 🔴 How does lambda type inference depend on target typing?
+
+1234. 🔴 How do method references interact with generic type inference?
+
+1235. 🔴 What situations can cause type inference to fail?
+
+1236. 🟡 How can an explicit type witness resolve an inference problem?
+
+---
+
+# U. Generic Functional Interfaces
+
+1237. 🟢 Can functional interfaces be generic?
+
+1238. 🟢 Explain:
+
+```java
+interface Converter<T, R> {
+    R convert(T input);
+}
+```
+
+1239. 🟡 How does a generic functional interface work with lambda expressions?
+
+1240. 🟡 How does type inference determine lambda parameter types?
+
+1241. 🔴 What happens when generic functional interfaces are used with overloaded methods?
+
+1242. 🟡 How are `Function<T,R>`, `Predicate<T>`, `Consumer<T>`, and `Supplier<T>` related to Generics?
+
+1243. 🔴 Why are these interfaces generic instead of having separate interfaces for every type?
+
+---
+
+# V. Generic Utility APIs
+
+1244. 🟢 How would you write a generic `max()` method?
+
+1245. 🟡 How would you write a generic method that accepts any subtype of Number?
+
+1246. 🟡 How would you write a method that adds Integer values into any compatible list?
+
+1247. 🟡 How would you write a generic copy method similar to `Collections.copy()`?
+
+1248. 🔴 Why does a copy method commonly use both `? extends T` and `? super T`?
+
+1249. 🔴 Explain the conceptual signature:
+
+```java
+<T> void copy(
+    List<? super T> destination,
+    List<? extends T> source
+)
+```
+
+1250. 🔴 Why can't the source and destination simply be `List<T>`?
+
+1251. 🟡 How would you design a generic repository method that accepts subclasses of an entity?
+
+1252. 🔴 How would you design a type-safe generic response wrapper for REST APIs?
+
+---
+
+# W. Recursive Generics / Self Types
+
+1253. 🔴 What are recursive generic type bounds?
+
+1254. 🔴 Explain:
+
+```java
+class Base<T extends Base<T>>
+```
+
+1255. 🔴 Why is the self-referential generic pattern useful?
+
+1256. 🔴 How does recursive generics support fluent APIs?
+
+1257. 🔴 How can recursive generics preserve the concrete subtype in builder patterns?
+
+1258. 🔴 Explain the relationship between recursive generics and the builder pattern.
+
+1259. 🔴 What is a "self type" pattern in Java?
+
+1260. 🔴 What limitations exist because Java does not have native self types?
+
+---
+
+# X. Generics + Inheritance + Polymorphism
+
+1261. 🟢 Does generic type substitution participate in runtime polymorphism?
+
+1262. 🟡 Explain:
+
+```java
+List<String> list = new ArrayList<>();
+```
+
+1263. 🟡 Which parts are compile-time and which parts are runtime here?
+
+1264. 🔴 What does type erasure mean for polymorphic generic methods?
+
+1265. 🔴 How do bridge methods preserve overridden generic behavior?
+
+1266. 🟡 Can a generic class be polymorphic?
+
+1267. 🟡 Can a generic interface be used polymorphically?
+
+1268. 🔴 Explain why:
+
+```java
+Repository<User> repo = new UserRepository();
+```
+
+can provide compile-time type safety.
+
+---
+
+# Y. Generics + Reflection
+
+1269. 🟢 Can Java reflection determine generic types?
+
+1270. 🟡 What is `Type` in `java.lang.reflect`?
+
+1271. 🟡 What is `ParameterizedType`?
+
+1272. 🟡 What is `TypeVariable`?
+
+1273. 🟡 What is `WildcardType`?
+
+1274. 🟡 What is `GenericArrayType`?
+
+1275. 🔴 How can reflection inspect the generic interfaces implemented by a class?
+
+1276. 🔴 Why can reflection sometimes recover generic information even though Generics use erasure?
+
+1277. 🔴 What generic metadata is retained in the class file?
+
+1278. 🔴 How do frameworks such as Spring/Jackson use generic type metadata?
+
+---
+
+# Z. Generics + Serialization / Backend Frameworks
+
+1279. 🟡 Why can generic type information become important during JSON deserialization?
+
+1280. 🔴 Why is this problematic?
+
+```java
+List<User> users = objectMapper.readValue(json, List.class);
+```
+
+1281. 🔴 What problem does `TypeReference<List<User>>` solve?
+
+1282. 🟡 Why can't a runtime `Class<List<User>>` directly represent the parameterized type?
+
+1283. 🔴 How does `ParameterizedTypeReference<T>` help in Spring applications?
+
+1284. 🟡 Why are generic response wrappers common in REST APIs?
+
+1285. 🔴 How would you deserialize:
+
+```java
+ApiResponse<List<User>>
+```
+
+while preserving the generic type information?
+
+---
+
+# AA. Tricky Compilation Questions
+
+1286. 🟢 Is this legal?
+
+```java
+List<int> list;
+```
+
+1287. 🟡 Is this legal?
+
+```java
+List<?> list = new ArrayList<String>();
+```
+
+1288. 🟡 Is this legal?
+
+```java
+List<Object> list = new ArrayList<String>();
+```
+
+1289. 🟡 Is this legal?
+
+```java
+List<? extends Number> list = new ArrayList<Integer>();
+```
+
+1290. 🟡 Is this legal?
+
+```java
+List<? super Integer> list = new ArrayList<Number>();
+```
+
+1291. 🟡 Is this legal?
+
+```java
+List<? super Integer> list = new ArrayList<Object>();
+```
+
+1292. 🔴 Is this legal?
+
+```java
+List<? extends Number> list = new ArrayList<>();
+list.add(10);
+```
+
+1293. 🔴 Is this legal?
+
+```java
+List<? super Integer> list = new ArrayList<Number>();
+Integer x = list.get(0);
+```
+
+1294. 🔴 Is this legal?
+
+```java
+List<?> list = new ArrayList<String>();
+String s = list.get(0);
+```
+
+1295. 🔴 Is this legal?
+
+```java
+<T> T getValue(List<T> list)
+```
+
+1296. 🔴 Is this legal?
+
+```java
+<T extends Number> void process(T value)
+```
+
+1297. 🔴 Is this legal?
+
+```java
+<T super Number> void process(T value)
+```
+
+1298. 🔴 Is this legal?
+
+```java
+class Test<T> {
+    static T value;
+}
+```
+
+1299. 🔴 Is this legal?
+
+```java
+class Test<T> {
+    static void process(T value) {}
+}
+```
+
+1300. 🔴 Is this legal?
+
+```java
+class Test<T> {
+    T[] values = new T[10];
+}
+```
+
+1301. 🔴 Is this legal?
+
+```java
+class Test<T> {
+    T value;
+
+    Test(T value) {
+        this.value = value;
+    }
+}
+```
+
+1302. 🔴 Is this legal?
+
+```java
+class Test<T> extends Exception {}
+```
+
+1303. 🔴 Is this legal?
+
+```java
+void process(List<String> list) {}
+void process(List<Integer> list) {}
+```
+
+1304. 🔴 Why does type erasure make question 1303 invalid?
+
+---
+
+# AB. Tricky Wildcard Questions
+
+1305. 🟡 What is the type of the value returned by:
+
+```java
+List<?> list;
+list.get(0);
+```
+
+1306. 🟡 Why can you call `list.clear()` on a `List<?>`?
+
+1307. 🟡 Why can you add `null` to a `List<?>`?
+
+1308. 🔴 Why can't you add an arbitrary Object to a `List<?>`?
+
+1309. 🔴 Why can't you add a Number to:
+
+```java
+List<? extends Number>
+```
+
+?
+
+1310. 🔴 Why can you add an Integer to:
+
+```java
+List<? super Integer>
+```
+
+?
+
+1311. 🔴 Why can you read only Object safely from:
+
+```java
+List<? super Integer>
+```
+
+?
+
+1312. 🔴 What happens if you assign:
+
+```java
+List<Integer>
+```
+
+to:
+
+```java
+List<? extends Number>
+```
+
+?
+
+1313. 🔴 What happens if you assign:
+
+```java
+List<Number>
+```
+
+to:
+
+```java
+List<? super Integer>
+```
+
+?
+
+1314. 🔴 Which of the following are compatible and why?
+
+```text
+List<Integer>
+List<Number>
+List<Object>
+List<?>
+List<? extends Number>
+List<? super Integer>
+```
+
+---
+
+# AC. Output / Runtime / ClassCastException Questions
+
+1315. 🟡 What happens when a raw `List` is used with a parameterized `List<String>`?
+
+1316. 🔴 What happens?
+
+```java
+List raw = new ArrayList<String>();
+raw.add(10);
+
+List<String> strings = raw;
+String value = strings.get(0);
+```
+
+1317. 🔴 At which line does the failure occur in question 1316?
+
+1318. 🔴 Why does the compiler allow part of this code with only a warning?
+
+1319. 🔴 Why does the `ClassCastException` happen during retrieval instead of insertion?
+
+1320. 🔴 How does type erasure contribute to this behavior?
+
+1321. 🔴 What happens when an unchecked cast is performed incorrectly?
+
+1322. 🟡 Why can this compile?
+
+```java
+List<String> list = (List<String>) someObject;
+```
+
+1323. 🔴 What does the compiler actually verify during such a cast?
+
+1324. 🔴 What happens when the first element is retrieved from the incorrectly cast list?
+
+---
+
+# AD. Generic API Design
+
+1325. 🟢 Why should public APIs avoid raw types?
+
+1326. 🟡 When should an API use a wildcard?
+
+1327. 🟡 When should an API use a named type parameter?
+
+1328. 🔴 How do you decide between:
+
+```java
+List<T>
+List<? extends T>
+List<? super T>
+List<?>
+```
+
+?
+
+1329. 🔴 How would you design a generic service interface?
+
+1330. 🔴 How would you design a generic repository interface?
+
+1331. 🔴 How would you design a generic cache interface?
+
+1332. 🔴 How would you design a generic converter interface?
+
+1333. 🔴 How would you design a generic event handler interface?
+
+1334. 🔴 How would you prevent callers from inserting incompatible types into a generic API?
+
+1335. 🔴 How would you expose a read-only generic collection from an API?
+
+1336. 🔴 How can wildcard bounds make APIs more flexible without sacrificing type safety?
+
+---
+
+# AE. Production / Backend Scenarios
+
+1337. 🟢 You are building a generic `Repository<T>` abstraction. How would you define it?
+
+1338. 🟡 You have repositories for `User`, `Account`, and `Transaction`. How could Generics reduce duplicate code?
+
+1339. 🔴 How would you design a base generic repository while allowing entity-specific operations?
+
+1340. 🟡 You are implementing a generic response wrapper:
+
+```java
+ApiResponse<T>
+```
+
+What benefits does it provide?
+
+1341. 🔴 How would you represent:
+
+```java
+ApiResponse<List<User>>
+```
+
+?
+
+1342. 🟡 Your REST client receives different response types from different APIs. How would you use Generics to build a reusable client?
+
+1343. 🔴 How would you preserve generic type information while deserializing JSON?
+
+1344. 🟡 You are building a generic event-processing framework. How could you model:
+
+```java
+Event<T>
+EventHandler<T>
+```
+
+?
+
+1345. 🔴 How would you prevent an `EventHandler<Order>` from accidentally processing `Event<Customer>`?
+
+1346. 🟡 You need a generic cache abstraction. What type parameters would you use?
+
+1347. 🔴 How would you design:
+
+```java
+Cache<K, V>
+```
+
+for a backend service?
+
+1348. 🟡 You have a method that only reads from a collection. Would you expose `List<T>` or `List<? extends T>`?
+
+1349. 🔴 You have a method that adds objects to a collection. When would `List<? super T>` be appropriate?
+
+1350. 🔴 You are designing a utility method that copies elements from one collection to another. How would you apply PECS?
+
+1351. 🔴 Your codebase has many raw `Map` and `List` usages. How would you migrate them safely to parameterized types?
+
+1352. 🔴 A production issue occurs because of a `ClassCastException` in a generic collection. How would you trace it back to the source of heap pollution?
+
+1353. 🔴 A framework uses unchecked casts extensively. What risks would you look for during code review?
+
+1354. 🔴 You need to expose a generic API across multiple microservices. What limitations of Java Generics matter when crossing a network boundary?
+
+---
+
+# AF. Interviewer Deep-Dive Chains
+
+## Generics Fundamentals Drill
+
+1355. 🟢 What are Generics?
+
+1356. 🟢 Why were they introduced?
+
+1357. 🟡 What is type safety?
+
+1358. 🟡 What is a raw type?
+
+1359. 🟡 What is type erasure?
+
+1360. 🔴 Why does Java use type erasure?
+
+1361. 🔴 What limitations does type erasure create?
+
+1362. 🔴 How does type erasure affect reflection?
+
+---
+
+## Wildcards Drill
+
+1363. 🟢 What is a wildcard?
+
+1364. 🟢 What is `? extends`?
+
+1365. 🟢 What is `? super`?
+
+1366. 🟢 Explain PECS.
+
+1367. 🟡 What can you read from `? extends`?
+
+1368. 🟡 What can you add to `? extends`?
+
+1369. 🟡 What can you add to `? super`?
+
+1370. 🟡 What can you read from `? super`?
+
+1371. 🔴 Why?
+
+1372. 🔴 Give a practical example.
+
+---
+
+## Type Erasure Drill
+
+1373. 🟢 What is type erasure?
+
+1374. 🟡 Why does Java erase generic types?
+
+1375. 🟡 What is the erased type of `T`?
+
+1376. 🔴 What happens with bounded `T`?
+
+1377. 🔴 Why can't you create `new T()`?
+
+1378. 🔴 Why can't you create `new T[]`?
+
+1379. 🔴 Why can't you use `instanceof List<String>`?
+
+1380. 🔴 Why can't methods differ only by generic parameterization?
+
+1381. 🔴 What are bridge methods?
+
+---
+
+## HashMap + Generics Drill
+
+1382. 🟢 Can HashMap have generic key/value types?
+
+1383. 🟡 What is `Map<String, User>`?
+
+1384. 🟡 What is the difference between `Map<String, User>` and raw `Map`?
+
+1385. 🔴 How can raw Map usage cause heap pollution?
+
+1386. 🔴 Where can the resulting ClassCastException appear?
+
+---
+
+## Backend API Design Drill
+
+1387. 🟢 Why use generic API wrappers?
+
+1388. 🟡 How would you define `ApiResponse<T>`?
+
+1389. 🟡 How would you represent `ApiResponse<User>`?
+
+1390. 🟡 How would you represent `ApiResponse<List<User>>`?
+
+1391. 🔴 How would Jackson deserialize the generic type?
+
+1392. 🔴 Why is `List.class` insufficient?
+
+1393. 🔴 How does `TypeReference` solve the problem?
+
+---
+
+# AG. Generics Master Checklist
+
+Before moving forward, make sure you can confidently answer:
+
+* [ ] Generic classes
+* [ ] Generic interfaces
+* [ ] Generic methods
+* [ ] Generic constructors
+* [ ] Type parameters
+* [ ] Type arguments
+* [ ] Parameterized types
+* [ ] Raw types
+* [ ] Generic invariance
+* [ ] Wildcards
+* [ ] Unbounded wildcard
+* [ ] Upper bounds
+* [ ] Lower bounds
+* [ ] PECS
+* [ ] Wildcard capture
+* [ ] Capture conversion
+* [ ] Bounded type parameters
+* [ ] Multiple bounds
+* [ ] Recursive bounds
+* [ ] F-bounded polymorphism
+* [ ] Type inference
+* [ ] Diamond operator
+* [ ] Target typing
+* [ ] Type erasure
+* [ ] Erasure of bounded types
+* [ ] Generic restrictions
+* [ ] Generic arrays
+* [ ] Generic varargs
+* [ ] Heap pollution
+* [ ] Unchecked casts
+* [ ] `@SafeVarargs`
+* [ ] Bridge methods
+* [ ] Generic inheritance
+* [ ] Generic interfaces
+* [ ] Generic nested classes
+* [ ] Generic overloading
+* [ ] Generic reflection
+* [ ] `ParameterizedType`
+* [ ] `TypeVariable`
+* [ ] `WildcardType`
+* [ ] Generics + lambdas
+* [ ] Generics + functional interfaces
+* [ ] Generics + Jackson
+* [ ] Generics + Spring
+* [ ] `TypeReference`
+* [ ] `ParameterizedTypeReference`
+* [ ] Generic API design
+* [ ] Backend scenarios
+* [ ] Tricky compilation questions
+* [ ] Runtime/ClassCastException scenarios
+* [ ] Interviewer follow-up chains
+
+# END OF TOPIC 7
+
+**Next: Topic 8 — Java 8 Features — DEEP DIVE**
+
+This will cover **Lambda Expressions, Functional Interfaces, Method References, Stream API, Optional, default/static interface methods, effectively-final variables, stream internals, lazy evaluation, intermediate vs terminal operations, collectors, parallel streams, ForkJoinPool, and tricky stream/output questions.**
+
+🔥 **Generics is now covered at interview-depth.** The next topic—**Java 8**—is substantially larger because interviewers can go very deep into Streams and lambdas.

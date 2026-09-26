@@ -1,0 +1,518 @@
+Ah yes — got it. 👍 You **don't want another high-level topic outline**. You want the same format as the earlier **150-question Spring bank**: actual interview questions, progressively deeper, with senior-level follow-ups and production scenarios.
+
+So let's continue exactly that way.
+
+# 🚀 SPRING MVC + REST — INTERVIEW QUESTION BANK
+
+Target: **~5 years Java/Spring developer**
+Approach: Basic → Intermediate → Deep → Internals → Production scenarios.
+
+---
+
+# 🟢 A. Spring MVC Fundamentals
+
+1. What is Spring MVC?
+2. What problem does Spring MVC solve?
+3. Explain the MVC architecture.
+4. What are Model, View and Controller?
+5. What is `DispatcherServlet`?
+6. Why is `DispatcherServlet` called the Front Controller?
+7. What happens when an HTTP request reaches a Spring MVC application?
+8. Explain the complete request lifecycle in Spring MVC.
+9. What is `HandlerMapping`?
+10. What is `HandlerAdapter`?
+11. What is `ViewResolver`?
+12. What is a Controller in Spring MVC?
+13. How does Spring identify which controller should handle a request?
+14. What happens if no controller can handle a request?
+15. What is `@RequestMapping`?
+16. How does Spring resolve a request mapping?
+17. Can two controllers have the same endpoint?
+18. What happens if multiple mappings match a request?
+19. How does Spring choose the most specific mapping?
+20. What is the difference between class-level and method-level `@RequestMapping`?
+
+---
+
+# 🟢 B. REST Controller
+
+21. What is REST?
+22. What are the principles of REST?
+23. What makes an API RESTful?
+24. REST vs SOAP?
+25. What is a REST resource?
+26. What is the difference between a REST API and a normal HTTP API?
+27. What is `@Controller`?
+28. What is `@RestController`?
+29. `@Controller` vs `@RestController`?
+30. What does `@RestController` actually do internally?
+31. What is `@ResponseBody`?
+32. How does Spring convert a Java object into JSON?
+33. What is `HttpMessageConverter`?
+34. How does Jackson integrate with Spring Boot?
+35. How does Spring convert JSON request data into a Java object?
+36. What happens if JSON cannot be deserialized?
+37. What happens if a required field is missing from the JSON?
+38. What is content negotiation?
+39. What are `Content-Type` and `Accept` headers?
+40. What happens if the client sends an unsupported content type?
+
+---
+
+# 🟢 C. Request Mapping
+
+41. What is `@GetMapping`?
+42. What is `@PostMapping`?
+43. What is `@PutMapping`?
+44. What is `@PatchMapping`?
+45. What is `@DeleteMapping`?
+46. How are these annotations different from `@RequestMapping`?
+47. Can `@RequestMapping` specify HTTP methods?
+48. Can you map multiple HTTP methods to one endpoint?
+49. What is path matching?
+50. What is the difference between:
+
+```text
+/users/{id}
+```
+
+and
+
+```text
+/users?id=10
+```
+
+51. `@PathVariable` vs `@RequestParam`?
+52. When should you use a path variable?
+53. When should you use a query parameter?
+54. Can `@RequestParam` be optional?
+55. How do you provide a default value for a request parameter?
+56. What is `@RequestHeader`?
+57. How do you read multiple headers?
+58. How do you read the HTTP request directly?
+59. What is `HttpServletRequest`?
+60. What is `HttpServletResponse`?
+
+---
+
+# 🟡 D. HTTP Methods & Semantics 🔥
+
+61. GET vs POST?
+62. PUT vs PATCH?
+63. POST vs PUT?
+64. DELETE vs PUT?
+65. What does **idempotent** mean?
+66. Which HTTP methods are idempotent?
+67. Is POST idempotent?
+68. Can a POST API be designed to be idempotent?
+69. How would you make a payment API idempotent?
+70. What are safe HTTP methods?
+71. Why should GET generally not modify server state?
+72. Can PUT create a resource?
+73. What does `204 No Content` mean?
+74. `200 OK` vs `201 Created`?
+75. `400 Bad Request` vs `422 Unprocessable Content`?
+76. `401 Unauthorized` vs `403 Forbidden`?
+77. `404 Not Found` vs `204 No Content`?
+78. `409 Conflict` — when would you use it?
+79. When should an API return `500`?
+80. What status code would you return for validation failure?
+
+---
+
+# 🟡 E. Request/Response Handling
+
+81. What is `@RequestBody`?
+82. What happens internally when Spring processes `@RequestBody`?
+83. Can a controller have multiple `@RequestBody` parameters?
+84. What is `ResponseEntity`?
+85. Why would you use `ResponseEntity`?
+86. `ResponseEntity` vs returning an object directly?
+87. How do you set HTTP headers in a response?
+88. How do you set the HTTP status dynamically?
+89. How do you return a custom response structure?
+90. Should you return entities directly from REST controllers?
+91. What is a DTO?
+92. Why use DTOs?
+93. Entity vs DTO?
+94. What problems can occur if you expose JPA entities directly?
+95. How do you convert Entity → DTO?
+96. DTO → Entity?
+97. How would you handle API responses consistently across multiple services?
+
+---
+
+# 🟡 F. Validation 🔥
+
+98. What is Bean Validation?
+99. What is `@Valid`?
+100. What is `@Validated`?
+101. `@Valid` vs `@Validated`?
+102. What is `@NotNull`?
+103. `@NotEmpty` vs `@NotBlank`?
+104. `@Size`?
+105. `@Min` vs `@Positive`?
+106. How do you validate a request body?
+107. What happens when validation fails?
+108. Which exception is typically raised for invalid request body validation?
+109. How do you customize validation error responses?
+110. How do you validate path variables?
+111. How do you validate request parameters?
+112. How do you create a custom validation annotation?
+113. How do you validate nested objects?
+114. How do you implement conditional validation?
+
+Example:
+
+```text
+If accountType = "JOINT"
+then jointHolder must be present.
+```
+
+How would you implement this?
+
+---
+
+# 🔥 G. Exception Handling
+
+115. How do you handle exceptions in Spring MVC?
+116. What is `@ExceptionHandler`?
+117. Where can `@ExceptionHandler` be used?
+118. What is `@ControllerAdvice`?
+119. What is `@RestControllerAdvice`?
+120. `@ControllerAdvice` vs `@RestControllerAdvice`?
+121. How does Spring choose which `@ExceptionHandler` to invoke?
+122. Can you have multiple exception handlers?
+123. What happens if both a specific and generic exception handler exist?
+124. How would you create a global exception handler?
+125. How would you return different HTTP status codes for different exceptions?
+126. How do you handle validation exceptions globally?
+127. How do you create a standard error response?
+
+For example:
+
+```json
+{
+  "timestamp": "...",
+  "status": 400,
+  "error": "VALIDATION_ERROR",
+  "message": "...",
+  "path": "...",
+  "correlationId": "..."
+}
+```
+
+128. Should you expose the full exception stack trace to clients?
+129. How would you log exceptions while returning a safe response?
+130. How do you handle unexpected exceptions?
+131. What happens if an exception occurs outside the controller?
+132. How would you distinguish business exceptions from technical exceptions?
+
+---
+
+# 🔥 H. Filters
+
+133. What is a Servlet Filter?
+134. How does a Filter work?
+135. Where does a Filter execute in the request lifecycle?
+136. What is `OncePerRequestFilter`?
+137. Why would you extend `OncePerRequestFilter`?
+138. How would you implement request logging using a Filter?
+139. How would you add a correlation ID using a Filter?
+140. How would you authenticate a request using a Filter?
+141. Can a Filter modify a request?
+142. Can a Filter modify a response?
+143. What is Filter ordering?
+144. What happens if multiple Filters are configured?
+145. Filter vs Interceptor?
+
+---
+
+# 🔥 I. Interceptors
+
+146. What is a Spring MVC Interceptor?
+147. What is `HandlerInterceptor`?
+148. What are:
+
+```text
+preHandle()
+postHandle()
+afterCompletion()
+```
+
+149. When is `preHandle()` executed?
+150. When is `postHandle()` executed?
+151. When is `afterCompletion()` executed?
+152. Filter vs Interceptor?
+153. When would you choose a Filter?
+154. When would you choose an Interceptor?
+155. Can an Interceptor stop a request?
+156. How would you implement authorization using an Interceptor?
+157. How would you measure API execution time using an Interceptor?
+
+---
+
+# 🔥 J. REST API Design
+
+158. How would you design a REST API for users?
+
+```text
+GET /users
+GET /users/{id}
+POST /users
+PUT /users/{id}
+DELETE /users/{id}
+```
+
+159. What makes a good REST endpoint?
+160. Should URLs contain verbs?
+
+For example:
+
+```text
+POST /createUser
+```
+
+vs
+
+```text
+POST /users
+```
+
+161. How would you design nested resources?
+
+```text
+/users/{userId}/accounts
+```
+
+162. When should nested resources be avoided?
+163. How would you design pagination?
+164. Offset pagination vs cursor pagination?
+165. What problems can offset pagination have with millions of records?
+166. How would you design sorting?
+167. How would you design filtering?
+168. How would you combine pagination + sorting + filtering?
+169. How would you version a REST API?
+170. URI versioning vs header versioning?
+171. How would you maintain backward compatibility?
+172. How would you deprecate an API?
+173. How would you design an API that handles millions of records?
+
+---
+
+# 🔴 K. REST Production Scenarios
+
+174. Your API suddenly becomes slow. How do you troubleshoot it?
+
+175. API latency is:
+
+```text
+50ms → 5 seconds
+```
+
+but CPU usage is only 20%. What could be happening?
+
+176. Your API has high CPU. How would you investigate?
+
+177. Your API has high memory usage. How would you investigate?
+
+178. Your API is receiving 10,000 requests/sec but can process only 2,000. What happens?
+
+179. How would you protect the API from excessive traffic?
+
+180. What is rate limiting?
+
+181. Where should rate limiting be implemented?
+
+182. What happens when a downstream service is slow?
+
+183. How do you prevent cascading failures?
+
+184. What is a timeout?
+
+185. Where should timeouts be configured?
+
+186. Should every downstream call have a timeout?
+
+187. What is retry?
+
+188. When should you retry a failed REST request?
+
+189. Why can retries make an outage worse?
+
+190. What is exponential backoff?
+
+191. What is a circuit breaker?
+
+192. How does a circuit breaker protect a microservice?
+
+193. What is bulkheading?
+
+194. How would you make a REST API resilient?
+
+---
+
+# 🔥 L. Idempotency & Distributed Systems
+
+195. Your client sends:
+
+```text
+POST /payment
+```
+
+The server processes the payment but the response is lost.
+
+The client retries.
+
+How do you prevent the payment from being processed twice?
+
+196. What is an idempotency key?
+
+197. Where should the idempotency key be stored?
+
+198. What happens if two identical requests arrive simultaneously?
+
+199. How would you make idempotency safe under concurrency?
+
+200. Database unique constraint vs application-level idempotency?
+
+201. How would you design an idempotent API across multiple microservice instances?
+
+202. What happens if the service crashes after performing the DB transaction but before returning the response?
+
+203. How would you reconcile such requests?
+
+---
+
+# 🔴 M. Security / CORS / Headers
+
+204. What is CORS?
+205. Why does CORS exist?
+206. What is a preflight request?
+207. What is the `OPTIONS` request?
+208. How does Spring handle CORS?
+209. What is CSRF?
+210. Is CSRF relevant for every REST API?
+211. What security headers should an API consider?
+212. What is HTTPS?
+213. TLS termination at load balancer vs application?
+214. Should authentication happen in the API Gateway or individual services?
+215. How should authorization be handled?
+
+We'll cover the actual Spring Security implementation separately.
+
+---
+
+# 🔥🔥 N. Advanced / Interviewer Follow-ups
+
+216. Explain the complete lifecycle of:
+
+```text
+POST /accounts
+```
+
+from the moment the request reaches Tomcat until the response goes back to the client.
+
+217. What happens inside `DispatcherServlet`?
+
+218. How does `DispatcherServlet` find the correct controller?
+
+219. How does Spring convert JSON into a Java object?
+
+220. How does Spring convert the Java response object back to JSON?
+
+221. Where do Filters execute relative to `DispatcherServlet`?
+
+222. Where do Interceptors execute relative to the Controller?
+
+223. What happens when a controller throws an exception?
+
+224. How does `@ControllerAdvice` intercept that exception?
+
+225. How does Spring determine the HTTP status?
+
+226. What happens when validation fails before your controller method executes?
+
+227. How would you trace one request across five microservices?
+
+228. Where would you generate a correlation ID?
+
+229. How would you propagate it through Kafka?
+
+230. How would you debug a request that succeeds in Service A but fails somewhere downstream?
+
+---
+
+# 🔥🔥 O. Questions I'd especially expect for YOU
+
+Given your **Java + Spring Boot + Kafka + microservices + financial/PF domain** background, don't just prepare generic REST questions.
+
+Be ready for:
+
+231. Explain one REST API you've developed.
+
+232. Why did you choose POST/PUT/PATCH for that API?
+
+233. How did you validate the request?
+
+234. How did you handle exceptions?
+
+235. How did you return error responses?
+
+236. How did you handle duplicate requests?
+
+237. How did you handle concurrent requests?
+
+238. How did you handle downstream failures?
+
+239. How did you configure timeouts?
+
+240. How did you log and trace requests?
+
+241. How did you monitor API performance?
+
+242. How would you troubleshoot an API that's suddenly taking 10 seconds?
+
+243. How would you scale your API horizontally?
+
+244. How would you make your API stateless?
+
+245. How would you handle a request that triggers a long-running PF calculation?
+
+246. Would you keep the HTTP request open while processing it?
+
+247. If not, how would you design the API?
+
+248. How would you communicate completion of an asynchronous operation?
+
+249. REST API vs Kafka event — when would you use which?
+
+250. Suppose your API updates a database and then publishes a Kafka event. What happens if DB succeeds but Kafka publishing fails?
+
+🔥 **That last question is especially important for your profile**, because it bridges **REST → database → Kafka → microservices → distributed consistency**.
+
+---
+
+## 🎯 Your process remains the same
+
+You don't need to send me answers to all 250.
+
+Go through them:
+
+```text
+✅ Know it
+🤔 Partially know it
+❌ Don't know it
+```
+
+Then send me the numbers.
+
+For example:
+
+> `Explain 8, 33, 82, 121, 165, 195, 250`
+
+I'll deep-dive those **at interview depth**, including internals, code, production examples, common traps, and how a 5-year engineer should answer.
+
+Once you're comfortable with this section, we'll go:
+
+**JPA/Hibernate + SQL → Kafka → Multithreading → Microservices** 🔥

@@ -1,0 +1,868 @@
+# Topic 9 — Java Date & Time API — DEEP DIVE
+
+> **Questions only — no answers.**
+> Target: **4–7 year Java Backend Engineer**
+> Focus: `java.time` → immutability → time zones → offsets → formatting → parsing → legacy API → concurrency → database/API scenarios → tricky questions.
+
+---
+
+# A. Date & Time API Fundamentals
+
+1999. 🟢 Why was the new Java Date and Time API introduced?
+
+2000. 🟢 What problems existed with `java.util.Date`?
+
+2001. 🟢 What problems existed with `java.util.Calendar`?
+
+2002. 🟢 What problems existed with `SimpleDateFormat`?
+
+2003. 🟢 What are the major classes in the `java.time` package?
+
+2004. 🟢 What is the difference between `LocalDate`, `LocalTime`, and `LocalDateTime`?
+
+2005. 🟢 What is `Instant`?
+
+2006. 🟢 What is `ZonedDateTime`?
+
+2007. 🟢 What is `OffsetDateTime`?
+
+2008. 🟢 What is `OffsetTime`?
+
+2009. 🟢 What is `Year`?
+
+2010. 🟢 What is `YearMonth`?
+
+2011. 🟢 What is `MonthDay`?
+
+2012. 🟢 What is `Duration`?
+
+2013. 🟢 What is `Period`?
+
+2014. 🟢 What is `ZoneId`?
+
+2015. 🟢 What is `ZoneOffset`?
+
+2016. 🟡 How are `ZoneId` and `ZoneOffset` different?
+
+2017. 🟡 Which date/time classes are date-based?
+
+2018. 🟡 Which date/time classes are time-based?
+
+2019. 🟡 Which classes represent an absolute point on the timeline?
+
+2020. 🔴 Why did Java separate human time concepts from machine time concepts?
+
+---
+
+# B. LocalDate
+
+2021. 🟢 What is `LocalDate`?
+
+2022. 🟢 Does LocalDate contain a time?
+
+2023. 🟢 Does LocalDate contain a time zone?
+
+2024. 🟢 How do you create the current date?
+
+2025. 🟢 How do you create a specific LocalDate?
+
+2026. 🟢 How do you parse a date from a String?
+
+2027. 🟢 How do you format a LocalDate?
+
+2028. 🟢 How do you add days to a LocalDate?
+
+2029. 🟢 How do you subtract months from a LocalDate?
+
+2030. 🟢 How do you compare two LocalDate objects?
+
+2031. 🟡 What is the difference between `isBefore()`, `isAfter()`, and `isEqual()`?
+
+2032. 🟡 What happens when you add one month to January 31?
+
+2033. 🔴 How does LocalDate handle dates that don't exist in the target month?
+
+2034. 🟡 How do you find the first day of a month?
+
+2035. 🟡 How do you find the last day of a month?
+
+2036. 🟡 How do you find the first Monday of a month?
+
+2037. 🟡 How do you determine whether a year is a leap year?
+
+2038. 🟡 How do you calculate the number of days between two dates?
+
+2039. 🔴 How would you calculate someone's age using LocalDate?
+
+2040. 🔴 How would you calculate an employee's service duration using LocalDate?
+
+---
+
+# C. LocalTime
+
+2041. 🟢 What is `LocalTime`?
+
+2042. 🟢 Does LocalTime contain a date?
+
+2043. 🟢 Does LocalTime contain a time zone?
+
+2044. 🟢 How do you get the current local time?
+
+2045. 🟢 How do you create a specific LocalTime?
+
+2046. 🟢 How do you add hours/minutes/seconds?
+
+2047. 🟡 What happens when adding hours causes the time to cross midnight?
+
+2048. 🟡 How do you compare two LocalTime values?
+
+2049. 🟡 What is the precision supported by LocalTime?
+
+2050. 🔴 How would you determine whether a time falls within a business-hours window?
+
+---
+
+# D. LocalDateTime
+
+2051. 🟢 What is `LocalDateTime`?
+
+2052. 🟢 Does LocalDateTime contain a time zone?
+
+2053. 🟢 When should you use LocalDateTime?
+
+2054. 🟢 When should you avoid using LocalDateTime?
+
+2055. 🟡 How do you combine LocalDate and LocalTime?
+
+2056. 🟡 How do you extract the date from LocalDateTime?
+
+2057. 🟡 How do you extract the time from LocalDateTime?
+
+2058. 🟡 How do you add a Duration to LocalDateTime?
+
+2059. 🟡 How do you compare LocalDateTime values?
+
+2060. 🔴 Why can LocalDateTime be dangerous when representing an event occurring globally?
+
+2061. 🔴 Why shouldn't LocalDateTime normally be used for a timestamp exchanged between distributed systems?
+
+---
+
+# E. Instant — VERY IMPORTANT
+
+2062. 🟢 What is `Instant`?
+
+2063. 🟢 What does Instant represent?
+
+2064. 🟢 Is Instant timezone-independent?
+
+2065. 🟢 What is the epoch?
+
+2066. 🟢 What is Unix epoch time?
+
+2067. 🟡 How does Instant relate to UTC?
+
+2068. 🟡 How do you get the current Instant?
+
+2069. 🟡 How do you convert Instant to a ZonedDateTime?
+
+2070. 🟡 How do you convert Instant to LocalDateTime?
+
+2071. 🔴 Why is a time zone required when converting Instant to LocalDateTime?
+
+2072. 🟡 How do you calculate elapsed time using Instant?
+
+2073. 🔴 Why is Instant usually better than LocalDateTime for distributed-system timestamps?
+
+2074. 🔴 How would you represent `createdAt` and `updatedAt` in a microservice?
+
+2075. 🔴 Should database audit timestamps use LocalDateTime or Instant?
+
+---
+
+# F. ZoneId and ZoneOffset
+
+2076. 🟢 What is ZoneId?
+
+2077. 🟢 What is ZoneOffset?
+
+2078. 🟢 What is the difference between a region-based time zone and a fixed offset?
+
+2079. 🟢 Give examples of ZoneId values.
+
+2080. 🟡 Why is `"Asia/Kolkata"` different conceptually from `"+05:30"`?
+
+2081. 🟡 What is the IANA time-zone database?
+
+2082. 🔴 Why are region-based ZoneIds preferable when dealing with real-world locations?
+
+2083. 🟡 How do you get the system default ZoneId?
+
+2084. 🔴 Why can relying on the system default time zone cause production bugs?
+
+2085. 🟡 How would you explicitly configure a time zone in a Spring Boot application?
+
+---
+
+# G. ZonedDateTime — VERY IMPORTANT
+
+2086. 🟢 What is ZonedDateTime?
+
+2087. 🟢 What information does ZonedDateTime contain?
+
+2088. 🟡 How do you create ZonedDateTime from a LocalDateTime?
+
+2089. 🟡 How do you convert ZonedDateTime between time zones?
+
+2090. 🟡 What does `withZoneSameInstant()` do?
+
+2091. 🟡 What does `withZoneSameLocal()` do?
+
+2092. 🔴 What is the difference between `withZoneSameInstant()` and `withZoneSameLocal()`?
+
+2093. 🔴 Give a practical scenario where using `withZoneSameLocal()` incorrectly would cause a bug.
+
+2094. 🟡 What happens when a time zone has a daylight-saving transition?
+
+2095. 🔴 What is an ambiguous local time?
+
+2096. 🔴 What is an invalid local time?
+
+2097. 🔴 How does ZonedDateTime handle DST gaps?
+
+2098. 🔴 How does ZonedDateTime handle DST overlaps?
+
+2099. 🟡 Why is timezone conversion more complicated than adding a fixed number of hours?
+
+2100. 🔴 How would you schedule an event for 9 AM in a user's local timezone?
+
+---
+
+# H. OffsetDateTime
+
+2101. 🟢 What is OffsetDateTime?
+
+2102. 🟢 How is OffsetDateTime different from ZonedDateTime?
+
+2103. 🟡 What information does OffsetDateTime retain?
+
+2104. 🟡 Does OffsetDateTime contain a named time zone?
+
+2105. 🟡 When would OffsetDateTime be appropriate for REST APIs?
+
+2106. 🔴 When would you choose Instant over OffsetDateTime?
+
+2107. 🔴 When would you choose ZonedDateTime over OffsetDateTime?
+
+2108. 🟡 What happens when converting OffsetDateTime to Instant?
+
+2109. 🔴 Why can an offset alone be insufficient to represent a user's time-zone rules?
+
+---
+
+# I. Duration vs Period
+
+2110. 🟢 What is Duration?
+
+2111. 🟢 What is Period?
+
+2112. 🟢 What is the difference between Duration and Period?
+
+2113. 🟡 Which one is date-based?
+
+2114. 🟡 Which one is time-based?
+
+2115. 🟡 Can Duration represent months?
+
+2116. 🟡 Can Period represent hours?
+
+2117. 🔴 Why are months and years not fixed durations?
+
+2118. 🟡 How do you calculate the number of hours between two Instants?
+
+2119. 🟡 How do you calculate the number of days between two LocalDate values?
+
+2120. 🔴 Why can `Duration.ofDays(1)` behave differently conceptually from adding one calendar day across DST transitions?
+
+2121. 🔴 How would you calculate SLA duration accurately across time zones?
+
+---
+
+# J. Immutability and Thread Safety
+
+2122. 🟢 Are Java 8 date/time classes immutable?
+
+2123. 🟢 Are Java 8 date/time classes thread-safe?
+
+2124. 🟡 Why is immutability useful for date/time objects?
+
+2125. 🔴 How does immutability improve thread safety?
+
+2126. 🟡 What happens when you call:
+
+```java id="4gj2ak"
+date.plusDays(1);
+```
+
+2127. 🔴 Does `plusDays()` modify the original LocalDate?
+
+2128. 🟡 Why are immutable date/time objects easier to use in concurrent applications?
+
+2129. 🔴 Why was SimpleDateFormat's mutability a problem in multi-threaded applications?
+
+---
+
+# K. Date/Time Formatting
+
+2130. 🟢 What is DateTimeFormatter?
+
+2131. 🟢 How do you format a LocalDate?
+
+2132. 🟢 How do you parse a String into LocalDate?
+
+2133. 🟢 What are common date formatting patterns?
+
+2134. 🟡 What is the difference between `yyyy` and `YYYY`?
+
+2135. 🔴 Why can using `YYYY` instead of `yyyy` produce unexpected dates?
+
+2136. 🟡 What is the difference between `HH` and `hh`?
+
+2137. 🟡 What is the difference between `MM` and `mm`?
+
+2138. 🟡 What is the difference between `dd` and `DD`?
+
+2139. 🔴 What is the difference between calendar year and week-based year?
+
+2140. 🟡 How do you parse ISO-8601 timestamps?
+
+2141. 🟡 What is `DateTimeFormatter.ISO_INSTANT`?
+
+2142. 🟡 What is `DateTimeFormatter.ISO_DATE_TIME`?
+
+2143. 🟡 How do you create a custom DateTimeFormatter?
+
+2144. 🟡 Is DateTimeFormatter thread-safe?
+
+2145. 🔴 Why can one shared DateTimeFormatter safely be reused across threads?
+
+---
+
+# L. Parsing and Validation
+
+2146. 🟢 What happens when parsing an invalid date?
+
+2147. 🟡 How do you handle DateTimeParseException?
+
+2148. 🟡 How would you validate a date supplied by an API client?
+
+2149. 🟡 How would you validate a date-time with a timezone?
+
+2150. 🔴 Why should input date formats be explicit in APIs?
+
+2151. 🔴 How can locale affect date/time formatting and parsing?
+
+2152. 🟡 What is ResolverStyle?
+
+2153. 🔴 What is the difference between STRICT, SMART, and LENIENT parsing?
+
+---
+
+# M. Legacy Date API
+
+2154. 🟢 What is `java.util.Date`?
+
+2155. 🟢 What is `java.util.Calendar`?
+
+2156. 🟢 What is `SimpleDateFormat`?
+
+2157. 🟡 Why is Date considered a legacy API?
+
+2158. 🟡 Why is Calendar difficult to work with?
+
+2159. 🟡 Why is SimpleDateFormat not thread-safe?
+
+2160. 🔴 How can SimpleDateFormat produce incorrect results under concurrent access?
+
+2161. 🟡 What replaced Date/Calendar for most new code?
+
+2162. 🟡 What replaced SimpleDateFormat?
+
+2163. 🟡 Can java.time and java.util.Date interoperate?
+
+2164. 🟢 How do you convert Date to Instant?
+
+2165. 🟢 How do you convert Instant to Date?
+
+2166. 🟡 How do you convert Calendar to ZonedDateTime?
+
+2167. 🔴 How would you migrate a legacy application from Date/Calendar to java.time incrementally?
+
+---
+
+# N. Time Zones in Distributed Systems
+
+2168. 🟢 Why are time zones important in backend applications?
+
+2169. 🟢 Why should distributed systems generally store timestamps consistently?
+
+2170. 🟡 Why is UTC commonly used for backend timestamps?
+
+2171. 🟡 What is the difference between UTC and GMT?
+
+2172. 🟡 What does an ISO-8601 timestamp look like?
+
+2173. 🟡 What does the `Z` suffix mean?
+
+2174. 🟡 What does `+05:30` mean in a timestamp?
+
+2175. 🔴 How would you design timestamp handling between frontend, backend, and database?
+
+2176. 🔴 A user in India creates an order and a user in New York views it. How should the timestamp be stored and displayed?
+
+2177. 🔴 How would you store "9 AM every day according to the user's local time"?
+
+2178. 🔴 Why is storing only `"09:00"` insufficient for a scheduled global event?
+
+2179. 🔴 How would you represent "9 AM Asia/Kolkata" correctly?
+
+2180. 🔴 How would you handle a user's timezone changing after they create a recurring schedule?
+
+---
+
+# O. Database Integration
+
+2181. 🟢 Which Java time types map commonly to SQL DATE?
+
+2182. 🟢 Which Java time types map commonly to SQL TIMESTAMP?
+
+2183. 🟡 What is the difference between SQL DATE and TIMESTAMP?
+
+2184. 🟡 How does Instant map to a database timestamp?
+
+2185. 🔴 How do database timezone settings affect Java applications?
+
+2186. 🔴 What can go wrong if application and database servers use different time zones?
+
+2187. 🔴 How would you diagnose a timestamp being shifted by several hours after persistence?
+
+2188. 🟡 How would you represent audit fields such as:
+
+```text
+createdAt
+updatedAt
+```
+
+in a JPA entity?
+
+2189. 🔴 What are the considerations when using `LocalDateTime` with Hibernate/JPA?
+
+2190. 🔴 When would `Instant` be preferable to `LocalDateTime` for an audit field?
+
+---
+
+# P. REST API Date/Time Handling
+
+2191. 🟢 How should date/time values be represented in REST APIs?
+
+2192. 🟡 What is ISO-8601?
+
+2193. 🟡 Should a REST API send `LocalDateTime`, Instant, or OffsetDateTime?
+
+2194. 🔴 What information is lost when an API sends only LocalDateTime?
+
+2195. 🔴 How would you design an API field representing an absolute event timestamp?
+
+2196. 🟡 How would you represent a date of birth?
+
+2197. 🟡 How would you represent a business date such as settlement date?
+
+2198. 🟡 How would you represent a timestamp such as transaction creation time?
+
+2199. 🔴 Why are date-of-birth and transaction-created-at fundamentally different temporal concepts?
+
+2200. 🔴 How would you prevent timezone ambiguity in an API contract?
+
+---
+
+# Q. Clock — VERY IMPORTANT FOR TESTING
+
+2201. 🟢 What is `java.time.Clock`?
+
+2202. 🟢 Why would you use Clock instead of directly calling `Instant.now()`?
+
+2203. 🟡 How does Clock improve testability?
+
+2204. 🟡 How can you inject a Clock into a service?
+
+2205. 🔴 How would you test code that depends on the current time?
+
+2206. 🔴 Why is this harder to test?
+
+```java id="x1jzqv"
+Instant.now()
+```
+
+2207. 🔴 How would you test expiration logic deterministically?
+
+2208. 🔴 How would you test a service where business logic depends on "today"?
+
+2209. 🟡 What is `Clock.fixed()`?
+
+2210. 🟡 What is `Clock.offset()`?
+
+2211. 🟡 What is `Clock.systemUTC()`?
+
+2212. 🔴 How would you design time-dependent backend code to be testable?
+
+---
+
+# R. TemporalAdjusters
+
+2213. 🟢 What is TemporalAdjuster?
+
+2214. 🟢 What is TemporalAdjusters?
+
+2215. 🟡 How do you find the first day of a month?
+
+2216. 🟡 How do you find the last day of a month?
+
+2217. 🟡 How do you find the next Monday?
+
+2218. 🟡 How do you find the previous Friday?
+
+2219. 🟡 How do you find the first occurrence of a weekday in a month?
+
+2220. 🔴 How would you implement a custom TemporalAdjuster?
+
+2221. 🔴 When would custom TemporalAdjusters be useful in business applications?
+
+---
+
+# S. ChronoUnit and ChronoField
+
+2222. 🟢 What is ChronoUnit?
+
+2223. 🟢 What is ChronoField?
+
+2224. 🟡 What is the difference between ChronoUnit and ChronoField?
+
+2225. 🟡 How do you calculate the number of days between dates using ChronoUnit?
+
+2226. 🟡 How do you extract a year/month/day using ChronoField?
+
+2227. 🔴 When would you prefer built-in methods such as `getYear()` over ChronoField?
+
+2228. 🟡 What does `until()` do?
+
+2229. 🔴 How does `until()` differ from Period or Duration?
+
+---
+
+# T. Tricky Date/Time Questions
+
+2230. 🟢 Does LocalDateTime represent an absolute point in time?
+
+2231. 🟢 Does LocalDate represent a timezone?
+
+2232. 🟢 Does Instant contain a timezone?
+
+2233. 🟡 What is the difference between UTC and a timezone?
+
+2234. 🔴 Why is `"2026-09-19T10:00:00"` ambiguous globally?
+
+2235. 🔴 What does `"2026-09-19T10:00:00Z"` represent?
+
+2236. 🔴 What does `"2026-09-19T10:00:00+05:30"` represent?
+
+2237. 🔴 Are these two timestamps necessarily the same instant?
+
+```text id="p4b2r5"
+2026-09-19T10:00:00Z
+2026-09-19T15:30:00+05:30
+```
+
+2238. 🔴 What happens when converting the above timestamps to Instant?
+
+2239. 🟡 What happens when adding one month to January 31?
+
+2240. 🔴 Why is adding 24 hours not always equivalent to adding one calendar day?
+
+2241. 🔴 What happens around DST transitions?
+
+2242. 🔴 Why can tests involving current time become flaky?
+
+2243. 🔴 Why can tests pass locally but fail on a CI server because of timezone configuration?
+
+---
+
+# U. Output-Based Questions
+
+2244. 🟡 What is the output?
+
+```java id="e2jd2s"
+LocalDate date = LocalDate.of(2026, 1, 31);
+System.out.println(date.plusMonths(1));
+```
+
+2245. 🟡 What is the output?
+
+```java id="4xgy5f"
+LocalDate date = LocalDate.of(2026, 2, 28);
+System.out.println(date.plusYears(1));
+```
+
+2246. 🟡 What is the output?
+
+```java id="qxjs8g"
+LocalDate date = LocalDate.of(2024, 2, 29);
+System.out.println(date.plusYears(1));
+```
+
+2247. 🟡 What is the output?
+
+```java id="a6u2kw"
+LocalDate date = LocalDate.of(2026, 9, 19);
+date.plusDays(10);
+
+System.out.println(date);
+```
+
+2248. 🔴 Why does question 2247 behave that way?
+
+2249. 🟡 What is the output?
+
+```java id="z5f1aj"
+LocalDateTime dt =
+    LocalDateTime.of(2026, 9, 19, 10, 30);
+
+System.out.println(dt.plusHours(15));
+```
+
+2250. 🟡 What is the output?
+
+```java id="7m5i6q"
+Instant instant = Instant.parse("2026-09-19T10:00:00Z");
+
+System.out.println(
+    instant.atZone(ZoneId.of("Asia/Kolkata"))
+);
+```
+
+2251. 🔴 What is the output?
+
+```java id="3ndh2r"
+ZonedDateTime zdt =
+    ZonedDateTime.of(
+        2026, 9, 19,
+        10, 0, 0, 0,
+        ZoneId.of("Asia/Kolkata")
+    );
+
+System.out.println(
+    zdt.withZoneSameInstant(ZoneId.of("UTC"))
+);
+```
+
+2252. 🔴 What is the conceptual difference if `withZoneSameLocal()` is used instead?
+
+2253. 🟡 What happens?
+
+```java id="z1a3qk"
+DateTimeFormatter formatter =
+    DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+LocalDate date =
+    LocalDate.parse("19-09-2026", formatter);
+
+System.out.println(date);
+```
+
+2254. 🔴 What happens when the input does not match the formatter?
+
+2255. 🔴 What is the output?
+
+```java id="y3k2ea"
+LocalDate date = LocalDate.of(2026, 9, 19);
+
+System.out.println(
+    date.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"))
+);
+```
+
+2256. 🔴 Why can `YYYY` produce surprising output near year boundaries?
+
+---
+
+# V. Backend Production Scenarios
+
+2257. 🟢 Your service stores transaction creation timestamps. Which Java type would you choose?
+
+2258. 🟢 Your application stores a customer's date of birth. Which Java type would you choose?
+
+2259. 🟢 Your application stores a scheduled settlement date. Which Java type would you choose?
+
+2260. 🟡 Your application receives timestamps from multiple microservices. How would you normalize them?
+
+2261. 🔴 Your database stores timestamps in UTC but the UI displays a different date. How would you debug the issue?
+
+2262. 🔴 A transaction created at `23:30` in India appears as the next day's transaction for another user. Is that necessarily a bug? How would you reason about it?
+
+2263. 🔴 A batch job must execute every day at 2 AM in a particular timezone. How would you represent the schedule?
+
+2264. 🔴 A scheduled job runs incorrectly around daylight-saving transitions. How would you investigate it?
+
+2265. 🔴 Your system has users across 50 countries and supports recurring payments. How would you model the scheduled payment time?
+
+2266. 🔴 A distributed system has services running in different time zones. What timestamp strategy would you establish?
+
+2267. 🔴 A production bug occurs because one service uses LocalDateTime and another uses Instant. How would you diagnose the mismatch?
+
+2268. 🔴 Your application and database disagree about the current timestamp. What would you inspect?
+
+2269. 🔴 An API accepts `"2026-09-19T10:00:00"` without a timezone. What problems can this create?
+
+2270. 🔴 How would you change the API contract to eliminate the ambiguity?
+
+2271. 🔴 Your code uses `Instant.now()` throughout business logic and is difficult to test. How would you refactor it?
+
+2272. 🔴 A service uses `SimpleDateFormat` as a singleton shared by multiple threads. What production issue could occur?
+
+2273. 🔴 A legacy application contains hundreds of Date/Calendar usages. How would you migrate safely without changing behavior unexpectedly?
+
+---
+
+# W. Interviewer Drill Chains
+
+## Date/Time Fundamentals
+
+2274. 🟢 Explain the Java 8 Date/Time API.
+
+2275. 🟢 What is LocalDate?
+
+2276. 🟢 What is LocalDateTime?
+
+2277. 🟢 What is Instant?
+
+2278. 🟡 What is ZonedDateTime?
+
+2279. 🟡 What is OffsetDateTime?
+
+2280. 🔴 When would you choose each one?
+
+---
+
+## Instant Drill
+
+2281. 🟢 What is Instant?
+
+2282. 🟡 Why is it useful in backend systems?
+
+2283. 🟡 How is it related to UTC?
+
+2284. 🔴 Why is it preferable for distributed-system timestamps?
+
+2285. 🔴 How do you convert it to a user's local timezone?
+
+---
+
+## Timezone Drill
+
+2286. 🟢 What is ZoneId?
+
+2287. 🟢 What is ZoneOffset?
+
+2288. 🟡 Difference between them?
+
+2289. 🔴 What happens during DST?
+
+2290. 🔴 What are ambiguous and invalid local times?
+
+2291. 🔴 How would you schedule recurring events correctly?
+
+---
+
+## Legacy API Drill
+
+2292. 🟢 Why was java.time introduced?
+
+2293. 🟢 What problems existed with Date?
+
+2294. 🟢 What problems existed with Calendar?
+
+2295. 🟢 Why is SimpleDateFormat unsafe?
+
+2296. 🔴 How would you migrate legacy code?
+
+---
+
+## Backend Timestamp Drill
+
+2297. 🟢 How would you store transaction timestamps?
+
+2298. 🟡 Why UTC?
+
+2299. 🟡 How would the frontend display local time?
+
+2300. 🔴 How would you handle users changing timezone?
+
+2301. 🔴 How would you debug a timestamp offset bug?
+
+---
+
+# X. Date/Time Master Checklist
+
+Before moving forward, make sure you can answer:
+
+* [ ] LocalDate
+* [ ] LocalTime
+* [ ] LocalDateTime
+* [ ] Instant
+* [ ] ZonedDateTime
+* [ ] OffsetDateTime
+* [ ] OffsetTime
+* [ ] ZoneId
+* [ ] ZoneOffset
+* [ ] UTC
+* [ ] Epoch
+* [ ] ISO-8601
+* [ ] Duration
+* [ ] Period
+* [ ] Year
+* [ ] YearMonth
+* [ ] MonthDay
+* [ ] Immutability
+* [ ] Thread safety
+* [ ] DateTimeFormatter
+* [ ] Parsing
+* [ ] Formatting
+* [ ] ResolverStyle
+* [ ] TemporalAdjuster
+* [ ] ChronoUnit
+* [ ] ChronoField
+* [ ] DST
+* [ ] Ambiguous local time
+* [ ] Invalid local time
+* [ ] `withZoneSameInstant()`
+* [ ] `withZoneSameLocal()`
+* [ ] Date vs Calendar
+* [ ] SimpleDateFormat
+* [ ] Legacy API migration
+* [ ] Database timestamps
+* [ ] JPA date/time handling
+* [ ] REST API timestamps
+* [ ] Clock
+* [ ] Testable time-dependent code
+* [ ] Distributed-system timestamps
+* [ ] Timezone conversion
+* [ ] Recurring schedules
+* [ ] Tricky date calculations
+* [ ] Output questions
+* [ ] Production scenarios
+* [ ] Interviewer drill chains
+
+# END OF TOPIC 9
+
+**Next: Topic 10 — JVM Internals — DEEP DIVE**
+
+This is where we move into **JVM architecture, class loading, bytecode, runtime data areas, stack vs heap, metaspace, JIT, execution engine, native methods, class-loader hierarchy, linking, initialization, and JVM troubleshooting.**

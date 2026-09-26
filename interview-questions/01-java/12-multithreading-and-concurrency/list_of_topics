@@ -1,0 +1,1803 @@
+# Java Multithreading & Concurrency
+
+## A. Concurrency Fundamentals
+
+### 🟢 Must Know
+
+**2302.** What is a thread in Java?
+
+**2303.** What is the difference between a process and a thread?
+
+**2304.** What is the difference between concurrency and parallelism?
+
+**2305.** Why do we need multithreading?
+
+**2306.** What are the advantages of using multiple threads?
+
+**2307.** What are the disadvantages and risks of multithreading?
+
+**2308.** What is the difference between single-threaded and multithreaded execution?
+
+**2309.** What is the difference between concurrency, parallelism, asynchronous execution, and multithreading?
+
+**2310.** Can a single-core CPU execute multiple threads concurrently?
+
+**2311.** Can multiple threads actually execute simultaneously?
+
+**2312.** How does the operating system schedule Java threads?
+
+**2313.** What is a context switch?
+
+**2314.** What is the cost of a context switch?
+
+**2315.** Why can creating too many threads reduce application performance?
+
+**2316.** What is CPU-bound work?
+
+**2317.** What is I/O-bound work?
+
+**2318.** How should the number of threads differ for CPU-bound and I/O-bound workloads?
+
+**2319.** What is thread safety?
+
+**2320.** What does it mean for a class to be thread-safe?
+
+**2321.** What is shared mutable state?
+
+**2322.** Why is shared mutable state dangerous in concurrent programs?
+
+**2323.** What is a race condition?
+
+**2324.** Give an example of a race condition in Java.
+
+**2325.** What is a critical section?
+
+**2326.** What is mutual exclusion?
+
+**2327.** What is synchronization?
+
+**2328.** What is atomicity?
+
+**2329.** What is visibility?
+
+**2330.** What is ordering in concurrent programming?
+
+**2331.** Why are atomicity, visibility, and ordering important in Java concurrency?
+
+---
+
+## B. Creating and Starting Threads
+
+### 🟢 Must Know
+
+**2332.** What are the different ways to create a thread in Java?
+
+**2333.** How do you create a thread by extending `Thread`?
+
+**2334.** How do you create a thread using `Runnable`?
+
+**2335.** What is the difference between extending `Thread` and implementing `Runnable`?
+
+**2336.** Why is implementing `Runnable` generally preferred over extending `Thread`?
+
+**2337.** Can a Java class extend `Thread` and another class simultaneously?
+
+**2338.** Can the same `Runnable` object be submitted to multiple threads?
+
+**2339.** What happens if the same `Thread` object is started twice?
+
+**2340.** What exception is thrown when a thread is started more than once?
+
+**2341.** What is the difference between `start()` and `run()`?
+
+**2342.** What happens internally when `start()` is called?
+
+**2343.** What happens if you directly call `run()`?
+
+**2344.** Does calling `run()` create a new thread?
+
+**2345.** Can `run()` be called manually?
+
+**2346.** Can `start()` be overridden?
+
+**2347.** Can `run()` be overloaded?
+
+**2348.** What happens if you overload `run()` instead of overriding it?
+
+**2349.** Can a thread be started from inside another thread?
+
+**2350.** Can a thread start another thread?
+
+### 🟡 Should Know
+
+**2351.** What happens if an exception escapes from a thread's `run()` method?
+
+**2352.** Does an exception in one thread terminate the entire JVM?
+
+**2353.** How can you handle uncaught exceptions in a thread?
+
+**2354.** What is `UncaughtExceptionHandler`?
+
+**2355.** What is the difference between setting an uncaught exception handler on a thread and on the `Thread` class?
+
+**2356.** What happens if both a thread-level and default uncaught exception handler are configured?
+
+---
+
+# C. Thread Lifecycle and Thread States
+
+### 🟢 Must Know
+
+**2357.** What are the different states of a Java thread?
+
+**2358.** Explain the Java `Thread.State` enum.
+
+**2359.** What is the `NEW` state?
+
+**2360.** What causes a thread to transition from `NEW` to `RUNNABLE`?
+
+**2361.** What is the `RUNNABLE` state?
+
+**2362.** Does Java have a separate `RUNNING` thread state?
+
+**2363.** What is the `BLOCKED` state?
+
+**2364.** When does a thread enter the `BLOCKED` state?
+
+**2365.** What is the `WAITING` state?
+
+**2366.** What causes a thread to enter `WAITING`?
+
+**2367.** What is the `TIMED_WAITING` state?
+
+**2368.** What operations can cause `TIMED_WAITING`?
+
+**2369.** What is the `TERMINATED` state?
+
+**2370.** Can a terminated thread be restarted?
+
+**2371.** Explain all possible transitions between Java thread states.
+
+**2372.** What is the difference between `BLOCKED` and `WAITING`?
+
+**2373.** What is the difference between `WAITING` and `TIMED_WAITING`?
+
+**2374.** What is the difference between `RUNNABLE` and actually running on a CPU?
+
+**2375.** Can a thread move directly from `NEW` to `TERMINATED`?
+
+**2376.** Can a thread move from `WAITING` directly to `TERMINATED`?
+
+### 🔴 Deep / Advanced
+
+**2377.** How would you diagnose an application where hundreds of threads are in `BLOCKED` state?
+
+**2378.** How would you distinguish lock contention from I/O waiting using a thread dump?
+
+**2379.** Can a Java thread remain `RUNNABLE` while it is actually waiting on native I/O?
+
+**2380.** How does the JVM map Java threads to operating-system threads?
+
+**2381.** What is the difference between platform threads and virtual threads from a lifecycle perspective?
+
+---
+
+# D. Thread Methods
+
+### 🟢 Must Know
+
+**2382.** What does `sleep()` do?
+
+**2383.** Does `Thread.sleep()` release a lock?
+
+**2384.** What happens when a thread calls `sleep()` while holding a monitor?
+
+**2385.** What is `join()`?
+
+**2386.** Why would you use `join()`?
+
+**2387.** What happens when `threadA.join()` is called?
+
+**2388.** What is the difference between `join()` and `sleep()`?
+
+**2389.** What happens if `join()` is called on the current thread?
+
+**2390.** What happens when `interrupt()` is called?
+
+**2391.** Does `interrupt()` forcibly terminate a thread?
+
+**2392.** What is the interrupted status of a thread?
+
+**2393.** What happens when `interrupt()` is called on a sleeping thread?
+
+**2394.** What happens when `interrupt()` is called on a waiting thread?
+
+**2395.** What happens when `interrupt()` is called on a thread that is doing normal computation?
+
+**2396.** What is the difference between `Thread.interrupted()` and `isInterrupted()`?
+
+**2397.** Does calling `Thread.interrupted()` clear the interrupt flag?
+
+**2398.** Does calling `isInterrupted()` clear the interrupt flag?
+
+### 🟡 Should Know
+
+**2399.** What is `yield()`?
+
+**2400.** Is `yield()` guaranteed to pause the current thread?
+
+**2401.** Is `yield()` useful in production code?
+
+**2402.** What is thread priority?
+
+**2403.** What are Java thread priority levels?
+
+**2404.** Does thread priority guarantee execution order?
+
+**2405.** Can thread priority be relied upon for synchronization?
+
+**2406.** What is a daemon thread?
+
+**2407.** What happens when all non-daemon threads terminate?
+
+**2408.** Can a daemon thread prevent JVM shutdown?
+
+**2409.** How do you create a daemon thread?
+
+**2410.** Can `setDaemon()` be called after a thread has started?
+
+---
+
+# E. `synchronized` and Intrinsic Locks
+
+## E1. Synchronized Methods
+
+### 🟢 Must Know
+
+**2411.** What is the `synchronized` keyword?
+
+**2412.** How does `synchronized` provide thread safety?
+
+**2413.** What is an intrinsic lock or monitor?
+
+**2414.** What object is used as the lock for a synchronized instance method?
+
+**2415.** What object is used as the lock for a synchronized static method?
+
+**2416.** What is the difference between synchronized instance and static methods?
+
+**2417.** Can two synchronized instance methods execute simultaneously on the same object?
+
+**2418.** Can two synchronized instance methods execute simultaneously on different objects?
+
+**2419.** Can a synchronized instance method and synchronized static method execute simultaneously?
+
+**2420.** What happens when a thread enters a synchronized method?
+
+**2421.** What happens when a thread exits a synchronized method?
+
+**2422.** Is `synchronized` reentrant?
+
+**2423.** What does reentrant synchronization mean?
+
+**2424.** Can a synchronized method call another synchronized method on the same object?
+
+---
+
+## E2. Synchronized Blocks
+
+### 🟢 Must Know
+
+**2425.** What is a synchronized block?
+
+**2426.** Why would you use a synchronized block instead of a synchronized method?
+
+**2427.** What can be used as the lock object in a synchronized block?
+
+**2428.** Why should you avoid synchronizing on publicly accessible objects?
+
+**2429.** Why is synchronizing on `String` literals dangerous?
+
+**2430.** Why is synchronizing on `this` sometimes undesirable?
+
+**2431.** What is the advantage of using a private final lock object?
+
+**2432.** Can two synchronized blocks use different locks?
+
+**2433.** Can two synchronized blocks use the same lock?
+
+**2434.** What happens when two threads synchronize on different objects?
+
+**2435.** What happens when two threads synchronize on the same object?
+
+### 🔴 Deep / Advanced
+
+**2436.** How does the JVM implement `synchronized`?
+
+**2437.** What is a monitor?
+
+**2438.** What is monitor ownership?
+
+**2439.** What happens internally when a thread tries to acquire an already-held monitor?
+
+**2440.** What is monitor contention?
+
+**2441.** What are biased locking, lightweight locking, and heavyweight locking?
+
+**2442.** How has monitor implementation evolved in modern HotSpot JVMs?
+
+**2443.** Is the performance difference between `synchronized` and `ReentrantLock` always significant?
+
+---
+
+# F. Atomicity, Visibility and Race Conditions
+
+### 🟢 Must Know
+
+**2444.** What does atomic operation mean?
+
+**2445.** Is `i++` atomic in Java?
+
+**2446.** Why is `i++` not atomic?
+
+**2447.** Is assignment to an `int` atomic?
+
+**2448.** Is assignment to a `long` atomic?
+
+**2449.** Can a race condition occur even when an operation looks like a single line of code?
+
+**2450.** Explain a lost-update problem.
+
+**2451.** What is a check-then-act race condition?
+
+**2452.** What is a read-modify-write operation?
+
+**2453.** Why is `if (!map.containsKey(key)) map.put(key, value)` unsafe concurrently?
+
+**2454.** How can you make a compound operation thread-safe?
+
+### 🔴 Deep / Advanced
+
+**2455.** Can a program be race-condition-free but still have visibility problems?
+
+**2456.** Can a program have visibility guarantees but still have atomicity problems?
+
+**2457.** Can an operation be atomic but not provide the required visibility?
+
+**2458.** Explain the difference between atomicity, visibility, and ordering with a concrete example.
+
+**2459.** What is a data race?
+
+**2460.** What is a logical race condition?
+
+**2461.** Can race conditions occur when using thread-safe collections?
+
+**2462.** Why does using `ConcurrentHashMap` not automatically make every multi-step operation thread-safe?
+
+---
+
+# G. `volatile`
+
+### 🟢 Must Know
+
+**2463.** What is the `volatile` keyword?
+
+**2464.** Why is `volatile` used?
+
+**2465.** What guarantees does `volatile` provide?
+
+**2466.** Does `volatile` provide atomicity?
+
+**2467.** Is `volatile int count; count++` thread-safe?
+
+**2468.** How does `volatile` provide visibility?
+
+**2469.** What is the happens-before relationship created by a volatile write/read?
+
+**2470.** When should you use `volatile`?
+
+**2471.** When should you not use `volatile`?
+
+**2472.** Can a reference variable be volatile?
+
+**2473.** What does a volatile reference guarantee?
+
+**2474.** Can a volatile object be mutable?
+
+**2475.** Is a volatile object's internal state automatically thread-safe?
+
+### 🔴 Deep / Advanced
+
+**2476.** How does `volatile` affect compiler and CPU reordering?
+
+**2477.** What memory barriers are conceptually associated with volatile operations?
+
+**2478.** What is the relationship between `volatile` and CPU cache coherence?
+
+**2479.** Does `volatile` make a compound operation safe?
+
+**2480.** Can `volatile` be used to implement a singleton?
+
+**2481.** Why is double-checked locking broken without `volatile`?
+
+**2482.** How does `volatile` prevent partially constructed objects from being observed in double-checked locking?
+
+**2483.** What is the difference between volatile visibility and synchronized visibility?
+
+**2484.** Can `volatile` be slower than a normal variable?
+
+---
+
+# H. Java Memory Model (JMM)
+
+### 🔴 Deep / Advanced
+
+**2485.** What is the Java Memory Model?
+
+**2486.** Why was the Java Memory Model needed?
+
+**2487.** What does the JMM define?
+
+**2488.** What is visibility under the JMM?
+
+**2489.** What is ordering under the JMM?
+
+**2490.** What is happens-before?
+
+**2491.** Why is happens-before important?
+
+**2492.** What operations establish happens-before relationships?
+
+**2493.** Does program order establish a happens-before relationship?
+
+**2494.** Does unlocking a monitor happen-before a subsequent locking of the same monitor?
+
+**2495.** Does a volatile write happen-before a subsequent read of the same variable?
+
+**2496.** Does calling `Thread.start()` establish a happens-before relationship?
+
+**2497.** Does thread termination establish a happens-before relationship with `join()`?
+
+**2498.** What is synchronization order?
+
+**2499.** What is the difference between happens-before and execution order?
+
+**2500.** Can two operations happen-before each other while executing on different CPUs?
+
+**2501.** Can code execute out of source-code order?
+
+**2502.** What is instruction reordering?
+
+**2503.** Why can instruction reordering break seemingly correct concurrent code?
+
+**2504.** What is compiler reordering?
+
+**2505.** What is CPU/instruction-level reordering?
+
+**2506.** What is the difference between happens-before and "before in source code"?
+
+**2507.** What is safe publication?
+
+**2508.** What is unsafe publication?
+
+**2509.** How can an object be safely published?
+
+**2510.** How do `final` fields provide special initialization guarantees?
+
+**2511.** Can a properly constructed immutable object be safely shared without synchronization?
+
+**2512.** What is the relationship between immutability and thread safety?
+
+---
+
+# I. Locks and `java.util.concurrent.locks`
+
+### 🟢 Must Know
+
+**2513.** What is `Lock`?
+
+**2514.** Why was the `Lock` API introduced?
+
+**2515.** What is `ReentrantLock`?
+
+**2516.** What does "reentrant" mean in `ReentrantLock`?
+
+**2517.** What is the difference between `synchronized` and `ReentrantLock`?
+
+**2518.** What advantages does `ReentrantLock` provide?
+
+**2519.** What is `tryLock()`?
+
+**2520.** Why would you use `tryLock()`?
+
+**2521.** What is the difference between `lock()` and `tryLock()`?
+
+**2522.** What is timed `tryLock()`?
+
+**2523.** What is `lockInterruptibly()`?
+
+**2524.** When would you use `lockInterruptibly()`?
+
+**2525.** Why should `unlock()` usually be placed in a `finally` block?
+
+**2526.** What happens if `unlock()` is called by a thread that does not own the lock?
+
+**2527.** Can multiple threads acquire a `ReentrantLock` simultaneously?
+
+**2528.** What is a fair lock?
+
+**2529.** What is an unfair lock?
+
+**2530.** What are the trade-offs between fair and unfair locks?
+
+### 🔴 Deep / Advanced
+
+**2531.** How does `ReentrantLock` work internally?
+
+**2532.** What is AQS?
+
+**2533.** What is `AbstractQueuedSynchronizer`?
+
+**2534.** How does AQS manage waiting threads?
+
+**2535.** What is the role of the AQS state variable?
+
+**2536.** How does `ReentrantLock` use AQS?
+
+**2537.** What is the difference between exclusive and shared synchronization in AQS?
+
+**2538.** Why is `synchronized` often sufficient compared with explicit locks?
+
+---
+
+# J. ReadWriteLock
+
+### 🟡 Should Know
+
+**2539.** What is `ReadWriteLock`?
+
+**2540.** Why would you use a read-write lock?
+
+**2541.** What is the difference between a read lock and a write lock?
+
+**2542.** Can multiple readers hold the read lock simultaneously?
+
+**2543.** Can a reader acquire the read lock while a writer holds the write lock?
+
+**2544.** Can multiple writers hold the write lock simultaneously?
+
+**2545.** What is `ReentrantReadWriteLock`?
+
+**2546.** When is a read-write lock useful?
+
+**2547.** When can a read-write lock perform worse than `synchronized`?
+
+**2548.** What is lock downgrading?
+
+**2549.** What is lock upgrading?
+
+**2550.** Why is upgrading from read lock to write lock problematic?
+
+---
+
+# K. `StampedLock`
+
+### 🟡 Should Know
+
+**2551.** What is `StampedLock`?
+
+**2552.** Why was `StampedLock` introduced?
+
+**2553.** What are optimistic reads?
+
+**2554.** How does optimistic reading work with `StampedLock`?
+
+**2555.** What is `validate()`?
+
+**2556.** What are the differences between `ReentrantReadWriteLock` and `StampedLock`?
+
+### 🔴 Deep / Advanced
+
+**2557.** Why is optimistic reading useful?
+
+**2558.** What happens if data changes while an optimistic read is in progress?
+
+**2559.** Why is `StampedLock` not reentrant?
+
+**2560.** What risks exist when using `StampedLock` incorrectly?
+
+---
+
+# L. Atomic Classes and CAS
+
+### 🟢 Must Know
+
+**2561.** What are atomic classes in Java?
+
+**2562.** What is `AtomicInteger`?
+
+**2563.** What is `AtomicLong`?
+
+**2564.** What is `AtomicBoolean`?
+
+**2565.** What is `AtomicReference`?
+
+**2566.** Why would you use atomic classes instead of `synchronized`?
+
+**2567.** What is CAS?
+
+**2568.** What does Compare-And-Set mean?
+
+**2569.** How does CAS work conceptually?
+
+**2570.** What happens when CAS succeeds?
+
+**2571.** What happens when CAS fails?
+
+**2572.** Why is CAS called lock-free?
+
+**2573.** Is CAS always better than locking?
+
+**2574.** What is a CAS retry loop?
+
+### 🔴 Deep / Advanced
+
+**2575.** How does `AtomicInteger.incrementAndGet()` work internally?
+
+**2576.** What is the ABA problem?
+
+**2577.** Give a real example of the ABA problem.
+
+**2578.** How does `AtomicStampedReference` address ABA?
+
+**2579.** What is `AtomicMarkableReference`?
+
+**2580.** What is false sharing?
+
+**2581.** How can false sharing affect atomic operations?
+
+**2582.** What is the difference between lock-free, wait-free, and obstruction-free algorithms?
+
+**2583.** Are Java atomic classes always lock-free internally?
+
+**2584.** What are `LongAdder` and `LongAccumulator`?
+
+**2585.** Why can `LongAdder` outperform `AtomicLong` under high contention?
+
+**2586.** When should you prefer `AtomicLong` over `LongAdder`?
+
+---
+
+# M. Thread Communication — `wait`, `notify`, `notifyAll`
+
+### 🟢 Must Know
+
+**2587.** What is inter-thread communication?
+
+**2588.** What is `wait()`?
+
+**2589.** What is `notify()`?
+
+**2590.** What is `notifyAll()`?
+
+**2591.** Why must `wait()` be called while holding the object's monitor?
+
+**2592.** Why must `notify()` be called while holding the object's monitor?
+
+**2593.** What happens when a thread calls `wait()`?
+
+**2594.** Does `wait()` release the monitor?
+
+**2595.** What happens to the thread after it is notified?
+
+**2596.** Does `notify()` immediately transfer the lock to the waiting thread?
+
+**2597.** What is the difference between `notify()` and `notifyAll()`?
+
+**2598.** Why is `notifyAll()` often safer?
+
+**2599.** Why should `wait()` normally be called inside a loop?
+
+**2600.** What is a spurious wakeup?
+
+**2601.** Why does the standard pattern use `while` instead of `if` around `wait()`?
+
+### 🔴 Deep / Advanced
+
+**2602.** Explain the complete lifecycle of a thread calling `wait()` and later being notified.
+
+**2603.** What happens if `wait()` is called without owning the monitor?
+
+**2604.** What exception occurs if `wait()` or `notify()` is called incorrectly?
+
+**2605.** Can `wait()` be replaced by `sleep()`?
+
+**2606.** What is the difference between `wait()` and `sleep()` regarding monitor ownership?
+
+**2607.** Why is `wait/notify` considered a lower-level concurrency mechanism?
+
+**2608.** How would you implement producer-consumer using `wait()` and `notifyAll()`?
+
+**2609.** What problems can occur in a poorly implemented wait/notify producer-consumer implementation?
+
+---
+
+# N. BlockingQueue and Producer-Consumer
+
+### 🟢 Must Know
+
+**2610.** What is the producer-consumer problem?
+
+**2611.** What is `BlockingQueue`?
+
+**2612.** Why is `BlockingQueue` preferred over manually implementing `wait/notify`?
+
+**2613.** What happens when `put()` is called on a full `BlockingQueue`?
+
+**2614.** What happens when `take()` is called on an empty `BlockingQueue`?
+
+**2615.** What is the difference between `put()` and `offer()`?
+
+**2616.** What is the difference between `take()` and `poll()`?
+
+**2617.** What is `offer(e, timeout, unit)`?
+
+**2618.** What are common implementations of `BlockingQueue`?
+
+**2619.** What is `ArrayBlockingQueue`?
+
+**2620.** What is `LinkedBlockingQueue`?
+
+**2621.** What is `PriorityBlockingQueue`?
+
+**2622.** What is `DelayQueue`?
+
+**2623.** What is `SynchronousQueue`?
+
+### 🟡 Should Know
+
+**2624.** What is the difference between bounded and unbounded queues?
+
+**2625.** Why can an unbounded queue be dangerous in a production system?
+
+**2626.** How does queue capacity affect throughput and memory usage?
+
+**2627.** How would you design a producer-consumer system with multiple producers and consumers?
+
+**2628.** How would you handle producer overload?
+
+**2629.** What is backpressure?
+
+**2630.** How can a bounded `BlockingQueue` provide backpressure?
+
+---
+
+# O. Executor Framework
+
+### 🟢 Must Know
+
+**2631.** What is the Executor Framework?
+
+**2632.** Why was the Executor Framework introduced?
+
+**2633.** What problem does `ExecutorService` solve?
+
+**2634.** What is the difference between manually creating threads and using an executor?
+
+**2635.** What is `Executor`?
+
+**2636.** What is `ExecutorService`?
+
+**2637.** What is `ScheduledExecutorService`?
+
+**2638.** What is the difference between `execute()` and `submit()`?
+
+**2639.** What happens when a task submitted with `submit()` throws an exception?
+
+**2640.** How do you retrieve an exception from a submitted task?
+
+**2641.** What is `Future`?
+
+**2642.** What is `Future.get()`?
+
+**2643.** What happens if `Future.get()` is called before the task completes?
+
+**2644.** What is `Future.cancel()`?
+
+**2645.** What is the difference between cancellation with and without interruption?
+
+**2646.** What does `shutdown()` do?
+
+**2647.** What does `shutdownNow()` do?
+
+**2648.** What is the difference between `shutdown()` and `shutdownNow()`?
+
+**2649.** How do you wait for an executor to terminate?
+
+**2650.** What happens if an executor is never shut down?
+
+---
+
+# P. Thread Pools
+
+### 🟢 Must Know
+
+**2651.** What is a thread pool?
+
+**2652.** Why do we use thread pools?
+
+**2653.** What are the benefits of reusing threads?
+
+**2654.** What is `ThreadPoolExecutor`?
+
+**2655.** What are the main components of `ThreadPoolExecutor`?
+
+**2656.** What is `corePoolSize`?
+
+**2657.** What is `maximumPoolSize`?
+
+**2658.** What is `keepAliveTime`?
+
+**2659.** What is the work queue?
+
+**2660.** What is a `ThreadFactory`?
+
+**2661.** What is a `RejectedExecutionHandler`?
+
+**2662.** Explain how `ThreadPoolExecutor` decides whether to create a thread or queue a task.
+
+**2663.** What happens when the core threads are busy?
+
+**2664.** When does `ThreadPoolExecutor` create threads beyond `corePoolSize`?
+
+**2665.** When does task rejection happen?
+
+**2666.** What are the standard rejection policies?
+
+**2667.** What is `AbortPolicy`?
+
+**2668.** What is `CallerRunsPolicy`?
+
+**2669.** What is `DiscardPolicy`?
+
+**2670.** What is `DiscardOldestPolicy`?
+
+### 🔴 Deep / Advanced
+
+**2671.** How would you choose `corePoolSize` and `maximumPoolSize` for a CPU-bound workload?
+
+**2672.** How would you choose them for an I/O-bound workload?
+
+**2673.** How does queue type affect thread-pool behavior?
+
+**2674.** Why can an unbounded queue make `maximumPoolSize` effectively useless?
+
+**2675.** Why can creating an enormous thread pool be harmful?
+
+**2676.** How can a thread pool cause memory pressure?
+
+**2677.** How can a thread pool cause request latency spikes?
+
+**2678.** How can a thread pool cause cascading failures in microservices?
+
+**2679.** How would you design separate thread pools for CPU-intensive and I/O-intensive tasks?
+
+**2680.** How would you monitor a production thread pool?
+
+---
+
+# Q. Built-in Executors
+
+### 🟢 Must Know
+
+**2681.** What does `Executors.newFixedThreadPool()` do?
+
+**2682.** What does `Executors.newCachedThreadPool()` do?
+
+**2683.** What does `Executors.newSingleThreadExecutor()` do?
+
+**2684.** What does `Executors.newScheduledThreadPool()` do?
+
+**2685.** What is the difference between fixed and cached thread pools?
+
+**2686.** Why can `newCachedThreadPool()` be dangerous under uncontrolled load?
+
+**2687.** Why can `newFixedThreadPool()` be dangerous because of its queue?
+
+**2688.** Why might you prefer constructing `ThreadPoolExecutor` explicitly?
+
+**2689.** What is the default queue used by `newFixedThreadPool()`?
+
+**2690.** What queue does `newCachedThreadPool()` use?
+
+---
+
+# R. Callable and Future
+
+### 🟢 Must Know
+
+**2691.** What is `Callable`?
+
+**2692.** How is `Callable` different from `Runnable`?
+
+**2693.** Can `Callable.call()` return a value?
+
+**2694.** Can `Callable.call()` throw checked exceptions?
+
+**2695.** How do you submit a `Callable` to an executor?
+
+**2696.** What does `Future<T>` represent?
+
+**2697.** What are the states/lifecycle concepts of a `Future`?
+
+**2698.** What happens when `Future.get()` times out?
+
+**2699.** What is `FutureTask`?
+
+**2700.** How does `FutureTask` combine `Runnable` and `Future` concepts?
+
+### 🟡 Should Know
+
+**2701.** How can you execute multiple `Callable` tasks and collect their results?
+
+**2702.** What is `invokeAll()`?
+
+**2703.** What is `invokeAny()`?
+
+**2704.** What is the difference between `invokeAll()` and `invokeAny()`?
+
+**2705.** What happens to remaining tasks when `invokeAny()` obtains a successful result?
+
+---
+
+# S. Synchronization Utilities
+
+### 🟢 Must Know
+
+**2706.** What is `CountDownLatch`?
+
+**2707.** When would you use `CountDownLatch`?
+
+**2708.** What does `countDown()` do?
+
+**2709.** What does `await()` do?
+
+**2710.** Can a `CountDownLatch` be reused?
+
+**2711.** What is `CyclicBarrier`?
+
+**2712.** How is `CyclicBarrier` different from `CountDownLatch`?
+
+**2713.** What does "cyclic" mean in `CyclicBarrier`?
+
+**2714.** What happens when one thread reaches a barrier before others?
+
+**2715.** What is a barrier action?
+
+**2716.** What happens if a thread waiting at a barrier is interrupted?
+
+### 🟡 Should Know
+
+**2717.** What is `Phaser`?
+
+**2718.** Why would you use `Phaser` instead of `CyclicBarrier`?
+
+**2719.** What are phases in `Phaser`?
+
+**2720.** What is dynamic registration in `Phaser`?
+
+**2721.** What is `Semaphore`?
+
+**2722.** What is a permit in `Semaphore`?
+
+**2723.** How can a semaphore limit concurrent access to a resource?
+
+**2724.** What is the difference between a binary semaphore and a mutex?
+
+**2725.** What happens if a semaphore has zero available permits?
+
+---
+
+# T. CompletableFuture
+
+## T1. Fundamentals
+
+### 🟢 Must Know
+
+**2726.** What is `CompletableFuture`?
+
+**2727.** Why was `CompletableFuture` introduced?
+
+**2728.** How is `CompletableFuture` different from `Future`?
+
+**2729.** How do you create an already completed `CompletableFuture`?
+
+**2730.** What is `supplyAsync()`?
+
+**2731.** What is `runAsync()`?
+
+**2732.** What is the difference between `supplyAsync()` and `runAsync()`?
+
+**2733.** What executor does `CompletableFuture` use by default for async methods?
+
+**2734.** How do you provide a custom executor?
+
+---
+
+## T2. Chaining
+
+### 🟢 Must Know
+
+**2735.** What is `thenApply()`?
+
+**2736.** What is `thenAccept()`?
+
+**2737.** What is `thenRun()`?
+
+**2738.** What is the difference between `thenApply`, `thenAccept`, and `thenRun`?
+
+**2739.** What is `thenCompose()`?
+
+**2740.** What is `thenCombine()`?
+
+**2741.** What is the difference between `thenCompose()` and `thenCombine()`?
+
+**2742.** What is `allOf()`?
+
+**2743.** What is `anyOf()`?
+
+**2744.** How do you execute multiple independent operations concurrently using `CompletableFuture`?
+
+**2745.** How do you combine their results?
+
+### 🟡 Should Know
+
+**2746.** What is the difference between `thenApply()` and `thenApplyAsync()`?
+
+**2747.** What is the difference between `thenCompose()` and `thenComposeAsync()`?
+
+**2748.** When does a non-async continuation execute?
+
+**2749.** Which thread executes a `thenApply()` callback?
+
+**2750.** Which executor executes `thenApplyAsync()`?
+
+---
+
+## T3. Exception Handling
+
+### 🟢 Must Know
+
+**2751.** How do you handle exceptions in `CompletableFuture`?
+
+**2752.** What is `exceptionally()`?
+
+**2753.** What is `handle()`?
+
+**2754.** What is `whenComplete()`?
+
+**2755.** What is the difference between `exceptionally`, `handle`, and `whenComplete`?
+
+**2756.** What happens when an exception occurs in the middle of a `CompletableFuture` chain?
+
+**2757.** What happens when an exception is recovered using `exceptionally()`?
+
+**2758.** How do you propagate exceptions through a `CompletableFuture` pipeline?
+
+### 🔴 Deep / Advanced
+
+**2759.** How does `CompletableFuture` represent exceptional completion internally?
+
+**2760.** What happens if a `CompletableFuture` is both completed normally and an exception is subsequently supplied?
+
+**2761.** What is the difference between `CompletionException` and the original exception?
+
+**2762.** Why might `join()` throw `CompletionException` while `get()` throws `ExecutionException`?
+
+---
+
+# U. Fork/Join Framework
+
+### 🟡 Should Know
+
+**2763.** What is the Fork/Join Framework?
+
+**2764.** What problem does Fork/Join solve?
+
+**2765.** What is `ForkJoinPool`?
+
+**2766.** What is work stealing?
+
+**2767.** Why does work stealing improve utilization?
+
+**2768.** What is `RecursiveTask`?
+
+**2769.** What is `RecursiveAction`?
+
+**2770.** What is the difference between `RecursiveTask` and `RecursiveAction`?
+
+**2771.** How do you divide a large task using Fork/Join?
+
+### 🔴 Deep / Advanced
+
+**2772.** How does work stealing work internally?
+
+**2773.** Why do Fork/Join workers maintain task queues?
+
+**2774.** What is the difference between pushing and stealing tasks?
+
+**2775.** Why is Fork/Join particularly useful for CPU-bound recursive workloads?
+
+**2776.** What happens when you submit blocking I/O tasks to a `ForkJoinPool`?
+
+**2777.** What is `ManagedBlocker`?
+
+**2778.** How does `ForkJoinPool.commonPool()` relate to `CompletableFuture`?
+
+**2779.** How can misuse of the common pool affect unrelated application tasks?
+
+---
+
+# V. ThreadLocal
+
+### 🟢 Must Know
+
+**2780.** What is `ThreadLocal`?
+
+**2781.** Why would you use `ThreadLocal`?
+
+**2782.** How does `ThreadLocal` store values separately for each thread?
+
+**2783.** Does one thread see another thread's `ThreadLocal` value?
+
+**2784.** What is `ThreadLocal.withInitial()`?
+
+**2785.** What is `ThreadLocal.remove()`?
+
+**2786.** Why is `ThreadLocal` dangerous when used with thread pools?
+
+**2787.** Why should thread-local values often be removed after use?
+
+### 🔴 Deep / Advanced
+
+**2788.** How does `ThreadLocalMap` work internally?
+
+**2789.** Why are `ThreadLocalMap` keys weak references?
+
+**2790.** What is a stale `ThreadLocal` entry?
+
+**2791.** How can stale `ThreadLocal` values cause memory leaks?
+
+**2792.** Why can a thread pool make a `ThreadLocal` leak persist longer?
+
+**2793.** What problems can occur when request-specific context is stored in `ThreadLocal`?
+
+**2794.** How would you safely use `ThreadLocal` in a web application?
+
+---
+
+# W. Concurrency Problems
+
+### 🟢 Must Know
+
+**2795.** What is deadlock?
+
+**2796.** What are the four necessary conditions for deadlock?
+
+**2797.** Give a simple Java deadlock example.
+
+**2798.** How can deadlock be prevented?
+
+**2799.** How can lock ordering prevent deadlock?
+
+**2800.** What is livelock?
+
+**2801.** How is livelock different from deadlock?
+
+**2802.** What is starvation?
+
+**2803.** How can starvation occur?
+
+**2804.** What is lock contention?
+
+**2805.** What is thread contention?
+
+**2806.** What is priority inversion?
+
+### 🔴 Deep / Advanced
+
+**2807.** How would you diagnose a deadlock in a production Java application?
+
+**2808.** How can a thread dump reveal deadlocks?
+
+**2809.** How can `tryLock()` help prevent deadlock?
+
+**2810.** Can deadlock occur with a single lock?
+
+**2811.** Can deadlock occur without explicit `synchronized`?
+
+**2812.** Can thread pools cause deadlocks?
+
+**2813.** How can nested task submission to the same executor cause deadlock?
+
+**2814.** What is thread starvation deadlock?
+
+---
+
+# X. Safe Publication and Immutability
+
+### 🟢 Must Know
+
+**2815.** What is safe publication?
+
+**2816.** Why is safe publication important?
+
+**2817.** How can an object be safely published through a `volatile` reference?
+
+**2818.** How can synchronization safely publish an object?
+
+**2819.** How can static initialization safely publish an object?
+
+**2820.** How can a final field help with safe publication?
+
+**2821.** Why are immutable objects naturally easier to share between threads?
+
+**2822.** Is an immutable object automatically thread-safe?
+
+**2823.** Is a thread-safe object necessarily immutable?
+
+### 🔴 Deep / Advanced
+
+**2824.** What is unsafe publication?
+
+**2825.** Can another thread observe default values of fields in an improperly published object?
+
+**2826.** Can another thread observe a partially initialized object?
+
+**2827.** Why is double-checked locking related to safe publication?
+
+**2828.** Why does the classic double-checked locking pattern require `volatile`?
+
+---
+
+# Y. Double-Checked Locking and Singleton
+
+### 🟡 Should Know
+
+**2829.** What is double-checked locking?
+
+**2830.** Why was double-checked locking historically broken in Java?
+
+**2831.** How does `volatile` make double-checked locking safe?
+
+**2832.** What are the different ways to implement a thread-safe singleton?
+
+**2833.** How does enum-based singleton provide thread safety?
+
+**2834.** How does class initialization provide thread safety for singleton initialization?
+
+**2835.** What is the initialization-on-demand holder idiom?
+
+### 🔴 Deep / Advanced
+
+**2836.** Explain the instruction reordering problem in double-checked locking.
+
+**2837.** Why can another thread observe a non-null but incompletely initialized singleton without `volatile`?
+
+**2838.** What happens at the machine level when an object is created and assigned to a reference?
+
+---
+
+# Z. Concurrent Design and Performance
+
+### 🟡 Should Know
+
+**2839.** How do you decide whether to use locking, atomics, immutable objects, or concurrent collections?
+
+**2840.** When is coarse-grained locking appropriate?
+
+**2841.** When is fine-grained locking appropriate?
+
+**2842.** What are the trade-offs of coarse-grained vs fine-grained locking?
+
+**2843.** What is lock granularity?
+
+**2844.** How can excessive synchronization reduce throughput?
+
+**2845.** How can excessive synchronization increase latency?
+
+**2846.** What is lock contention?
+
+**2847.** How can you reduce lock contention?
+
+**2848.** What is lock striping?
+
+**2849.** Why is reducing shared mutable state often better than adding more locks?
+
+### 🔴 Deep / Advanced
+
+**2850.** How would you design a highly concurrent in-memory cache?
+
+**2851.** How would you prevent multiple threads from loading the same missing cache entry simultaneously?
+
+**2852.** How would you design a thread-safe rate limiter?
+
+**2853.** How would you design a bounded worker system that applies backpressure?
+
+**2854.** How would you design a thread-safe counter under extremely high contention?
+
+**2855.** How would you choose between `AtomicLong`, `LongAdder`, and locking for a high-throughput counter?
+
+**2856.** How would you design a thread-safe statistics collector?
+
+---
+
+# AA. Thread Pools in Backend Applications
+
+### 🔴 Deep / Advanced
+
+**2857.** Suppose a REST API receives 10,000 requests per second. How would you reason about thread-pool sizing?
+
+**2858.** What happens if every incoming request performs a blocking database call?
+
+**2859.** How can a database connection pool and application thread pool interact?
+
+**2860.** What happens if the application thread pool is larger than the database connection pool?
+
+**2861.** What happens if the database connection pool is larger than the application thread pool?
+
+**2862.** How can an incorrectly sized thread pool cause cascading latency?
+
+**2863.** How would you isolate slow downstream services from fast operations?
+
+**2864.** How would you prevent one workload from exhausting the application's worker threads?
+
+**2865.** How would you design separate executors for Kafka processing, database work, and asynchronous API calls?
+
+**2866.** How would you propagate request context across asynchronous tasks?
+
+**2867.** What problems can occur when using `ThreadLocal` with asynchronous execution?
+
+**2868.** How would you handle graceful shutdown of executors during application deployment?
+
+---
+
+# AB. Concurrency + Kafka / Event-Driven Systems
+
+### 🟡 Should Know
+
+**2869.** How does concurrency work in a Kafka consumer application?
+
+**2870.** What is the relationship between Kafka partitions and consumer concurrency?
+
+**2871.** Can multiple threads safely consume from the same Kafka consumer instance?
+
+**2872.** Why is a Kafka consumer generally not shared concurrently across threads?
+
+**2873.** How would you design concurrent processing of Kafka records?
+
+**2874.** What problems can occur when Kafka processing is delegated to another thread pool?
+
+**2875.** How can asynchronous processing affect Kafka offset management?
+
+**2876.** What happens if message processing finishes out of order?
+
+**2877.** How would you preserve ordering for messages belonging to the same key?
+
+**2878.** How can an executor become a bottleneck for Kafka consumption?
+
+**2879.** How would you apply backpressure to Kafka processing?
+
+### 🔴 Deep / Advanced
+
+**2880.** Suppose Kafka is producing messages faster than your Java application can process them. How would you design the concurrency model?
+
+**2881.** How would you prevent unbounded task accumulation when consuming Kafka messages?
+
+**2882.** How would you coordinate Kafka consumer concurrency with database connection limits?
+
+**2883.** How would you handle retries when multiple messages are processed concurrently?
+
+**2884.** How can concurrent processing affect message ordering and idempotency?
+
+---
+
+# AC. Concurrency + Database / Batch Processing
+
+### 🔴 Deep / Advanced
+
+**2885.** How would you process millions of database records concurrently?
+
+**2886.** How would you decide the number of worker threads for a database-heavy batch job?
+
+**2887.** How can excessive database concurrency reduce overall throughput?
+
+**2888.** How do database connection pools interact with Java executor pools?
+
+**2889.** How would you prevent multiple threads from processing the same database record?
+
+**2890.** What locking strategies can be used for concurrent database processing?
+
+**2891.** What is optimistic locking?
+
+**2892.** What is pessimistic locking?
+
+**2893.** How does database-level locking differ from Java-level locking?
+
+**2894.** Why doesn't a Java `synchronized` block protect data from another application instance?
+
+**2895.** How would you coordinate processing when multiple application instances consume the same workload?
+
+**2896.** How would you design idempotent concurrent processing?
+
+---
+
+# AD. Advanced Concurrency Concepts
+
+### 🔴 Deep / Advanced
+
+**2897.** What is lock-free programming?
+
+**2898.** What is wait-free programming?
+
+**2899.** What is non-blocking concurrency?
+
+**2900.** What is obstruction-free progress?
+
+**2901.** What is the difference between blocking and non-blocking algorithms?
+
+**2902.** What is memory contention?
+
+**2903.** What is cache-line contention?
+
+**2904.** What is false sharing?
+
+**2905.** How can CPU cache behavior affect multithreaded Java performance?
+
+**2906.** What is cache coherence?
+
+**2907.** What is the relationship between cache coherence and the Java Memory Model?
+
+**2908.** What is memory fencing?
+
+**2909.** What is a memory barrier?
+
+**2910.** Why can memory barriers affect performance?
+
+**2911.** What is optimistic concurrency?
+
+**2912.** What is pessimistic concurrency?
+
+**2913.** When would optimistic concurrency be preferable?
+
+**2914.** When would pessimistic concurrency be preferable?
+
+---
+
+# AE. Modern Java Concurrency — Virtual Threads
+
+### 🟢 Must Know
+
+**2915.** What are virtual threads?
+
+**2916.** Why were virtual threads introduced?
+
+**2917.** What problem do virtual threads solve?
+
+**2918.** What is a platform thread?
+
+**2919.** What is the difference between platform threads and virtual threads?
+
+**2920.** Can you create millions of virtual threads?
+
+**2921.** How do virtual threads improve scalability for blocking I/O?
+
+**2922.** Are virtual threads faster than platform threads?
+
+**2923.** Are virtual threads appropriate for CPU-bound workloads?
+
+**2924.** How do virtual threads affect thread-pool design?
+
+**2925.** Should you use a traditional fixed thread pool for virtual threads?
+
+**2926.** How do you create a virtual thread?
+
+**2927.** What is `Executors.newVirtualThreadPerTaskExecutor()`?
+
+### 🔴 Deep / Advanced
+
+**2928.** How are virtual threads implemented conceptually?
+
+**2929.** What are carrier threads?
+
+**2930.** What is mounting and unmounting of virtual threads?
+
+**2931.** What happens when a virtual thread performs blocking I/O?
+
+**2932.** Why doesn't blocking I/O necessarily block the underlying carrier thread?
+
+**2933.** What is pinning in virtual threads?
+
+**2934.** How can `synchronized` potentially pin a virtual thread?
+
+**2935.** What happens when a virtual thread is pinned?
+
+**2936.** How should blocking sections be designed when using virtual threads?
+
+**2937.** Can virtual threads eliminate the need for asynchronous programming?
+
+**2938.** Can virtual threads eliminate the need for backpressure?
+
+**2939.** What happens if you create millions of virtual threads that all access a limited database connection pool?
+
+**2940.** How would you migrate a traditional Spring Boot application from platform-thread-based concurrency to virtual threads?
+
+---
+
+# AF. Interview Output / Tricky Questions
+
+### 🔥 Very Important
+
+**2941.** What is the output when `start()` and `run()` are called in different combinations?
+
+**2942.** What happens when two threads increment the same integer 1,000 times without synchronization?
+
+**2943.** Can the final counter value ever be greater than expected?
+
+**2944.** Can the final counter value ever be less than expected?
+
+**2945.** What happens when a `volatile` variable is incremented by multiple threads?
+
+**2946.** What happens when a synchronized method calls another synchronized method?
+
+**2947.** What happens when two synchronized methods use different objects?
+
+**2948.** What happens when a thread calls `wait()` without owning the monitor?
+
+**2949.** What happens when `notify()` is called before another thread calls `wait()`?
+
+**2950.** What happens when `notify()` is called and no thread is waiting?
+
+**2951.** What happens when `notifyAll()` wakes multiple threads competing for the same lock?
+
+**2952.** What happens when a thread is interrupted while sleeping?
+
+**2953.** What happens when a thread catches `InterruptedException` and does not restore the interrupt status?
+
+**2954.** What happens when `Future.get()` is called on a task that never completes?
+
+**2955.** What happens when an executor's queue becomes full?
+
+**2956.** What happens when `shutdown()` is called while tasks are still running?
+
+**2957.** What happens when `shutdownNow()` is called?
+
+**2958.** What happens when `CompletableFuture` stages throw exceptions?
+
+**2959.** Which thread executes a non-async `CompletableFuture` callback?
+
+**2960.** What happens when a `ThreadLocal` value is not removed in a thread pool?
+
+---
+
+# AG. Production Troubleshooting Scenarios
+
+### 🔥 Very Important
+
+**2961.** Your Java application suddenly has 500 threads. How would you investigate?
+
+**2962.** CPU usage is 100% but heap usage is normal. How would you investigate a concurrency-related cause?
+
+**2963.** Application latency suddenly increases while request volume remains constant. How could thread contention be involved?
+
+**2964.** All worker threads are busy and requests are queued. How would you diagnose the bottleneck?
+
+**2965.** The application has many `BLOCKED` threads. What would you investigate?
+
+**2966.** The application has many `WAITING` threads. What could be happening?
+
+**2967.** The application has many threads in `TIMED_WAITING`. What could be happening?
+
+**2968.** A thread pool's queue keeps growing. What does that tell you?
+
+**2969.** A thread pool rejects tasks intermittently. What would you investigate?
+
+**2970.** A database connection pool is exhausted while many application threads are waiting. How would you diagnose it?
+
+**2971.** A Kafka consumer application is consuming slower than producers are publishing. How would you investigate?
+
+**2972.** One service instance has dramatically more threads than other instances. What could explain it?
+
+**2973.** An application works correctly with one thread but fails under concurrency. How would you debug it?
+
+**2974.** A shared cache occasionally returns stale data. What concurrency issues would you investigate?
+
+**2975.** A counter occasionally has incorrect values under load. How would you diagnose it?
+
+**2976.** A production application occasionally hangs with no obvious exception. How would you investigate possible deadlock?
+
+**2977.** A task submitted to an executor never completes. What could cause it?
+
+**2978.** A `CompletableFuture` chain occasionally becomes stuck. What would you investigate?
+
+**2979.** An application experiences periodic latency spikes when traffic increases. How could thread-pool saturation cause this?
+
+**2980.** How would you use thread dumps to diagnose a concurrency problem?
+
+---
+
+# AH. Interviewer Deep-Dive Chains
+
+### 🔥 Must Practice
+
+**2981.** Explain `synchronized`.
+→ What is a monitor?
+→ What object is locked?
+→ Is it reentrant?
+→ What happens if another thread tries to acquire it?
+→ How does the JVM implement it?
+
+**2982.** Explain `volatile`.
+→ Does it provide atomicity?
+→ What is visibility?
+→ What is happens-before?
+→ Why is it required for double-checked locking?
+
+**2983.** Explain `ThreadPoolExecutor`.
+→ What is `corePoolSize`?
+→ What happens when core threads are busy?
+→ When are additional threads created?
+→ What happens when the queue is full?
+→ What is rejection policy?
+
+**2984.** Explain `CompletableFuture`.
+→ `thenApply` vs `thenCompose`?
+→ `thenApply` vs `thenApplyAsync`?
+→ How are exceptions handled?
+→ Which executor is used?
+→ What happens if the common pool is saturated?
+
+**2985.** Explain `ReentrantLock`.
+→ Why use it over `synchronized`?
+→ What is `tryLock()`?
+→ What is fairness?
+→ What is AQS?
+→ How does AQS queue threads?
+
+**2986.** Explain `AtomicInteger`.
+→ What is CAS?
+→ Why is CAS useful?
+→ What is ABA?
+→ When would you use `LongAdder` instead?
+
+**2987.** Explain `wait()` and `notify()`.
+→ Why must you own the monitor?
+→ Does `wait()` release the lock?
+→ Why use `while`?
+→ What is a spurious wakeup?
+
+**2988.** Explain thread pools in backend systems.
+→ CPU-bound vs I/O-bound?
+→ Database pool interaction?
+→ Queue sizing?
+→ Backpressure?
+→ Rejection strategy?
+
+**2989.** Explain deadlock.
+→ Four necessary conditions?
+→ Prevention?
+→ Detection?
+→ Thread dump diagnosis?
+→ Can thread pools cause deadlocks?
+
+**2990.** Explain virtual threads.
+→ Platform vs virtual threads?
+→ Carrier threads?
+→ Blocking I/O?
+→ Pinning?
+→ Database connection limits?
+→ Are virtual threads appropriate for CPU-heavy work?
+
+---
+
+# AI. Final Master Checklist
+
+**2991.** Can you explain process vs thread?
+
+**2992.** Can you explain concurrency vs parallelism?
+
+**2993.** Can you explain the complete Java thread lifecycle?
+
+**2994.** Can you explain every Java `Thread.State`?
+
+**2995.** Can you explain `start()` vs `run()`?
+
+**2996.** Can you explain `sleep()` vs `wait()` vs `join()`?
+
+**2997.** Can you explain `interrupt()` correctly?
+
+**2998.** Can you explain intrinsic locks and monitors?
+
+**2999.** Can you explain `synchronized` at both API and JVM-concept level?
+
+**3000.** Can you explain atomicity, visibility, and ordering?
+
+**3001.** Can you explain `volatile`?
+
+**3002.** Can you explain the Java Memory Model?
+
+**3003.** Can you explain happens-before?
+
+**3004.** Can you explain safe publication?
+
+**3005.** Can you explain race conditions?
+
+**3006.** Can you explain `ReentrantLock`?
+
+**3007.** Can you explain AQS?
+
+**3008.** Can you explain `ReadWriteLock`?
+
+**3009.** Can you explain `StampedLock`?
+
+**3010.** Can you explain CAS?
+
+**3011.** Can you explain atomic classes?
+
+**3012.** Can you explain ABA?
+
+**3013.** Can you explain `LongAdder`?
+
+**3014.** Can you explain `wait/notify/notifyAll`?
+
+**3015.** Can you explain `BlockingQueue`?
+
+**3016.** Can you implement producer-consumer safely?
+
+**3017.** Can you explain `ExecutorService`?
+
+**3018.** Can you explain `ThreadPoolExecutor` internals?
+
+**3019.** Can you explain thread-pool sizing?
+
+**3020.** Can you explain rejection policies?
+
+**3021.** Can you explain `Callable` and `Future`?
+
+**3022.** Can you explain `CompletableFuture`?
+
+**3023.** Can you explain asynchronous chaining and composition?
+
+**3024.** Can you explain `CompletableFuture` exception handling?
+
+**3025.** Can you explain Fork/Join and work stealing?
+
+**3026.** Can you explain `ThreadLocal` and its memory-leak risks?
+
+**3027.** Can you explain deadlock, livelock, and starvation?
+
+**3028.** Can you diagnose concurrency issues using thread dumps?
+
+**3029.** Can you design a thread-safe cache?
+
+**3030.** Can you design a producer-consumer system?
+
+**3031.** Can you design a bounded worker system with backpressure?
+
+**3032.** Can you design a high-throughput concurrent counter?
+
+**3033.** Can you design concurrency around Kafka consumers?
+
+**3034.** Can you design concurrency around database-heavy batch processing?
+
+**3035.** Can you explain virtual threads and when to use them?
+
+**3036.** Can you troubleshoot thread-pool saturation in production?
+
+**3037.** Can you explain the difference between Java-level concurrency and database-level concurrency?
+
+**3038.** Can you reason about concurrency when multiple application instances are running?
+
+**3039.** Can you identify race conditions from code without executing it?
+
+**3040.** Can you explain why a seemingly thread-safe implementation can still fail under production load?

@@ -1,0 +1,1528 @@
+Yes — and after looking at the role/company context, I would **change your preparation strategy quite a bit**.
+
+This does **not** sound like a generic “Java developer + LeetCode” Round 1.
+
+From what you've been told, I would prepare for a **hands-on backend/payment-engineering screening** where the interviewer can move between:
+
+**DSA → Java implementation → Spring/microservices → security → concurrency → database/pagination → payment-domain scenarios.**
+
+India Satcom describes itself as a payments platform-as-a-service company serving merchants, with work involving payment services, merchant systems, high-throughput APIs, identity, reporting and critical production systems. Their current material also specifically discusses Keycloak, MongoDB, CQRS, payment gateways, ledgers, reconciliation and high-throughput processing. ([LinkedIn][1])
+
+Their published Java role also mentions Java/Spring Boot/Spring Data/Spring Security, REST/gRPC, microservices, relational + NoSQL databases, unit testing, and payment functions such as authorization, capture, refund, settlement, reconciliation and webhooks. ([Wellfound][2])
+
+So your interviewer giving you that list actually gives us a **very strong signal about the pattern**.
+
+---
+
+# 1. First: What I think Round 1 will look like
+
+I'd prepare for something roughly like:
+
+### Part A — DSA / coding
+
+**25–35%**
+
+Not necessarily extremely hard LeetCode.
+
+Likely:
+
+* Arrays
+* Strings
+* HashMap/HashSet
+* Searching
+* Sorting
+* Two pointers
+* Sliding window
+* Basic recursion
+* Stack/Queue
+* CRUD-style coding
+* Pagination
+* Boundary/edge cases
+
+And importantly:
+
+> **They may ask you to actually write Java code while explaining it.**
+
+---
+
+### Part B — Java implementation
+
+**25–30%**
+
+This is where I think your interviewer may go deeper than a normal DSA round.
+
+Expect:
+
+* OOP
+* Encapsulation
+* `equals()` / `hashCode()`
+* Collections
+* HashMap
+* Exception handling
+* Streams
+* Optional
+* Interfaces/abstract classes
+* Immutable objects
+* Multithreading
+* ExecutorService
+* `CompletableFuture`
+* synchronized / locks
+* race conditions
+* concurrent collections
+* writing unit tests
+
+Especially:
+
+> "Implement this."
+
+rather than:
+
+> "What is polymorphism?"
+
+---
+
+### Part C — Spring / Microservices
+
+**15–20%**
+
+You should absolutely prepare:
+
+* Spring Boot
+* REST APIs
+* Dependency Injection
+* Spring Data JPA
+* MongoDB basics
+* Transactions
+* Exception handling
+* Validation
+* Feign/WebClient
+* Async programming
+* Kafka basics
+* Circuit breaker
+* Retry
+* Timeout
+* Idempotency
+* Pagination
+* Authentication/authorization
+
+---
+
+### Part D — Payment concepts
+
+**15–20%**
+
+This is the part I would **not underestimate**.
+
+Because the company is specifically payment-focused.
+
+Their own material describes payment flows involving gateway → bank/card networks → merchant → settlement/reconciliation, and highlights authorization, settlement, reliability and security. ([LinkedIn][3])
+
+You should know:
+
+```text
+Payment Initiation
+       ↓
+Authorization
+       ↓
+Capture
+       ↓
+Success / Failure
+       ↓
+Settlement
+       ↓
+Reconciliation
+```
+
+And:
+
+* Payment lifecycle
+* Payment status
+* Idempotency
+* Duplicate payment
+* Retry
+* Timeout
+* Callback/webhook
+* Refund
+* Partial refund
+* Reversal
+* Settlement
+* Reconciliation
+* Ledger
+* Double-entry ledger
+* Transaction consistency
+* Exactly-once vs at-least-once
+* Distributed failures
+
+---
+
+# 2. The BIGGEST signal in the list you received
+
+This:
+
+> **"multithreading, async programming, wallet, parking, high TPS, ledger, schema designing, DB locks/logs"**
+
+is extremely important.
+
+It tells me the interviewer isn't only testing whether you can solve:
+
+```java
+int[] nums = {...}
+```
+
+They're testing:
+
+> **Can this person actually implement a backend system correctly when concurrency and money are involved?**
+
+That's a very different preparation style.
+
+---
+
+# 3. Your preparation should have 8 major buckets
+
+I would structure your Sunday → Wednesday preparation exactly like this.
+
+---
+
+# BUCKET 1 — DSA
+
+Don't attempt 200 random LeetCode problems.
+
+Master **patterns**.
+
+## Tier 1 — MUST DO
+
+### Arrays
+
+You should be able to implement quickly:
+
+* Find maximum/minimum
+* Second largest
+* Remove duplicates
+* Move zeroes
+* Rotate array
+* Reverse array
+* Merge arrays
+* Missing number
+* Duplicate number
+* Frequency counting
+* Kadane's algorithm
+
+---
+
+### HashMap / HashSet
+
+Very important.
+
+Practice:
+
+```text
+Two Sum
+First non-repeating character
+Frequency counting
+Group Anagrams
+Longest consecutive sequence
+Duplicate detection
+Intersection of arrays
+```
+
+Know exactly why:
+
+```java
+HashMap<K,V>
+```
+
+gives average:
+
+```text
+get → O(1)
+put → O(1)
+```
+
+and when that assumption breaks.
+
+---
+
+### Two pointers
+
+Must know:
+
+```text
+Two Sum sorted
+Remove duplicates
+Move zeroes
+Container With Most Water
+Palindrome
+3Sum
+```
+
+---
+
+### Sliding window
+
+This is explicitly mentioned by your interviewer.
+
+So **HIGH PRIORITY**.
+
+Know:
+
+```text
+Fixed window
+Variable window
+Longest substring
+Maximum/minimum window
+Frequency-map based window
+```
+
+Classic problems:
+
+* Longest substring without repeating characters
+* Maximum sum subarray of size K
+* Minimum window substring
+* Longest substring with at most K distinct characters
+
+---
+
+### Searching
+
+Know:
+
+```text
+Linear search
+Binary search
+Binary search on answer
+```
+
+And variations:
+
+```text
+First occurrence
+Last occurrence
+Lower bound
+Upper bound
+Rotated sorted array
+Search insertion position
+```
+
+---
+
+### Sorting
+
+You don't need to become a sorting-algorithm researcher.
+
+Know:
+
+* Bubble
+* Selection
+* Insertion
+* Merge
+* Quick
+* Heap
+
+More importantly:
+
+**when to use Java's sorting facilities and complexity.**
+
+---
+
+# BUCKET 2 — Java implementation
+
+This is probably one of your most important areas.
+
+I'd specifically prepare these.
+
+### OOP
+
+You mentioned encapsulation.
+
+Be ready for:
+
+```text
+Encapsulation
+Abstraction
+Inheritance
+Polymorphism
+Composition
+Interface vs abstract class
+```
+
+But don't just memorize definitions.
+
+They might say:
+
+> "Design a Wallet class with proper encapsulation."
+
+You should be able to write it.
+
+For example:
+
+```java
+public class Wallet {
+
+    private final String walletId;
+    private BigDecimal balance;
+
+    public Wallet(String walletId) {
+        this.walletId = walletId;
+        this.balance = BigDecimal.ZERO;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void credit(BigDecimal amount) {
+        // validation
+        // update
+    }
+
+    public void debit(BigDecimal amount) {
+        // validation
+        // update
+    }
+}
+```
+
+Then they may ask:
+
+> "Is this thread safe?"
+
+That's where the interview becomes interesting.
+
+---
+
+# BUCKET 3 — Multithreading & concurrency
+
+I'd put this **very high priority**.
+
+Because they explicitly mentioned it.
+
+You should be able to explain and implement:
+
+### Basics
+
+* Thread
+* Runnable
+* Callable
+* Future
+* ExecutorService
+* ThreadPoolExecutor
+* synchronized
+* volatile
+* AtomicInteger
+* Lock
+* ReentrantLock
+* CountDownLatch
+* Semaphore
+* BlockingQueue
+
+---
+
+### Very important interview scenarios
+
+They might give you:
+
+> "10 threads are updating the same wallet balance. How do you prevent incorrect results?"
+
+You should immediately think:
+
+```text
+Race condition
+      ↓
+Shared mutable state
+      ↓
+Synchronization / atomicity
+      ↓
+Lock / synchronized / atomic operation
+```
+
+---
+
+### Async
+
+Know:
+
+```java
+CompletableFuture
+```
+
+and:
+
+```java
+ExecutorService
+```
+
+Example:
+
+```java
+CompletableFuture
+    .supplyAsync(() -> paymentService.authorize(payment))
+    .thenApply(this::processResponse)
+    .exceptionally(this::handleFailure);
+```
+
+But be prepared for:
+
+> "What executor is being used?"
+
+> "What happens if the executor is exhausted?"
+
+> "How do you handle exceptions?"
+
+> "How do you avoid blocking?"
+
+That's the level I'd prepare for.
+
+---
+
+# BUCKET 4 — Pagination
+
+Your interviewer specifically mentioned:
+
+> limit/offset
+> cursor based pagination
+
+So this deserves focused preparation.
+
+Know:
+
+### Offset
+
+```sql
+SELECT *
+FROM transactions
+ORDER BY created_at DESC
+LIMIT 20 OFFSET 100;
+```
+
+Problems:
+
+* Large offsets become expensive
+* Records can shift between pages
+* Duplicate/missing records under concurrent writes
+
+---
+
+### Cursor
+
+Example:
+
+```text
+GET /transactions?limit=20&cursor=abc123
+```
+
+Internally:
+
+```sql
+WHERE created_at < :lastCreatedAt
+ORDER BY created_at DESC
+LIMIT 20
+```
+
+For robust ordering:
+
+```text
+(created_at, transaction_id)
+```
+
+This is particularly relevant to payment transaction/reporting systems.
+
+India Satcom's published reporting work specifically discusses merchant reporting over high-volume transaction data and MongoDB query patterns. ([India Satcom Limited][4])
+
+---
+
+# BUCKET 5 — JWT / OAuth / Keycloak
+
+This is another **high-confidence topic**.
+
+They explicitly gave you:
+
+> JWT
+> OAuth2
+> Authentication
+> Authorization
+> Keycloak
+> RBAC
+
+Prepare this as an actual flow.
+
+For example:
+
+```text
+Client
+  ↓
+Keycloak
+  ↓
+Access Token / JWT
+  ↓
+API Gateway
+  ↓
+Microservice
+  ↓
+JWT validation
+  ↓
+Role/permission check
+  ↓
+Business logic
+```
+
+Know:
+
+### Authentication
+
+> Who are you?
+
+### Authorization
+
+> What are you allowed to do?
+
+### RBAC
+
+```text
+USER
+ ↓
+ROLE
+ ↓
+PERMISSION
+```
+
+For example:
+
+```text
+MERCHANT_ADMIN
+MERCHANT_OPERATOR
+SUPPORT
+```
+
+India Satcom's own case study specifically says it used Keycloak as the central identity authority across merchant-facing applications, including merchant accounts and API keys. ([India Satcom Limited][5])
+
+So **don't treat Keycloak as a generic Spring Security topic**.
+
+Understand how it fits into a merchant/payment platform.
+
+---
+
+# BUCKET 6 — Resilience / distributed systems
+
+You mentioned:
+
+> circuit breaker and fault tolerance
+
+This is very important for payment systems.
+
+Prepare:
+
+```text
+Timeout
+Retry
+Circuit Breaker
+Bulkhead
+Rate Limiting
+Fallback
+Idempotency
+Dead Letter Queue
+Observability
+```
+
+Understand:
+
+### Timeout
+
+Don't wait forever for PSP.
+
+### Retry
+
+Don't blindly retry payment requests.
+
+Why?
+
+Because:
+
+```text
+Request → PSP
+          ↓
+      payment succeeds
+          ↓
+      response lost
+```
+
+Your system sees:
+
+```text
+TIMEOUT
+```
+
+If you blindly retry:
+
+```text
+PAYMENT #1 → SUCCESS
+PAYMENT #2 → SUCCESS
+```
+
+💥 **Duplicate payment.**
+
+Therefore:
+
+# Idempotency is HUGE in payment interviews.
+
+---
+
+# BUCKET 7 — Payment domain
+
+This is where you should differentiate yourself.
+
+You don't need to become a payments expert in three days.
+
+But understand this model extremely well:
+
+```text
+Merchant
+   ↓
+Payment Gateway
+   ↓
+PSP / Acquirer
+   ↓
+Card Network / Bank
+   ↓
+Issuer
+```
+
+And lifecycle:
+
+```text
+CREATED
+   ↓
+INITIATED
+   ↓
+AUTHORIZED
+   ↓
+CAPTURED
+   ↓
+SETTLED
+```
+
+Failure paths:
+
+```text
+FAILED
+CANCELLED
+EXPIRED
+REVERSED
+REFUNDED
+PARTIALLY_REFUNDED
+```
+
+Know why you need a state machine.
+
+---
+
+# BUCKET 8 — Ledger
+
+**This could be your killer topic.**
+
+Because your current work already involves ledger/retirement systems, and their domain explicitly involves payment and ledger concepts.
+
+You should be able to answer:
+
+> "Design a ledger for a wallet."
+
+Think:
+
+```text
+Transaction
+--------------------
+transaction_id
+reference_id
+from_account
+to_account
+amount
+currency
+status
+created_at
+```
+
+And preferably understand **double-entry bookkeeping**.
+
+Example:
+
+₹100 transfer:
+
+```text
+Alice account       -100
+Merchant account    +100
+```
+
+Total:
+
+```text
+-100 + 100 = 0
+```
+
+This gives you an invariant:
+
+> **Every financial transaction must balance.**
+
+That's an excellent interview point.
+
+---
+
+# 4. The database part could be VERY important
+
+Because your interviewer mentioned:
+
+> "ledger system on DB logs/locks"
+
+Prepare:
+
+### Transactions
+
+```text
+ACID
+```
+
+### Isolation
+
+```text
+Read Uncommitted
+Read Committed
+Repeatable Read
+Serializable
+```
+
+### Locks
+
+```text
+Optimistic locking
+Pessimistic locking
+Row-level locking
+```
+
+### Race condition
+
+Imagine:
+
+```text
+Balance = ₹1000
+```
+
+Two requests simultaneously:
+
+```text
+T1 → withdraw 800
+T2 → withdraw 700
+```
+
+Without proper concurrency control:
+
+```text
+Both read ₹1000
+Both succeed
+```
+
+You have created money that doesn't exist.
+
+That is **exactly the sort of scenario I'd expect in this interview**.
+
+---
+
+# 5. MongoDB
+
+Don't go extremely deep.
+
+Know:
+
+```text
+Document
+Collection
+Embedding
+Referencing
+Indexes
+Compound indexes
+Aggregation
+Pagination
+Atomic updates
+Transactions
+```
+
+Especially:
+
+> "How would you design a transaction collection?"
+
+Think about query patterns first.
+
+For example:
+
+```text
+merchantId
+transactionId
+status
+createdAt
+paymentMethod
+```
+
+Then indexes based on actual access patterns.
+
+---
+
+# 6. Spring
+
+You already studied a lot of Spring, so **do not spend all Sunday rereading Spring fundamentals**.
+
+Instead practice implementation.
+
+Be able to build something like:
+
+```text
+POST /payments
+GET /payments/{id}
+GET /payments?cursor=...
+POST /payments/{id}/refund
+```
+
+with:
+
+```text
+Controller
+   ↓
+Service
+   ↓
+Repository
+```
+
+and:
+
+```text
+DTO
+Validation
+Exception handling
+Global exception handler
+Unit tests
+```
+
+---
+
+# 7. Testing — DON'T SKIP THIS
+
+Your interviewer explicitly mentioned:
+
+> "writing test cases"
+
+So practice JUnit + Mockito.
+
+Example:
+
+```java
+@Test
+void shouldRejectInsufficientBalance() {
+    ...
+}
+```
+
+Know:
+
+```text
+Unit test
+Integration test
+Mock
+Stub
+Verify
+ArgumentCaptor
+Parameterized test
+```
+
+And especially:
+
+> **What test cases would you write for a payment API?**
+
+Think:
+
+```text
+Successful payment
+Invalid amount
+Invalid merchant
+Duplicate request
+Timeout
+PSP failure
+Insufficient balance
+Invalid currency
+Already processed transaction
+Concurrent requests
+```
+
+This is much more relevant than simply knowing Mockito syntax.
+
+---
+
+# 8. Ingress / Load Balancing / Autoscaling
+
+You don't need Kubernetes certification knowledge.
+
+Understand the architecture:
+
+```text
+Internet
+   ↓
+Ingress
+   ↓
+Service
+   ↓
+Pods
+   ↓
+Application
+```
+
+And:
+
+```text
+Load Balancer
+       ↓
+Pod 1
+Pod 2
+Pod 3
+```
+
+Autoscaling:
+
+```text
+Traffic ↑
+   ↓
+CPU / memory / custom metric ↑
+   ↓
+HPA
+   ↓
+More pods
+```
+
+Be ready for:
+
+> "What happens when traffic suddenly goes 10x?"
+
+You should talk about:
+
+```text
+Load balancer
+Autoscaling
+Connection pools
+DB capacity
+Caching
+Kafka
+Backpressure
+Rate limiting
+Circuit breaker
+Timeouts
+```
+
+---
+
+# 9. gRPC / REST
+
+Because you were told about:
+
+> Golang + gRPC + Hexagonal Architecture
+
+Don't ignore this.
+
+Know basic comparison:
+
+| REST               | gRPC                                     |
+| ------------------ | ---------------------------------------- |
+| HTTP/JSON commonly | HTTP/2 + Protobuf                        |
+| Human-readable     | Binary                                   |
+| Easy external APIs | Excellent internal service communication |
+| Flexible           | Strong contract                          |
+| Browser-friendly   | Less browser-native                      |
+
+And understand:
+
+```text
+.proto
+   ↓
+Generated client/server
+   ↓
+gRPC service
+```
+
+---
+
+# 10. Hexagonal Architecture
+
+Since the company apparently uses it, prepare this.
+
+Think:
+
+```text
+             ┌──────────────┐
+             │ REST API     │
+             └──────┬───────┘
+                    ↓
+          ┌──────────────────┐
+          │ Application Core │
+          │                  │
+          │ Business Logic   │
+          └──────────────────┘
+             ↑            ↑
+             │            │
+        DB Adapter     Kafka Adapter
+```
+
+The important idea:
+
+> **Business logic shouldn't depend directly on infrastructure.**
+
+Ports:
+
+```text
+Inbound Port
+Outbound Port
+```
+
+Adapters:
+
+```text
+REST Adapter
+Kafka Adapter
+Mongo Adapter
+Postgres Adapter
+```
+
+Be ready to implement a small example.
+
+---
+
+# 11. What I would NOT spend much time on
+
+Given only ~3 days, don't get distracted by:
+
+❌ Deep JVM internals
+❌ Garbage collector internals
+❌ Advanced Kubernetes internals
+❌ Extremely hard DP
+❌ obscure Java APIs
+❌ Java 9+ feature trivia
+❌ advanced distributed consensus
+❌ deep Kafka internals
+
+You need **interview ROI**, not a complete computer-science degree in three days.
+
+---
+
+# 12. Your Sunday → Wednesday plan
+
+This is how I'd actually use the remaining time.
+
+## 🟢 SUNDAY — Coding + Java
+
+### Session 1
+
+**DSA**
+
+2–3 hours:
+
+```text
+Arrays
+HashMap
+Two pointers
+Sliding window
+Binary search
+Sorting
+```
+
+Do around **10–15 representative problems**, not 50.
+
+---
+
+### Session 2
+
+**Java implementation**
+
+2 hours:
+
+```text
+OOP
+Collections
+HashMap
+equals/hashCode
+Streams
+Exception handling
+Generics
+```
+
+---
+
+### Session 3
+
+**Concurrency**
+
+2 hours:
+
+```text
+Thread
+ExecutorService
+ThreadPoolExecutor
+CompletableFuture
+synchronized
+Lock
+Atomic
+BlockingQueue
+Race condition
+```
+
+---
+
+# 🟡 MONDAY — Spring + Security + DB
+
+### Morning
+
+```text
+Spring Boot
+REST
+JPA
+MongoDB
+Transactions
+Pagination
+```
+
+### Afternoon
+
+```text
+JWT
+OAuth2
+Keycloak
+RBAC
+Authentication
+Authorization
+```
+
+### Evening
+
+```text
+Circuit breaker
+Retry
+Timeout
+Idempotency
+Fault tolerance
+```
+
+---
+
+# 🟠 TUESDAY — PAYMENT + IMPLEMENTATION
+
+This is the **most important day**.
+
+Study:
+
+```text
+Payment lifecycle
+Payment gateway
+Authorization
+Capture
+Refund
+Settlement
+Reconciliation
+Webhook
+Idempotency
+Duplicate payment
+Ledger
+Double entry
+Wallet
+Concurrency
+DB locks
+```
+
+Then actually **code**.
+
+I would practice implementing:
+
+### Problem 1
+
+```text
+Wallet
+deposit()
+withdraw()
+getBalance()
+```
+
+### Problem 2
+
+```text
+Thread-safe wallet
+```
+
+### Problem 3
+
+```text
+Payment service
+```
+
+### Problem 4
+
+```text
+Transaction pagination
+```
+
+### Problem 5
+
+```text
+Idempotent payment API
+```
+
+### Problem 6
+
+```text
+Ledger entry
+```
+
+---
+
+# 🔴 WEDNESDAY BEFORE INTERVIEW
+
+Do NOT learn new things.
+
+Do:
+
+### 1 hour DSA
+
+```text
+HashMap
+Sliding window
+Two pointers
+Binary search
+Array
+String
+```
+
+### 1 hour Java
+
+```text
+Collections
+Concurrency
+OOP
+Streams
+```
+
+### 1 hour payment
+
+Explain aloud:
+
+```text
+Payment lifecycle
+Idempotency
+Ledger
+Wallet
+Refund
+Settlement
+Reconciliation
+```
+
+### 30 minutes Spring
+
+```text
+JWT
+Keycloak
+Circuit breaker
+Pagination
+REST
+```
+
+---
+
+# 13. And I would add one more category to your preparation
+
+Your interviewer gave you a list, but there's one thing I'd add:
+
+## 🔥 SQL + database fundamentals
+
+Because payment + ledger + high TPS almost inevitably leads there.
+
+Prepare:
+
+```text
+JOIN
+GROUP BY
+HAVING
+INDEX
+Composite index
+EXPLAIN
+Transactions
+Isolation
+Locks
+Optimistic locking
+Pessimistic locking
+Deadlocks
+Unique constraints
+Pagination
+```
+
+Especially:
+
+> **How do you prevent two concurrent payment requests from modifying the same balance incorrectly?**
+
+That question can connect:
+
+**Java → concurrency → Spring → DB → payment → ledger**
+
+which is exactly the kind of cross-topic question I'd expect here.
+
+---
+
+# 14. The interview pattern I would prepare for
+
+This is the most important part.
+
+Don't prepare each topic independently.
+
+Practice **chains of questions**.
+
+For example:
+
+### Interviewer:
+
+> Design a wallet.
+
+You:
+
+```text
+Wallet
+ ├── walletId
+ ├── userId
+ └── balance
+```
+
+Then interviewer:
+
+> What if two requests withdraw simultaneously?
+
+You:
+
+```text
+Race condition
+```
+
+Then:
+
+> How do you solve it?
+
+You:
+
+```text
+DB transaction
+optimistic/pessimistic locking
+atomic update
+```
+
+Then:
+
+> What if request times out after the payment succeeds?
+
+You:
+
+```text
+Idempotency
+```
+
+Then:
+
+> How do you identify duplicate requests?
+
+You:
+
+```text
+idempotency key
+unique constraint
+```
+
+Then:
+
+> What if PSP is unavailable?
+
+You:
+
+```text
+timeout
+circuit breaker
+retry carefully
+```
+
+Then:
+
+> What if Kafka delivers the event twice?
+
+You:
+
+```text
+idempotent consumer
+transaction/reference ID
+deduplication
+```
+
+Then:
+
+> How do you maintain financial correctness?
+
+You:
+
+```text
+double-entry ledger
+```
+
+**THAT is the interview mindset I want you to prepare for.**
+
+---
+
+# 15. Your priority matrix
+
+If I were you, I'd rank your preparation:
+
+| Topic                           | Priority |
+| ------------------------------- | -------: |
+| Arrays + HashMap                |   🔥🔥🔥 |
+| Sliding Window                  |   🔥🔥🔥 |
+| Two Pointers                    |   🔥🔥🔥 |
+| Java implementation             |   🔥🔥🔥 |
+| Multithreading                  |   🔥🔥🔥 |
+| Async / CompletableFuture       |   🔥🔥🔥 |
+| Payment lifecycle               |   🔥🔥🔥 |
+| Idempotency                     |   🔥🔥🔥 |
+| Ledger / wallet                 |   🔥🔥🔥 |
+| DB transactions + locks         |   🔥🔥🔥 |
+| JWT/OAuth/Keycloak              |     🔥🔥 |
+| Spring Boot                     |     🔥🔥 |
+| Pagination                      |     🔥🔥 |
+| Testing                         |     🔥🔥 |
+| Circuit breaker/fault tolerance |     🔥🔥 |
+| MongoDB                         |     🔥🔥 |
+| Kafka                           |     🔥🔥 |
+| gRPC                            |       🔥 |
+| Hexagonal architecture          |       🔥 |
+| Kubernetes/Ingress              |       🔥 |
+| Advanced DP                     |       ◼︎ |
+| JVM internals                   |       ◼︎ |
+
+---
+
+## And one important thing for **you specifically**
+
+You've already spent a lot of time preparing **Spring interview questions, Java questions, Kafka, concurrency, JWT, microservices, Spring Batch**, etc. So I **wouldn't restart from zero**.
+
+Your biggest opportunity now is to shift from:
+
+> **"Can I explain this concept?"**
+
+to:
+
+> **"Can I implement this concept under interview pressure?"**
+
+That's especially important because the interviewer explicitly told you **implementation + theory**.
+
+So from now until Wednesday, I'd make our preparation highly practical:
+
+**Question → you attempt → I correct → ideal Java implementation → follow-up questions → payment-specific variation.**
+
+And I'd make the DSA questions **pattern-based**, not random.
+
+If you want, we can start **Round-1 preparation right now with Day 1: DSA + Java implementation**, and I'll act like the interviewer—starting easy and progressively pushing you toward the exact kind of questions this role is likely to ask.
+
+[1]: https://in.linkedin.com/company/india-satcom-limited?utm_source=chatgpt.com "India Satcom Limited (JV of ITI LTD) | LinkedIn"
+[2]: https://wellfound.com/jobs/3709515-lead-java-developer?utm_source=chatgpt.com "Lead Java Developer at India Satcom • Bengaluru | Wellfound"
+[3]: https://www.linkedin.com/posts/india-satcom-limited_payment-merchant-authorization-activity-7418175639477997569-JSCP?utm_source=chatgpt.com "Payment Gateway System: Secure Money Transfer Process | India Satcom Limited (JV of ITI LTD) posted on the topic | LinkedIn"
+[4]: https://indiasatcom.ltd/work/national-scale-reporting?utm_source=chatgpt.com "Reporting Built for National-Scale Commerce · India Satcom"
+[5]: https://indiasatcom.ltd/work/identity-layer?utm_source=chatgpt.com "One Identity Layer for a Digital Merchant Ecosystem · India Satcom"
