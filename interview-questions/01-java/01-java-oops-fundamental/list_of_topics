@@ -1,0 +1,435 @@
+Yes! 👍 **Topic-by-topic is much better for your preparation.**
+
+We’ll take **one topic at a time**, go very deep, and only move forward when you say you're ready.
+
+### Our approach
+
+For each topic, I’ll give you:
+
+1. 🟢 **Must Know questions**
+2. 🟡 **Should Know questions**
+3. 🔴 **Deep / Advanced questions**
+4. **Tricky/output-based questions**
+5. **Interviewer follow-up questions**
+6. **Real-world/backend scenarios**
+7. **Internal/JVM questions where relevant**
+
+And **questions only** — no answers unless you send me a question number.
+
+---
+
+# Topic 1 — OOPS / Object-Oriented Programming
+
+We'll start with the fundamentals and progressively go deeper.
+
+## A. Classes & Objects
+
+1. 🟢 What is a class in Java?
+2. 🟢 What is an object in Java?
+3. 🟢 What is the difference between a class and an object?
+4. 🟢 How do you create an object in Java?
+5. 🟡 What happens internally when you use the `new` keyword?
+6. 🟡 Where is an object stored when it is created?
+7. 🟡 Where is the reference variable stored?
+8. 🔴 What exactly does a reference variable contain?
+9. 🔴 Can two reference variables point to the same object?
+10. 🔴 Can an object exist without any reference variable pointing to it?
+11. 🔴 When does an object become eligible for garbage collection?
+12. 🔴 Can an object become eligible for GC even though a reference variable previously pointed to it?
+13. 🟡 Can you create an object without using `new`?
+14. 🔴 What are the different ways an object can be created in Java?
+15. 🔴 What is the difference between object identity and object state?
+
+### Interviewer follow-ups
+
+16. 🟡 If two variables point to the same object and you modify the object through one variable, what happens to the other?
+17. 🟡 What happens if you assign one object reference to another?
+18. 🔴 If `Employee e1 = new Employee()` and `Employee e2 = e1`, how many objects exist?
+19. 🔴 If `e1 = null`, what happens to the object?
+20. 🔴 If a local reference goes out of scope, does the object immediately get garbage collected?
+
+---
+
+# B. Encapsulation
+
+21. 🟢 What is encapsulation?
+22. 🟢 Why do we need encapsulation?
+23. 🟢 How do you achieve encapsulation in Java?
+24. 🟡 Is making all fields `private` enough to achieve encapsulation?
+25. 🟡 Why are getters and setters used?
+26. 🟡 Can getters and setters still violate encapsulation?
+27. 🔴 How can exposing a mutable object through a getter break encapsulation?
+28. 🔴 How can exposing a `List` through a getter break encapsulation?
+29. 🔴 How would you safely expose a collection from a class?
+30. 🔴 What is defensive copying?
+31. 🔴 How does defensive copying protect encapsulation?
+32. 🔴 What is the difference between defensive copying and returning an unmodifiable collection?
+33. 🔴 Design a class where callers cannot put the object into an invalid state.
+34. 🔴 How would you encapsulate business rules inside an object rather than exposing setters?
+35. 🔴 Give a real-world backend example where poor encapsulation can cause bugs.
+
+---
+
+# C. Abstraction
+
+36. 🟢 What is abstraction?
+37. 🟢 Why do we need abstraction?
+38. 🟢 How is abstraction achieved in Java?
+39. 🟢 What is the difference between abstraction and encapsulation?
+40. 🟡 Can abstraction be achieved without an abstract class?
+41. 🟡 Can an abstract class have concrete methods?
+42. 🟡 Can an abstract class have variables?
+43. 🟡 Can an abstract class have constructors?
+44. 🔴 Why does an abstract class need a constructor if it cannot be instantiated?
+45. 🟡 Can an abstract class contain static methods?
+46. 🟡 Can an abstract class contain final methods?
+47. 🟡 Can an abstract class contain private methods?
+48. 🔴 Can an abstract class have zero abstract methods?
+49. 🔴 Can an abstract class be declared `final`?
+50. 🔴 Why would you create an abstract class that has no abstract methods?
+51. 🔴 When would you choose an abstract class over an interface?
+
+---
+
+# D. Inheritance
+
+52. 🟢 What is inheritance?
+53. 🟢 Why is inheritance used?
+54. 🟢 What types of inheritance does Java support?
+55. 🟢 Does Java support multiple inheritance?
+56. 🟡 Why doesn't Java support multiple inheritance of classes?
+57. 🟡 What is the diamond problem?
+58. 🔴 Explain the diamond problem with an example.
+59. 🔴 How does Java avoid the diamond problem?
+60. 🟡 Can Java achieve multiple inheritance using interfaces?
+61. 🔴 What happens when two interfaces contain the same default method?
+62. 🔴 What happens when a class implements two interfaces having conflicting default methods?
+63. 🔴 How do you resolve a default-method conflict?
+64. 🟢 What is an IS-A relationship?
+65. 🟢 What is a HAS-A relationship?
+66. 🟡 How does inheritance represent an IS-A relationship?
+67. 🟡 How does composition represent a HAS-A relationship?
+68. 🟡 What is the difference between inheritance and composition?
+69. 🔴 Why is composition often preferred over inheritance?
+70. 🔴 What problems can arise from deep inheritance hierarchies?
+71. 🔴 What is tight coupling in inheritance?
+72. 🔴 Give an example where inheritance looks appropriate initially but composition would be better.
+73. 🔴 How would you refactor a large inheritance hierarchy?
+
+---
+
+# E. Polymorphism
+
+74. 🟢 What is polymorphism?
+75. 🟢 What are the types of polymorphism in Java?
+76. 🟢 What is compile-time polymorphism?
+77. 🟢 What is runtime polymorphism?
+78. 🟢 What is method overloading?
+79. 🟢 What is method overriding?
+80. 🟢 What is dynamic method dispatch?
+81. 🟡 How does Java achieve runtime polymorphism?
+82. 🟡 When is an overloaded method resolved?
+83. 🟡 When is an overridden method resolved?
+84. 🔴 What happens internally when a superclass reference points to a subclass object?
+85. 🔴 How does JVM determine which overridden method should execute?
+86. 🔴 Can static methods be overridden?
+87. 🔴 If static methods cannot be overridden, what happens when a subclass defines a static method with the same signature?
+88. 🔴 What is method hiding?
+89. 🔴 Method overriding vs method hiding?
+90. 🟡 Can private methods be overridden?
+91. 🟡 Can final methods be overridden?
+92. 🟡 Can constructors be overridden?
+93. 🔴 Why can't constructors be overridden?
+94. 🔴 Can an overloaded method differ only by return type?
+95. 🔴 Why doesn't return type alone participate in method overloading?
+96. 🔴 How does Java choose between overloaded methods?
+97. 🔴 What happens when overloaded methods involve primitive widening?
+98. 🔴 What happens when overloaded methods involve boxing?
+99. 🔴 What happens when overloaded methods involve varargs?
+100. 🔴 Which has priority during overload resolution: widening, boxing or varargs?
+101. 🔴 What happens when `null` is passed to overloaded methods?
+102. 🔴 What happens if two overloaded methods are equally specific for `null`?
+
+---
+
+# F. Association, Aggregation & Composition
+
+103. 🟢 What is association?
+104. 🟡 What is aggregation?
+105. 🟡 What is composition?
+106. 🟡 Aggregation vs composition?
+107. 🟡 Association vs aggregation?
+108. 🔴 Give a Java example of association.
+109. 🔴 Give a Java example of aggregation.
+110. 🔴 Give a Java example of composition.
+111. 🔴 How does object lifecycle differ between aggregation and composition?
+112. 🔴 Give a backend/domain-model example where composition is appropriate.
+113. 🔴 How would you model `Order` and `OrderItem`?
+114. 🔴 How would you model `Department` and `Employee`?
+115. 🔴 How would you determine whether a relationship should be inheritance, aggregation or composition?
+
+---
+
+# G. Interfaces
+
+116. 🟢 What is an interface?
+117. 🟢 Why do we use interfaces?
+118. 🟢 Interface vs abstract class?
+119. 🟡 Can an interface have variables?
+120. 🟡 What is the default modifier of an interface variable?
+121. 🟡 Can an interface have a constructor?
+122. 🟡 Can an interface have static methods?
+123. 🟡 Can an interface have default methods?
+124. 🟡 Can an interface have private methods?
+125. 🔴 Why were default methods introduced in Java 8?
+126. 🔴 How do default methods provide backward compatibility?
+127. 🔴 What happens if a class inherits the same default method from two interfaces?
+128. 🔴 What happens if a superclass has a method and an interface has a default method with the same signature?
+129. 🔴 Which one takes precedence: superclass method or interface default method?
+130. 🟡 Can an interface extend another interface?
+131. 🟡 Can an interface extend multiple interfaces?
+132. 🟡 Can a class implement multiple interfaces?
+133. 🔴 Can an interface extend a class?
+134. 🔴 Can an interface have private static methods?
+135. 🔴 Can an interface be instantiated?
+136. 🔴 Can an interface reference point to an implementation object?
+137. 🔴 Why is programming to an interface useful in backend systems?
+
+---
+
+# H. Constructors
+
+138. 🟢 What is a constructor?
+139. 🟢 Why do we need constructors?
+140. 🟢 What happens if you don't define a constructor?
+141. 🟡 Can constructors be overloaded?
+142. 🟡 Can constructors be inherited?
+143. 🟡 Can constructors be overridden?
+144. 🟡 Can a constructor be private?
+145. 🟡 When would you use a private constructor?
+146. 🟢 What is constructor chaining?
+147. 🟢 What is `this()`?
+148. 🟢 What is `super()`?
+149. 🔴 Where must `this()` or `super()` appear inside a constructor?
+150. 🔴 Can `this()` and `super()` both be called explicitly in the same constructor?
+151. 🟡 What happens if you don't explicitly call `super()`?
+152. 🔴 What happens during superclass constructor execution?
+153. 🔴 What is the order of constructor execution in inheritance?
+154. 🔴 What happens if a superclass constructor calls an overridable method?
+155. 🔴 Why is calling an overridable method from a constructor dangerous?
+156. 🔴 Can a constructor throw an exception?
+157. 🔴 What happens to the object if its constructor throws an exception?
+158. 🔴 Can constructors be recursive?
+159. 🔴 What happens if constructor chaining creates a cycle?
+
+---
+
+# I. `this` and `super`
+
+160. 🟢 What does `this` represent?
+161. 🟢 What does `super` represent?
+162. 🟡 Why would you use `this.field`?
+163. 🟡 Why would you use `super.field`?
+164. 🟡 Can `this` be used inside a static method?
+165. 🟡 Can `super` be used inside a static method?
+166. 🔴 How does `this()` differ from `this`?
+167. 🔴 How does `super()` differ from `super`?
+168. 🔴 What happens when a subclass field has the same name as a superclass field?
+169. 🔴 Are fields polymorphic like methods?
+170. 🔴 What happens when a superclass reference accesses a hidden field?
+
+---
+
+# J. `final`
+
+171. 🟢 What does `final` mean for a variable?
+172. 🟢 What does `final` mean for a method?
+173. 🟢 What does `final` mean for a class?
+174. 🟡 Can a final variable be initialized inside a constructor?
+175. 🟡 What is a blank final variable?
+176. 🔴 Is a final reference immutable?
+177. 🔴 Can the state of an object referenced by a final variable change?
+178. 🔴 Final reference vs immutable object?
+179. 🔴 Why is `String` immutable even though the reference to it doesn't necessarily have to be final?
+180. 🔴 How do final fields relate to safe publication in multithreaded programs?
+
+---
+
+# K. Object Class
+
+181. 🟢 What is the `Object` class?
+182. 🟢 Why does every Java class inherit from `Object`?
+183. 🟢 What important methods are present in `Object`?
+184. 🟢 Explain `equals()`.
+185. 🟢 Explain `hashCode()`.
+186. 🟢 Explain `toString()`.
+187. 🟡 What is `getClass()`?
+188. 🟡 What is `clone()`?
+189. 🟡 What is `finalize()` and what happened to it in modern Java?
+190. 🔴 What is the contract of `equals()`?
+191. 🔴 What is the contract between `equals()` and `hashCode()`?
+192. 🔴 What happens if you override `equals()` but don't override `hashCode()`?
+193. 🔴 What happens if you override `hashCode()` but don't override `equals()`?
+194. 🔴 Can two unequal objects have the same hash code?
+195. 🔴 Can two equal objects have different hash codes?
+196. 🔴 Why should `equals()` be reflexive, symmetric, transitive and consistent?
+197. 🔴 What problems can inheritance cause when implementing `equals()`?
+198. 🔴 `instanceof` vs `getClass()` inside `equals()`?
+199. 🔴 How would you implement `equals()` correctly for an entity-like class?
+200. 🔴 How would you implement `equals()` correctly for a value object?
+
+---
+
+# L. Cloning & Copying
+
+201. 🟢 What is cloning?
+202. 🟡 What is the `Cloneable` interface?
+203. 🟡 How does `Object.clone()` work?
+204. 🟡 What is shallow copy?
+205. 🟡 What is deep copy?
+206. 🔴 Why does `Object.clone()` produce a shallow copy?
+207. 🔴 Why is `Cloneable` considered problematic?
+208. 🔴 What happens if `clone()` is called on an object that doesn't implement `Cloneable`?
+209. 🟡 What is a copy constructor?
+210. 🟡 Copy constructor vs cloning?
+211. 🟡 Copy constructor vs factory method?
+212. 🔴 How would you deep-copy an object containing nested mutable objects?
+213. 🔴 How can serialization be used for deep copying, and what problems does that approach have?
+214. 🔴 How would you design a safe copying strategy for a complex domain object?
+
+---
+
+# M. SOLID / OOP Design
+
+215. 🟢 What are the SOLID principles?
+216. 🟢 Explain Single Responsibility Principle.
+217. 🟢 Explain Open/Closed Principle.
+218. 🟢 Explain Liskov Substitution Principle.
+219. 🟢 Explain Interface Segregation Principle.
+220. 🟢 Explain Dependency Inversion Principle.
+221. 🟡 Give a real Java example of SRP violation.
+222. 🟡 Give a real Java example of OCP violation.
+223. 🔴 Give an example of an LSP violation.
+224. 🔴 How can inheritance violate LSP?
+225. 🔴 How can composition help maintain LSP?
+226. 🔴 Give an example of ISP violation in a backend application.
+227. 🔴 How does dependency injection relate to DIP?
+228. 🔴 How would you identify SOLID violations in an existing codebase?
+229. 🔴 Given a large service class containing validation, persistence, notification and business logic, how would you refactor it?
+230. 🔴 How would you design a payment service so that adding a new payment provider does not require modifying existing business logic?
+
+---
+
+# N. Immutability — Deep Dive
+
+231. 🟢 What is an immutable object?
+232. 🟢 What are the characteristics of an immutable class?
+233. 🟡 Why is immutability useful?
+234. 🟡 How does immutability help with thread safety?
+235. 🟡 How does immutability help with caching?
+236. 🔴 Can an immutable class contain mutable fields?
+237. 🔴 If yes, how can the class remain immutable?
+238. 🔴 Why is defensive copying required for mutable constructor arguments?
+239. 🔴 Why is defensive copying required for mutable return values?
+240. 🔴 Design an immutable `Employee` class containing a `Date`.
+241. 🔴 Design an immutable `Employee` class containing a `List<String>`.
+242. 🔴 Design an immutable class containing another mutable custom object.
+243. 🔴 Can an immutable class perform lazy initialization?
+244. 🔴 Can an immutable object safely be shared between threads?
+245. 🔴 Why are immutable objects particularly useful as HashMap keys?
+
+---
+
+# O. OOPS Tricky / Output Questions
+
+246. 🔴 What is the output when a superclass reference points to a subclass object and both classes define the same method?
+247. 🔴 What happens when superclass and subclass define the same field?
+248. 🔴 Predict the output when a static method is declared in both superclass and subclass.
+249. 🔴 Predict the output when an overridden method is called from a superclass constructor.
+250. 🔴 Predict the initialization order involving static blocks, instance blocks and constructors.
+251. 🔴 What happens when an overloaded method receives `null`?
+252. 🔴 What happens when overloaded methods differ by primitive and wrapper types?
+253. 🔴 What happens when overloaded methods involve `Integer`, `Long` and `Number`?
+254. 🔴 What happens when both `this()` and `super()` are involved in constructor chaining?
+255. 🔴 What happens when a final reference points to a mutable object?
+256. 🔴 What happens when `equals()` is overridden incorrectly?
+257. 🔴 What happens when an object's field used by `hashCode()` is modified after insertion into a HashSet?
+258. 🔴 What happens when a subclass violates the contract expected by its superclass?
+
+---
+
+# P. Real Backend OOP Scenarios
+
+259. 🟢 Design a notification system supporting Email, SMS and Push notifications.
+260. 🟡 Design a payment system supporting multiple payment providers.
+261. 🟡 Design an employee hierarchy using appropriate OOP principles.
+262. 🟡 Design an order-management model using composition.
+263. 🔴 Design a pricing engine supporting multiple pricing strategies.
+264. 🔴 Design a discount engine where new discount types can be added without modifying existing code.
+265. 🔴 Design a file-processing system supporting CSV, JSON and XML processors.
+266. 🔴 Design a retry mechanism using an appropriate OOP design.
+267. 🔴 Design a validation framework where different entities have different validation rules.
+268. 🔴 Your service has a 2,000-line class. How would you identify and refactor its OOP/design problems?
+269. 🔴 A developer has created an inheritance hierarchy with 10 subclasses. How would you determine whether composition would be more appropriate?
+270. 🔴 How would you design a domain object that guarantees its state is always valid?
+271. 🔴 How would you design a thread-safe immutable configuration object?
+272. 🔴 How would you design an extensible Java backend component following OCP and DIP?
+273. 🔴 You inherit a legacy codebase where everything is tightly coupled to concrete classes. How would you gradually introduce abstractions without rewriting the entire application?
+
+---
+
+## 🔥 OOPS Interviewer Drill Chain
+
+These are especially useful because an interviewer may start with one simple question and keep drilling:
+
+274. 🟢 What is polymorphism?
+
+275. 🟡 What is runtime polymorphism?
+
+276. 🟡 How does method overriding achieve it?
+
+277. 🔴 How does JVM decide which method to execute?
+
+278. 🔴 Are fields polymorphic?
+
+279. 🔴 Are static methods polymorphic?
+
+280. 🔴 Are private methods polymorphic?
+
+281. 🔴 What happens if the reference type and actual object type have different methods?
+
+282. 🔴 How does this relate to dynamic method dispatch?
+
+283. 🔴 What happens at the bytecode/JVM level during virtual method invocation?
+
+284. 🟢 What is `HashMap`'s relationship with `equals()` and `hashCode()`?
+
+285. 🟡 Why must equal objects have equal hash codes?
+
+286. 🔴 What happens if the key is mutable?
+
+287. 🔴 What happens if `equals()` changes after insertion?
+
+288. 🔴 Why can the key become impossible to retrieve?
+
+289. 🔴 How does this connect to object immutability?
+
+290. 🟢 Why prefer composition over inheritance?
+
+291. 🟡 What does composition actually mean?
+
+292. 🔴 How does composition reduce coupling?
+
+293. 🔴 How does composition support OCP?
+
+294. 🔴 Give a real backend example where inheritance would become problematic.
+
+295. 🔴 How would you refactor it?
+
+---
+
+**Stop here for Topic 1.**
+
+When you're ready, send me something like **“Explain Q84”**, **“Q116–137”**, or **“I’m done with OOPS”**.
+
+Then we'll either deep-dive the exact questions you're weak on, or move to **Topic 2 — Java Language Fundamentals**.

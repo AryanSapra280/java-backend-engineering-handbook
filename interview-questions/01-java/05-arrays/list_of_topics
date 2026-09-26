@@ -1,0 +1,595 @@
+# Topic 5 — Arrays
+
+Moving on! 🔥 We’ll keep this **interview-question-only** and go from fundamentals → internals → tricky behavior → performance → coding scenarios.
+
+## A. Array Fundamentals
+
+1. 🟢 What is an array in Java?
+2. 🟢 Why are arrays considered objects in Java?
+3. 🟢 How do you declare an array?
+4. 🟢 How do you initialize an array?
+5. 🟢 What is the difference between array declaration, creation and initialization?
+6. 🟢 What are the default values of elements in a newly created array?
+7. 🟡 Do local array variables get a default value?
+8. 🟡 What happens if you access an array element before assigning a value to it?
+9. 🟢 Are arrays fixed-size in Java?
+10. 🟡 Can you change the size of an existing array?
+11. 🟡 What happens when an array is full and you need more elements?
+12. 🟢 How do you find the length of an array?
+13. 🟡 Is `length` a method or a field?
+14. 🔴 Why does an array use `length` while String uses `length()`?
+15. 🟢 What happens if you access an array using an invalid index?
+16. 🟡 What exception is thrown for a negative array index?
+17. 🟡 What exception is thrown when the index is equal to the array length?
+18. 🔴 What happens when the array reference itself is `null`?
+19. 🔴 What is the difference between a null array reference and an empty array?
+20. 🔴 How would you distinguish between `new int[0]` and `null`?
+
+---
+
+# B. Array Memory & Object Model
+
+21. 🟢 Where is an array stored in JVM memory?
+22. 🟡 Is an array allocated on the heap?
+23. 🟡 Where is the array reference stored?
+24. 🔴 What does an array variable actually contain?
+25. 🔴 Does an array variable contain the array elements themselves?
+26. 🔴 How are primitive array elements stored?
+27. 🔴 How are object references stored inside an object array?
+28. 🔴 Does an object array contain the actual objects or references to objects?
+29. 🔴 What happens when you create:
+
+```java
+int[] arr = new int[1000];
+```
+
+30. 🔴 What happens when you create:
+
+```java
+Employee[] employees = new Employee[1000];
+```
+
+31. 🔴 How many Employee objects exist immediately after creating the array above?
+32. 🔴 What happens when one element of an object array is assigned an Employee object?
+33. 🔴 How does array allocation affect heap usage?
+34. 🔴 Can a very large array cause `OutOfMemoryError`?
+35. 🔴 What factors determine how much memory a large array consumes?
+
+---
+
+# C. Primitive Arrays vs Object Arrays
+
+36. 🟢 What is the difference between a primitive array and an object array?
+37. 🟡 How is `int[]` different from `Integer[]`?
+38. 🟡 What are the memory implications of using `Integer[]` instead of `int[]`?
+39. 🔴 Why can primitive arrays be significantly more memory-efficient?
+40. 🔴 What happens when autoboxing is used to populate an `Integer[]`?
+41. 🔴 How does Integer caching interact with an `Integer[]`?
+42. 🔴 Can an object array contain `null`?
+43. 🔴 Can a primitive array contain `null`?
+44. 🔴 What happens when you assign `null` to an element of an object array?
+45. 🔴 What happens when you attempt the same with a primitive array?
+
+---
+
+# D. Array Covariance
+
+46. 🟢 What does it mean that Java arrays are covariant?
+47. 🟢 Is `String[]` a subtype of `Object[]`?
+48. 🟡 Why does Java allow this assignment?
+
+```java
+Object[] arr = new String[10];
+```
+
+49. 🔴 What is the danger of array covariance?
+50. 🔴 What is `ArrayStoreException`?
+51. 🔴 Predict what happens:
+
+```java
+Object[] arr = new String[3];
+arr[0] = "Java";
+arr[1] = 100;
+```
+
+52. 🔴 Why is the error detected at runtime instead of compile time?
+53. 🔴 How does JVM know the actual component type of an array?
+54. 🔴 Why are generics invariant while arrays are covariant?
+55. 🔴 Compare:
+
+```java
+Object[] arr = new String[10];
+```
+
+with:
+
+```java
+List<Object> list = new ArrayList<String>();
+```
+
+56. 🔴 Why is the second assignment invalid?
+57. 🔴 What trade-off did Java make by allowing array covariance?
+
+---
+
+# E. Multidimensional Arrays
+
+58. 🟢 How do you create a two-dimensional array?
+59. 🟢 How are multidimensional arrays represented in Java?
+60. 🟡 Is a Java two-dimensional array actually a matrix internally?
+61. 🔴 Is `int[][]` really an array of arrays?
+62. 🔴 Can rows of a two-dimensional array have different lengths?
+63. 🔴 What is a jagged array?
+64. 🔴 How do you create a jagged array?
+65. 🔴 Predict the dimensions of:
+
+```java
+int[][] arr = new int[3][];
+```
+
+66. 🔴 What happens if you access `arr[0][0]` before initializing `arr[0]`?
+67. 🔴 Can different rows reference the same underlying array?
+68. 🔴 What happens if two rows reference the same array?
+69. 🔴 How does memory layout differ between a one-dimensional array and a two-dimensional array?
+70. 🔴 What are the performance implications of traversing a multidimensional array?
+
+---
+
+# F. Array Copying
+
+71. 🟢 How do you copy an array?
+72. 🟢 What is the difference between assigning one array reference to another and copying an array?
+73. 🟡 What happens here?
+
+```java
+int[] a = {1, 2, 3};
+int[] b = a;
+```
+
+74. 🔴 If you modify `b`, what happens to `a`?
+75. 🟢 What does `Arrays.copyOf()` do?
+76. 🟢 What does `System.arraycopy()` do?
+77. 🟡 What is the difference between `Arrays.copyOf()` and `System.arraycopy()`?
+78. 🔴 Is `System.arraycopy()` a deep copy?
+79. 🔴 Is `Arrays.copyOf()` a deep copy?
+80. 🔴 What happens when copying an array containing object references?
+81. 🔴 How would you deep-copy an object array?
+82. 🔴 What is the difference between shallow and deep copying for:
+
+```java
+Employee[] employees;
+```
+
+83. 🔴 What happens when you copy a two-dimensional array using `Arrays.copyOf()`?
+84. 🔴 Is copying an `int[][]` automatically a deep copy of all rows?
+85. 🔴 How would you create a true deep copy of a 2D array?
+
+---
+
+# G. `Arrays` Utility Class
+
+86. 🟢 What is the `Arrays` utility class?
+87. 🟢 What does `Arrays.sort()` do?
+88. 🟢 What does `Arrays.binarySearch()` do?
+89. 🟢 What does `Arrays.equals()` do?
+90. 🟢 What does `Arrays.deepEquals()` do?
+91. 🟡 Difference between `Arrays.equals()` and `Arrays.deepEquals()`?
+92. 🟢 What does `Arrays.fill()` do?
+93. 🟢 What does `Arrays.copyOf()` do?
+94. 🟢 What does `Arrays.copyOfRange()` do?
+95. 🟡 What does `Arrays.asList()` do?
+96. 🔴 What are the limitations of `Arrays.asList()`?
+97. 🔴 Can you add or remove elements from the List returned by `Arrays.asList()`?
+98. 🔴 What happens if you modify an element of the List returned by `Arrays.asList()`?
+99. 🔴 Is the List returned by `Arrays.asList()` backed by the original array?
+100. 🔴 What happens to the array when you modify the List?
+101. 🔴 What happens to the List when you modify the original array?
+102. 🟡 What happens with primitive arrays and `Arrays.asList()`?
+103. 🔴 Why does:
+
+```java
+Arrays.asList(new int[]{1, 2, 3})
+```
+
+not behave like:
+
+```java
+Arrays.asList(1, 2, 3)
+```
+
+104. 🟡 What is the difference between `Arrays.toString()` and `Arrays.deepToString()`?
+
+---
+
+# H. Array Sorting
+
+105. 🟢 How do you sort an array in Java?
+106. 🟢 What is the time complexity of sorting an array?
+107. 🟡 Which sorting algorithm is used by Java for primitive arrays?
+108. 🟡 Which sorting algorithm is used for object arrays?
+109. 🔴 Why does Java use different sorting algorithms for primitive and object arrays?
+110. 🔴 What is Dual-Pivot Quicksort?
+111. 🔴 What is TimSort?
+112. 🟡 What is the difference between sorting primitive and reference arrays?
+113. 🔴 How does comparator-based sorting affect performance?
+114. 🔴 Can you sort an object array using a custom Comparator?
+115. 🔴 What happens if the Comparator violates its contract?
+116. 🔴 Can an incorrectly implemented Comparator cause sorting to behave unexpectedly?
+
+---
+
+# I. Binary Search
+
+117. 🟢 What is binary search?
+118. 🟢 What is the time complexity of binary search?
+119. 🟢 What prerequisite must be satisfied before binary search?
+120. 🟡 What happens if the array is not sorted?
+121. 🟡 What does `Arrays.binarySearch()` return when an element is found?
+122. 🟡 What does it return when the element is not found?
+123. 🔴 Why can `Arrays.binarySearch()` return a negative value?
+124. 🔴 How is the insertion position encoded in the return value?
+125. 🔴 What happens if duplicate values exist?
+126. 🔴 Does binary search necessarily return the first occurrence of a duplicate?
+127. 🔴 How would you find the first occurrence of a duplicate element?
+128. 🔴 How would you find the last occurrence?
+129. 🔴 How would you implement binary search manually?
+130. 🔴 Why should you be careful with midpoint calculation in binary search?
+131. 🔴 Compare:
+
+```java
+mid = (low + high) / 2;
+```
+
+with an overflow-safe midpoint calculation.
+
+---
+
+# J. Array Iteration
+
+132. 🟢 How can you iterate over an array?
+133. 🟢 Traditional `for` loop vs enhanced `for` loop?
+134. 🟡 When would you prefer an indexed loop?
+135. 🟡 When would you prefer an enhanced `for` loop?
+136. 🔴 Can you modify array elements using an enhanced `for` loop?
+137. 🔴 What happens here?
+
+```java
+for (int x : arr) {
+    x = 10;
+}
+```
+
+138. 🔴 What happens with an object array?
+
+```java
+for (Employee e : employees) {
+    e.setName("Updated");
+}
+```
+
+139. 🔴 Why can object state change inside enhanced for-loop while primitive array elements don't?
+140. 🔴 Can you remove elements while iterating over an array?
+141. 🔴 How would you process a very large array efficiently?
+
+---
+
+# K. Arrays vs Collections
+
+142. 🟢 Array vs ArrayList?
+143. 🟢 When would you use an array instead of a collection?
+144. 🟡 What are the advantages of ArrayList over arrays?
+145. 🟡 What are the advantages of arrays over ArrayList?
+146. 🔴 Compare memory overhead of `int[]` and `ArrayList<Integer>`.
+147. 🔴 Why can `ArrayList<Integer>` consume significantly more memory than `int[]`?
+148. 🔴 How does boxing affect the performance of `ArrayList<Integer>`?
+149. 🔴 When would a primitive array be preferable in a high-performance application?
+150. 🟡 Can an array store heterogeneous objects?
+151. 🔴 Can an `Object[]` store objects of different classes?
+152. 🔴 What are the type-safety differences between arrays and generics?
+153. 🔴 Why might you prefer collections over arrays in application-level code?
+154. 🔴 When might arrays still be preferable in backend systems?
+
+---
+
+# L. Array Performance & Memory
+
+155. 🟢 What is the time complexity of accessing an array element by index?
+156. 🟢 What is the time complexity of updating an array element?
+157. 🟢 What is the time complexity of searching an unsorted array?
+158. 🟢 What is the time complexity of inserting at a specific array position?
+159. 🟢 What is the time complexity of deleting an element from the middle?
+160. 🟡 Why is array random access O(1)?
+161. 🔴 What does contiguous memory mean in the context of arrays?
+162. 🔴 Does Java guarantee physical contiguous memory for an array?
+163. 🔴 How does locality of reference affect array performance?
+164. 🔴 Why can arrays perform better than linked structures for sequential processing?
+165. 🔴 How can cache locality affect large-array processing?
+166. 🔴 What is the difference between sequential and random access patterns?
+167. 🔴 How would you optimize processing of a very large primitive array?
+
+---
+
+# M. Array Edge Cases
+
+168. 🟢 Can an array have zero elements?
+169. 🟡 What happens when you create:
+
+```java
+new int[0]
+```
+
+170. 🟡 Can you access index `0` of a zero-length array?
+171. 🔴 What happens when you pass an empty array to a method?
+172. 🔴 Can an array reference be `final`?
+173. 🔴 Does a final array reference make the array immutable?
+174. 🔴 Can you modify elements of a final array?
+175. 🔴 What happens when an array is declared `static final`?
+176. 🔴 Does `static final int[]` represent a constant immutable array?
+177. 🔴 How would you expose a static array safely?
+178. 🔴 What happens if an array is passed into a method and modified?
+179. 🔴 Can an array be returned from a method?
+180. 🔴 What risks exist when returning an internal array directly from a class?
+181. 🔴 How would you safely expose an internal array?
+182. 🔴 Can arrays contain themselves?
+183. 🔴 Can an `Object[]` contain itself?
+184. 🔴 What happens when recursively printing a self-referencing array?
+
+---
+
+# N. Array Covariance — Tricky Questions
+
+185. 🔴 What happens here?
+
+```java
+Object[] objects = new String[5];
+objects[0] = "Java";
+```
+
+186. 🔴 What happens here?
+
+```java
+Object[] objects = new String[5];
+objects[0] = new Object();
+```
+
+187. 🔴 At compile time, is the assignment legal?
+188. 🔴 At runtime, what determines whether the assignment succeeds?
+189. 🔴 Why does Java allow the potentially unsafe assignment in the first place?
+190. 🔴 How does this compare with generic type safety?
+191. 🔴 Can `Number[]` reference an `Integer[]`?
+192. 🔴 Can `Integer[]` reference a `Number[]`?
+193. 🔴 What happens with `Object[]`, `Number[]`, `Integer[]` and `Double[]`?
+
+---
+
+# O. Tricky Output-Based Questions
+
+194. 🔴 Predict the output:
+
+```java
+int[] a = {1, 2, 3};
+int[] b = a;
+
+b[0] = 100;
+
+System.out.println(a[0]);
+```
+
+195. 🔴 Predict:
+
+```java
+int[] a = {1, 2, 3};
+int[] b = Arrays.copyOf(a, a.length);
+
+b[0] = 100;
+
+System.out.println(a[0]);
+```
+
+196. 🔴 Predict:
+
+```java
+String[] a = {"A", "B"};
+Object[] b = a;
+
+b[0] = "C";
+```
+
+197. 🔴 Predict the behavior:
+
+```java
+Object[] a = new String[2];
+a[0] = 10;
+```
+
+198. 🔴 Predict:
+
+```java
+int[][] arr = new int[3][];
+System.out.println(arr.length);
+System.out.println(arr[0]);
+```
+
+199. 🔴 Predict:
+
+```java
+int[][] arr = new int[2][3];
+arr[0] = new int[10];
+
+System.out.println(arr[0].length);
+System.out.println(arr[1].length);
+```
+
+200. 🔴 Predict:
+
+```java
+int[] arr = {};
+System.out.println(arr.length);
+```
+
+201. 🔴 Predict:
+
+```java
+int[] arr = null;
+System.out.println(arr.length);
+```
+
+202. 🔴 Predict:
+
+```java
+final int[] arr = {1, 2, 3};
+arr[0] = 100;
+```
+
+203. 🔴 Predict:
+
+```java
+final int[] arr = {1, 2, 3};
+arr = new int[]{4, 5, 6};
+```
+
+204. 🔴 Predict:
+
+```java
+int[] a = {1, 2, 3};
+int[] b = Arrays.copyOf(a, 5);
+```
+
+205. 🔴 What are the values of the newly added elements after `Arrays.copyOf()`?
+
+206. 🔴 Predict:
+
+```java
+String[] arr = new String[3];
+System.out.println(Arrays.toString(arr));
+```
+
+207. 🔴 Predict:
+
+```java
+int[][] arr = {
+    {1, 2},
+    {3, 4}
+};
+
+System.out.println(Arrays.toString(arr));
+System.out.println(Arrays.deepToString(arr));
+```
+
+208. 🔴 Predict:
+
+```java
+int[] arr = {1, 2, 3};
+List<int[]> list = Arrays.asList(arr);
+
+System.out.println(list.size());
+```
+
+209. 🔴 Predict:
+
+```java
+int[] arr = {1, 2, 3};
+List<Integer> list = Arrays.asList(1, 2, 3);
+
+list.set(0, 100);
+
+System.out.println(list);
+```
+
+210. 🔴 Predict what happens when `Arrays.asList()` is used with a primitive array.
+
+---
+
+# P. Real Backend / Production Scenarios
+
+211. 🟢 You need to process one million integers. Would you use `int[]` or `List<Integer>`? What factors would you consider?
+212. 🟡 A service is consuming large amounts of heap while processing numeric data. How could the choice between primitive arrays and wrapper collections matter?
+213. 🟡 You need to return an internal array from a class. How would you prevent callers from modifying internal state?
+214. 🔴 A service processes a very large dataset sequentially. How could array locality and access patterns affect performance?
+215. 🔴 You have a two-dimensional dataset where each row has a different length. How would you represent it?
+216. 🔴 You need to copy a large array containing millions of primitives. Which Java APIs would you consider?
+217. 🔴 You need to copy an array of mutable domain objects. What additional problem arises?
+218. 🔴 A developer uses `Arrays.asList()` and then calls `add()`. What happens and why?
+219. 🔴 A production service throws `ArrayStoreException`. How would you investigate it?
+220. 🔴 A large array allocation causes `OutOfMemoryError`. What JVM/application factors would you investigate?
+221. 🔴 A developer uses `Object[]` everywhere to make APIs flexible. What type-safety and runtime problems could this create?
+222. 🔴 A performance-critical service uses `Integer[]` for millions of numbers. What would you investigate before changing it to `int[]`?
+223. 🔴 How would you process a huge array without creating unnecessary temporary arrays?
+224. 🔴 When would you use primitive arrays instead of streams/collections for performance-sensitive code?
+225. 🔴 How would you benchmark `int[]` versus `ArrayList<Integer>` fairly?
+
+---
+
+# 🔥 Interviewer Drill Chains
+
+## Drill 1 — Array Memory
+
+226. 🟢 Where is an array stored?
+227. 🟡 What does the array reference contain?
+228. 🟡 How are elements stored?
+229. 🔴 How does `int[]` differ from `Integer[]` in memory?
+230. 🔴 How does `Integer[]` introduce boxing/object-reference overhead?
+231. 🔴 How would this affect a dataset containing 100 million numbers?
+232. 🔴 What JVM/performance factors would you investigate?
+
+## Drill 2 — Array Covariance
+
+233. 🟢 What is array covariance?
+234. 🟡 Why can `String[]` be assigned to `Object[]`?
+235. 🔴 What is the danger?
+236. 🔴 What is `ArrayStoreException`?
+237. 🔴 Why does it happen at runtime?
+238. 🔴 Why are generics designed differently?
+239. 🔴 What trade-off does array covariance represent?
+
+## Drill 3 — Copying
+
+240. 🟢 How do you copy an array?
+241. 🟡 Reference assignment vs copying?
+242. 🟡 `Arrays.copyOf()` vs `System.arraycopy()`?
+243. 🔴 Shallow vs deep copy?
+244. 🔴 What happens when the array contains mutable objects?
+245. 🔴 What happens with a 2D array?
+246. 🔴 How would you implement a true deep copy?
+
+## Drill 4 — Arrays vs Collections
+
+247. 🟢 Array vs ArrayList?
+248. 🟡 Why is ArrayList more flexible?
+249. 🔴 Why can `int[]` be more memory-efficient than `ArrayList<Integer>`?
+250. 🔴 How does boxing affect the comparison?
+251. 🔴 When would you choose arrays in production?
+252. 🔴 How would you benchmark the two approaches?
+
+---
+
+## 🎯 Topic 5 Checklist
+
+Before moving ahead, make sure you're comfortable with:
+
+* Array declaration/creation/initialization
+* Array memory model
+* Primitive vs object arrays
+* Array references
+* Fixed-size nature
+* Array covariance
+* `ArrayStoreException`
+* Multidimensional/jagged arrays
+* Array copying
+* Shallow vs deep copy
+* `Arrays` utility methods
+* Sorting
+* Binary search
+* `Arrays.asList()`
+* Array iteration
+* Arrays vs collections
+* Array performance/cache locality
+* Large-array memory behavior
+* Final array references
+* Null vs empty arrays
+* Tricky output questions
+* Backend performance scenarios
+
+**Next topic → Topic 6: Collections Framework — DEEP DIVE.**
+
+This will be substantially larger because we'll cover **ArrayList → LinkedList → Set → HashSet → TreeSet → HashMap internals → resizing → collisions → treeification → LinkedHashMap → TreeMap → ConcurrentHashMap → queues → iterators → fail-fast/weak consistency → Comparable/Comparator**, with interviewer drill-downs.

@@ -1,0 +1,1823 @@
+Absolutely! 🔥 We’re moving to the **most important Java Collections topic for a 5-year backend interview**.
+
+Next is **Topic 6 — Collections Framework**, and I’ll go much deeper here, especially around **HashMap, HashSet, resizing, collisions, treeification, ConcurrentHashMap, iterators, ordering, complexity, and production scenarios**.
+
+# Topic 6 — Java Collections Framework — DEEP DIVE
+
+> **Questions only — no answers.**
+> Target: **4–7 years Java Backend Engineer**
+> Focus: fundamentals → internals → complexity → JVM behavior → concurrency → production scenarios → interviewer follow-ups.
+
+---
+
+# A. Collections Framework Fundamentals
+
+253. 🟢 What is the Java Collections Framework?
+
+254. 🟢 Why was the Collections Framework introduced?
+
+255. 🟢 What problems does the Collections Framework solve?
+
+256. 🟢 What is the difference between a Collection and a Collections?
+
+257. 🟢 What is the difference between Collection and Map?
+
+258. 🟢 Explain the overall hierarchy of the Java Collections Framework.
+
+259. 🟢 What is the relationship between `Iterable`, `Collection`, `List`, `Set`, and `Queue`?
+
+260. 🟢 Why does `Map` not extend `Collection`?
+
+261. 🟢 What is the purpose of the `Iterable` interface?
+
+262. 🟢 What is the purpose of the `Collection` interface?
+
+263. 🟢 What common operations are defined by `Collection`?
+
+264. 🟡 Why does Java provide interfaces such as `List`, `Set`, and `Queue` instead of exposing concrete implementations directly?
+
+265. 🟡 What are the advantages of programming against the `List` interface instead of `ArrayList`?
+
+266. 🟡 What happens when you declare a variable as `List` but instantiate it as `ArrayList`?
+
+267. 🟡 Can you change the implementation from `ArrayList` to `LinkedList` without changing the variable type?
+
+268. 🟡 What is the difference between `Collection`, `Collections`, and `Arrays` utility classes?
+
+269. 🟡 What are the major characteristics of the main Java collection types?
+
+270. 🟡 Which collection types maintain insertion order?
+
+271. 🟡 Which collection types maintain sorted order?
+
+272. 🟡 Which collections allow duplicates?
+
+273. 🟢 Which collections allow `null`?
+
+274. 🟡 Which collections are thread-safe by default?
+
+275. 🟡 Which collection would you choose if you need fast random access?
+
+276. 🟡 Which collection would you choose if duplicate elements are not allowed?
+
+277. 🟡 Which collection would you choose if elements must remain sorted?
+
+278. 🟡 Which collection would you choose for FIFO processing?
+
+279. 🟡 Which collection would you choose for LIFO processing?
+
+280. 🔴 What design principles were considered while designing the Java Collections Framework?
+
+---
+
+# B. Iterable, Iterator and ListIterator
+
+281. 🟢 What is `Iterable`?
+
+282. 🟢 What is the purpose of the `iterator()` method?
+
+283. 🟢 What is an `Iterator`?
+
+284. 🟢 How does an `Iterator` work internally?
+
+285. 🟢 What are the methods provided by `Iterator`?
+
+286. 🟢 What is the difference between `Iterator` and enhanced `for` loop?
+
+287. 🟢 How does the enhanced `for` loop work internally for a collection?
+
+288. 🟡 Can you remove an element from a collection while iterating over it?
+
+289. 🟢 What is `ConcurrentModificationException`?
+
+290. 🟢 What does fail-fast iteration mean?
+
+291. 🟡 How does an iterator detect concurrent modification?
+
+292. 🔴 What is `modCount`?
+
+293. 🔴 How do `expectedModCount` and `modCount` work together?
+
+294. 🟡 Is fail-fast behavior guaranteed by the Java specification?
+
+295. 🟡 Can fail-fast iterators prevent concurrent modification?
+
+296. 🟡 Why is `ConcurrentModificationException` not considered a synchronization mechanism?
+
+297. 🟢 What is `Iterator.remove()`?
+
+298. 🟡 Why does removing an element using `collection.remove()` during iteration potentially cause `ConcurrentModificationException`?
+
+299. 🟡 Why does `iterator.remove()` work differently?
+
+300. 🟡 What happens if `iterator.remove()` is called twice without calling `next()`?
+
+301. 🟡 Can `Iterator` modify elements in a collection?
+
+302. 🟢 What is `ListIterator`?
+
+303. 🟢 What is the difference between `Iterator` and `ListIterator`?
+
+304. 🟢 Which additional operations does `ListIterator` provide?
+
+305. 🟡 Can `ListIterator` iterate in both directions?
+
+306. 🟡 Can `ListIterator` add and remove elements?
+
+307. 🟡 Can `ListIterator` be used with `Set`?
+
+308. 🟡 Why is `ListIterator` available only for lists?
+
+309. 🔴 What happens internally when `ArrayList.listIterator()` is created?
+
+310. 🔴 How does `ListIterator` behave when the underlying list is structurally modified outside the iterator?
+
+---
+
+# C. List Interface
+
+311. 🟢 What is a `List`?
+
+312. 🟢 What are the characteristics of a `List`?
+
+313. 🟢 Can a `List` contain duplicate elements?
+
+314. 🟢 Does a `List` maintain insertion order?
+
+315. 🟢 Can a `List` contain `null`?
+
+316. 🟢 What are the major implementations of `List`?
+
+317. 🟢 Compare `ArrayList`, `LinkedList`, `Vector`, and `CopyOnWriteArrayList`.
+
+318. 🟡 When would you choose `ArrayList` over `LinkedList`?
+
+319. 🟡 When would you choose `LinkedList` over `ArrayList`?
+
+320. 🟡 Is `LinkedList` really faster than `ArrayList` for insertion and deletion?
+
+321. 🔴 Why can `ArrayList` outperform `LinkedList` even when Big-O suggests similar or better insertion complexity for `LinkedList`?
+
+322. 🟡 What is the time complexity of common operations on `List` implementations?
+
+323. 🟡 What is the difference between `size()`, `isEmpty()`, and checking against `null`?
+
+324. 🟡 What is the difference between `remove(int)` and `remove(Object)`?
+
+325. 🟡 What happens when you call `list.remove(1)` on a `List<Integer>`?
+
+326. 🔴 How can you remove an integer value instead of an index from `List<Integer>`?
+
+327. 🟡 What is the difference between `subList()` and creating a new list?
+
+328. 🔴 How does `subList()` work internally?
+
+329. 🔴 What problems can occur if the original list is structurally modified after obtaining a `subList()`?
+
+---
+
+# D. ArrayList — DEEP DIVE
+
+330. 🟢 What is `ArrayList`?
+
+331. 🟢 What internal data structure does `ArrayList` use?
+
+332. 🟢 Is `ArrayList` dynamically sized?
+
+333. 🟢 How does `ArrayList` grow when its capacity is exhausted?
+
+334. 🟢 What is the difference between `size` and `capacity` in `ArrayList`?
+
+335. 🟡 What is the initial capacity of an `ArrayList`?
+
+336. 🟡 Is an empty `ArrayList` immediately allocated with a large backing array?
+
+337. 🟡 What happens internally when the first element is added?
+
+338. 🟢 What happens internally when `ArrayList.add()` is called?
+
+339. 🟢 What happens when the internal array becomes full?
+
+340. 🟡 How is the new capacity calculated?
+
+341. 🔴 What is the capacity growth strategy used by modern Java `ArrayList` implementations?
+
+342. 🟡 Why doesn't `ArrayList` increase its capacity by exactly one every time?
+
+343. 🟡 What is the time complexity of `ArrayList.add(E)`?
+
+344. 🔴 Why is `ArrayList.add(E)` considered amortized O(1)?
+
+345. 🟡 What is the time complexity of inserting an element at index 0?
+
+346. 🟡 What happens internally when inserting an element in the middle of an `ArrayList`?
+
+347. 🟡 What is the time complexity of removing an element from the middle?
+
+348. 🟢 What is the time complexity of `get(index)`?
+
+349. 🟢 Why is random access fast in `ArrayList`?
+
+350. 🟡 What is the difference between `ensureCapacity()` and automatic resizing?
+
+351. 🟡 When should `ensureCapacity()` be used?
+
+352. 🔴 How can unnecessary `ArrayList` resizing affect application performance?
+
+353. 🟡 What does `trimToSize()` do?
+
+354. 🟡 When would you use `trimToSize()`?
+
+355. 🔴 Why can excessive use of `trimToSize()` hurt performance?
+
+356. 🟡 How does `ArrayList` handle `null` elements?
+
+357. 🟡 Does `ArrayList` allow duplicate objects?
+
+358. 🟡 Is `ArrayList` thread-safe?
+
+359. 🟡 What happens if multiple threads modify the same `ArrayList` concurrently?
+
+360. 🟡 How can you make an `ArrayList` synchronized?
+
+361. 🟡 What is the difference between `Collections.synchronizedList()` and `CopyOnWriteArrayList`?
+
+362. 🔴 Is `Collections.synchronizedList()` sufficient when iterating over the list concurrently?
+
+363. 🟡 What is the memory overhead of an `ArrayList`?
+
+364. 🔴 Why can `ArrayList` provide better CPU-cache locality than `LinkedList`?
+
+365. 🔴 How does object reference locality affect `ArrayList` performance?
+
+366. 🟡 What happens when an `ArrayList` containing millions of elements needs to resize?
+
+367. 🔴 How would you design an application that continuously loads millions of records into an `ArrayList`?
+
+368. 🟡 When should you avoid using `ArrayList`?
+
+---
+
+# E. LinkedList — DEEP DIVE
+
+369. 🟢 What is `LinkedList`?
+
+370. 🟢 What data structure does `LinkedList` use internally?
+
+371. 🟢 Is Java's `LinkedList` singly linked or doubly linked?
+
+372. 🟢 What does each node of `LinkedList` contain?
+
+373. 🟢 Why does `LinkedList` maintain both `first` and `last` references?
+
+374. 🟢 What is the time complexity of adding an element at the beginning?
+
+375. 🟢 What is the time complexity of adding an element at the end?
+
+376. 🟡 What is the time complexity of retrieving an element by index?
+
+377. 🟡 Why is `LinkedList.get(index)` O(n)?
+
+378. 🔴 How does `LinkedList` optimize traversal depending on the requested index?
+
+379. 🟡 What happens internally when an element is removed from a `LinkedList`?
+
+380. 🟡 What happens internally when a node is inserted between two nodes?
+
+381. 🟡 Does `LinkedList` allocate a new object for every element?
+
+382. 🔴 What are the memory implications of using a linked list compared with an array-backed list?
+
+383. 🟡 Does `LinkedList` support random access efficiently?
+
+384. 🟡 Why can repeatedly calling `get(i)` on a `LinkedList` lead to O(n²) behavior?
+
+385. 🟡 Is `LinkedList` thread-safe?
+
+386. 🟡 Can `LinkedList` be used as a `Queue`?
+
+387. 🟢 Can `LinkedList` be used as a `Deque`?
+
+388. 🟡 What interfaces does `LinkedList` implement?
+
+389. 🔴 Why might `ArrayDeque` be preferred over `LinkedList` for queue/deque operations?
+
+390. 🟡 When should you actually choose `LinkedList` in a real application?
+
+---
+
+# F. Vector and Stack
+
+391. 🟢 What is `Vector`?
+
+392. 🟢 How is `Vector` different from `ArrayList`?
+
+393. 🟢 Is `Vector` thread-safe?
+
+394. 🟡 How does synchronization affect `Vector` performance?
+
+395. 🟡 What is the default capacity growth behavior of `Vector`?
+
+396. 🟡 Can the capacity increment of a `Vector` be configured?
+
+397. 🟡 Why is `Vector` considered a legacy collection?
+
+398. 🟢 What is `Stack`?
+
+399. 🟢 What data structure does `Stack` represent?
+
+400. 🟢 Is `Stack` thread-safe?
+
+401. 🟡 Why is `Stack` considered a legacy class?
+
+402. 🟡 What should generally be used instead of `Stack`?
+
+403. 🟡 How can `Deque` provide stack behavior?
+
+404. 🔴 Compare `Stack`, `ArrayDeque`, and `LinkedList` for LIFO operations.
+
+---
+
+# G. Set Interface
+
+405. 🟢 What is a `Set`?
+
+406. 🟢 What makes a `Set` different from a `List`?
+
+407. 🟢 Does a `Set` allow duplicates?
+
+408. 🟢 Does every `Set` preserve insertion order?
+
+409. 🟢 What are the major implementations of `Set`?
+
+410. 🟡 Compare `HashSet`, `LinkedHashSet`, and `TreeSet`.
+
+411. 🟡 Which `Set` should you use when ordering is irrelevant?
+
+412. 🟡 Which `Set` should you use when insertion order must be preserved?
+
+413. 🟡 Which `Set` should you use when elements must remain sorted?
+
+414. 🟡 Can a `Set` contain `null`?
+
+415. 🟡 Does `Set` guarantee fast lookup?
+
+416. 🔴 What does "no duplicates" actually mean internally for different `Set` implementations?
+
+---
+
+# H. HashSet — DEEP DIVE
+
+417. 🟢 What is `HashSet`?
+
+418. 🟢 What data structure does `HashSet` use internally?
+
+419. 🟢 Does `HashSet` internally use `HashMap`?
+
+420. 🟢 How does `HashSet` use `HashMap` internally?
+
+421. 🟡 What is the dummy value used by `HashSet`'s backing map?
+
+422. 🟢 How does `HashSet.add()` work internally?
+
+423. 🟢 How does `HashSet.contains()` work internally?
+
+424. 🟢 How does `HashSet.remove()` work internally?
+
+425. 🟡 What determines whether two objects are considered duplicates in a `HashSet`?
+
+426. 🟢 What is the relationship between `equals()` and `hashCode()` for `HashSet`?
+
+427. 🟡 What happens if two objects have the same hash code but are not equal?
+
+428. 🟡 What happens if two objects are equal but have different hash codes?
+
+429. 🔴 Why must equal objects have the same hash code?
+
+430. 🟡 Can different objects have the same hash code?
+
+431. 🟡 What is a hash collision?
+
+432. 🔴 How does `HashSet` handle hash collisions?
+
+433. 🟡 What happens if an object stored in a `HashSet` is mutated?
+
+434. 🔴 Explain the mutable-key/mutable-element problem in `HashSet`.
+
+435. 🟡 Can you store a mutable object safely in a `HashSet`?
+
+436. 🔴 What happens if the fields used by `hashCode()` change after insertion into a `HashSet`?
+
+437. 🟡 Can a `HashSet` contain `null`?
+
+438. 🟡 Is `HashSet` thread-safe?
+
+439. 🟡 What is the average time complexity of `HashSet.add()`?
+
+440. 🟡 What is the average time complexity of `HashSet.contains()`?
+
+441. 🔴 What is the worst-case complexity of lookup in modern `HashSet` implementations?
+
+442. 🔴 How does HashSet's behavior depend on the implementation of its backing `HashMap`?
+
+---
+
+# I. LinkedHashSet
+
+443. 🟢 What is `LinkedHashSet`?
+
+444. 🟢 How is `LinkedHashSet` different from `HashSet`?
+
+445. 🟢 How does `LinkedHashSet` preserve insertion order?
+
+446. 🟡 What additional data structure is involved in `LinkedHashSet`?
+
+447. 🟡 Does `LinkedHashSet` allow duplicates?
+
+448. 🟡 Can `LinkedHashSet` contain `null`?
+
+449. 🟡 What is the time complexity of common operations?
+
+450. 🟡 What is the memory overhead of `LinkedHashSet` compared with `HashSet`?
+
+451. 🟡 When would you choose `LinkedHashSet` instead of `HashSet`?
+
+452. 🔴 What is the relationship between `LinkedHashSet` and `LinkedHashMap` internally?
+
+---
+
+# J. TreeSet — DEEP DIVE
+
+453. 🟢 What is `TreeSet`?
+
+454. 🟢 What data structure does `TreeSet` use internally?
+
+455. 🟢 What is the relationship between `TreeSet` and `TreeMap`?
+
+456. 🟢 Does `TreeSet` maintain sorted order?
+
+457. 🟢 How does `TreeSet` determine element ordering?
+
+458. 🟢 What is `Comparable`?
+
+459. 🟢 What is `Comparator`?
+
+460. 🟡 What happens when elements inserted into a `TreeSet` do not implement `Comparable` and no `Comparator` is provided?
+
+461. 🟡 Can `TreeSet` store objects with multiple different types?
+
+462. 🟡 What happens if a `TreeSet` comparator considers two distinct objects equal?
+
+463. 🔴 Can `TreeSet` lose an element even though `equals()` says the objects are different?
+
+464. 🔴 What relationship should exist between a comparator and equality when using `TreeSet`?
+
+465. 🟢 What is the complexity of `TreeSet.add()`?
+
+466. 🟢 What is the complexity of `TreeSet.contains()`?
+
+467. 🟢 What is the complexity of `TreeSet.remove()`?
+
+468. 🟡 Why are `TreeSet` operations O(log n)?
+
+469. 🔴 What tree data structure is used internally by `TreeMap`/`TreeSet`?
+
+470. 🔴 Why is a red-black tree used?
+
+471. 🟡 Does `TreeSet` allow `null`?
+
+472. 🟡 Is `TreeSet` thread-safe?
+
+473. 🟡 When should you choose `TreeSet` over `HashSet`?
+
+474. 🔴 When would `TreeSet` be a poor choice even though sorted data is required?
+
+---
+
+# K. EnumSet
+
+475. 🟢 What is `EnumSet`?
+
+476. 🟢 What type of elements can be stored in an `EnumSet`?
+
+477. 🟡 Why is `EnumSet` more efficient than a general-purpose `Set` for enum values?
+
+478. 🟡 What internal representation does `EnumSet` use?
+
+479. 🔴 How can bit-level representation make `EnumSet` efficient?
+
+480. 🟡 What are the different internal implementations of `EnumSet`?
+
+481. 🟡 Does `EnumSet` allow `null`?
+
+482. 🟡 Does `EnumSet` preserve enum declaration order?
+
+483. 🟡 Is `EnumSet` thread-safe?
+
+484. 🟡 When should you prefer `EnumSet` over `HashSet<Enum>`?
+
+---
+
+# L. Queue and Deque
+
+485. 🟢 What is a `Queue`?
+
+486. 🟢 What does FIFO mean?
+
+487. 🟢 What is the difference between `add()` and `offer()` in a `Queue`?
+
+488. 🟢 What is the difference between `remove()` and `poll()`?
+
+489. 🟢 What is the difference between `element()` and `peek()`?
+
+490. 🟡 Why does the Queue API provide pairs such as `add/offer`, `remove/poll`, and `element/peek`?
+
+491. 🟢 What is a `Deque`?
+
+492. 🟢 What does Deque stand for?
+
+493. 🟢 How can a `Deque` behave as both a queue and a stack?
+
+494. 🟡 What is the difference between `Queue` and `Deque`?
+
+495. 🟡 What are the major `Deque` implementations?
+
+496. 🟡 What happens when adding/removing from both ends of a `Deque`?
+
+497. 🟡 Which implementation would you choose for a high-performance single-threaded deque?
+
+498. 🔴 Why is `ArrayDeque` generally preferable to `Stack` for stack operations?
+
+---
+
+# M. PriorityQueue — DEEP DIVE
+
+499. 🟢 What is `PriorityQueue`?
+
+500. 🟢 Does `PriorityQueue` maintain insertion order?
+
+501. 🟢 How does `PriorityQueue` determine which element is returned first?
+
+502. 🟢 What data structure does `PriorityQueue` use internally?
+
+503. 🟡 What is a binary heap?
+
+504. 🟡 Is Java's `PriorityQueue` a min-heap or max-heap by default?
+
+505. 🟡 How can you create a max-heap using `PriorityQueue`?
+
+506. 🟡 What is the time complexity of `PriorityQueue.add()`?
+
+507. 🟡 What is the time complexity of `PriorityQueue.poll()`?
+
+508. 🟡 What is the time complexity of `PriorityQueue.peek()`?
+
+509. 🔴 What is the time complexity of searching for an arbitrary element in a `PriorityQueue`?
+
+510. 🟡 Does iterating over a `PriorityQueue` return elements in sorted order?
+
+511. 🔴 Why doesn't iteration over `PriorityQueue` produce sorted output?
+
+512. 🟡 Can `PriorityQueue` contain `null`?
+
+513. 🟡 Can `PriorityQueue` contain duplicate elements?
+
+514. 🟡 Is `PriorityQueue` thread-safe?
+
+515. 🟡 How would you implement a priority-based task scheduler using `PriorityQueue`?
+
+516. 🔴 What problems could occur if priorities of mutable objects change while they are inside a `PriorityQueue`?
+
+---
+
+# N. ArrayDeque — DEEP DIVE
+
+517. 🟢 What is `ArrayDeque`?
+
+518. 🟢 What internal data structure does `ArrayDeque` use?
+
+519. 🟡 Why is `ArrayDeque` often implemented as a circular array?
+
+520. 🟡 How does insertion at both ends work efficiently?
+
+521. 🟡 What happens when the internal array becomes full?
+
+522. 🟡 What is the complexity of adding/removing from either end?
+
+523. 🟡 Does `ArrayDeque` allow `null`?
+
+524. 🟡 Is `ArrayDeque` thread-safe?
+
+525. 🟡 Compare `ArrayDeque` and `LinkedList` as `Deque` implementations.
+
+526. 🔴 Why can `ArrayDeque` have better performance than `LinkedList` despite both supporting O(1) end operations?
+
+---
+
+# O. Map Interface
+
+527. 🟢 What is a `Map`?
+
+528. 🟢 How is a `Map` different from a `Collection`?
+
+529. 🟢 What is a key-value pair?
+
+530. 🟢 Can a `Map` contain duplicate keys?
+
+531. 🟢 Can a `Map` contain duplicate values?
+
+532. 🟢 What happens when you insert a value using an existing key?
+
+533. 🟢 What are the major implementations of `Map`?
+
+534. 🟡 Compare `HashMap`, `LinkedHashMap`, and `TreeMap`.
+
+535. 🟡 Which Map should you use when ordering is irrelevant?
+
+536. 🟡 Which Map should you use when insertion order must be preserved?
+
+537. 🟡 Which Map should you use when keys must remain sorted?
+
+538. 🟡 Which Map implementations allow `null` keys?
+
+539. 🟡 Which Map implementations allow `null` values?
+
+540. 🟡 Which Map implementations are thread-safe?
+
+541. 🟡 What are `keySet()`, `values()`, and `entrySet()`?
+
+542. 🟢 Why is `entrySet()` usually preferred when iterating over both keys and values?
+
+543. 🟡 Are `keySet()`, `values()`, and `entrySet()` copies or views?
+
+544. 🔴 What happens when the underlying map is modified after obtaining `keySet()`?
+
+545. 🔴 What happens when you modify the map through an `entrySet()` view?
+
+546. 🟡 What is the difference between `get()` and `getOrDefault()`?
+
+547. 🟡 What is the difference between `containsKey()` and `containsValue()`?
+
+548. 🔴 Why can `containsValue()` be much slower than `containsKey()` in a `HashMap`?
+
+---
+
+# P. HashMap — VERY DEEP
+
+549. 🟢 What is `HashMap`?
+
+550. 🟢 What data structure does `HashMap` use internally?
+
+551. 🟢 How does `HashMap` store key-value pairs?
+
+552. 🟢 What is a bucket in `HashMap`?
+
+553. 🟢 What is hashing?
+
+554. 🟢 What is a hash function?
+
+555. 🟢 Why does `HashMap` need `hashCode()`?
+
+556. 🟢 Why does `HashMap` need `equals()`?
+
+557. 🟢 Explain the complete flow of `HashMap.put(key, value)`.
+
+558. 🟢 Explain the complete flow of `HashMap.get(key)`.
+
+559. 🟡 How is the bucket index calculated from the hash?
+
+560. 🔴 Why does modern `HashMap` use bitwise operations instead of simply `hash % capacity`?
+
+561. 🔴 Why does `HashMap` prefer power-of-two capacities?
+
+562. 🟡 What is hash spreading in `HashMap`?
+
+563. 🔴 Why does `HashMap` perform additional hash mixing?
+
+564. 🟡 What happens when two keys map to the same bucket?
+
+565. 🟢 What is a collision?
+
+566. 🟢 How does `HashMap` handle collisions?
+
+567. 🟡 What data structure was used for collisions in older Java versions?
+
+568. 🟡 What changed in Java 8 regarding collision handling?
+
+569. 🔴 When does a `HashMap` bucket become treeified?
+
+570. 🔴 What is `TREEIFY_THRESHOLD`?
+
+571. 🔴 What is `UNTREEIFY_THRESHOLD`?
+
+572. 🔴 What is `MIN_TREEIFY_CAPACITY`?
+
+573. 🔴 Why doesn't HashMap immediately convert a heavily-collided bucket into a tree?
+
+574. 🔴 What happens when the table is too small but a bucket has many collisions?
+
+575. 🔴 What happens to a treeified bucket when entries are removed?
+
+576. 🔴 What type of tree is used for treeified HashMap buckets?
+
+577. 🔴 Why does HashMap use a red-black tree instead of a binary search tree?
+
+578. 🟡 What is the average lookup complexity of `HashMap`?
+
+579. 🔴 What is the worst-case lookup complexity before and after treeification?
+
+580. 🟡 What is the initial capacity of `HashMap`?
+
+581. 🟡 What is the default load factor?
+
+582. 🟢 What is load factor?
+
+583. 🟢 Why does `HashMap` use a load factor?
+
+584. 🟡 What is the threshold of a `HashMap`?
+
+585. 🟢 How is the resize threshold calculated?
+
+586. 🔴 What happens internally when `HashMap` reaches its resize threshold?
+
+587. 🟢 What happens during `HashMap` resizing?
+
+588. 🔴 Why is resizing expensive?
+
+589. 🔴 What is rehashing?
+
+590. 🟡 Does modern Java HashMap recompute the complete hash during resize?
+
+591. 🔴 How does Java 8 optimize node redistribution during resize?
+
+592. 🔴 What do the low and high partitions mean during HashMap resize?
+
+593. 🟡 Why is resizing approximately O(n)?
+
+594. 🟡 What happens if you create a HashMap with a very small initial capacity and insert millions of entries?
+
+595. 🟡 What happens if you create a HashMap with an excessively large initial capacity?
+
+596. 🔴 How would you choose an appropriate initial capacity for a HashMap when you know the expected number of entries?
+
+597. 🟡 What happens when `HashMap` receives a `null` key?
+
+598. 🟡 Where is the `null` key stored?
+
+599. 🟡 How does HashMap handle multiple `null` keys?
+
+600. 🟢 Can HashMap contain multiple `null` values?
+
+601. 🟡 Is `HashMap` thread-safe?
+
+602. 🟡 What can happen if multiple threads modify a HashMap concurrently?
+
+603. 🔴 Can concurrent modification of HashMap cause lost updates?
+
+604. 🔴 Can concurrent modification cause inconsistent internal state?
+
+605. 🔴 Why should HashMap not be used as a shared mutable map across multiple threads?
+
+606. 🟡 What happens if a key's `hashCode()` changes after it has been inserted?
+
+607. 🔴 Explain the mutable-key problem in HashMap.
+
+608. 🟡 Can you retrieve an entry if its key has been mutated after insertion?
+
+609. 🔴 Why should keys used in HashMap generally be immutable?
+
+610. 🟡 Can a value in a HashMap be mutable?
+
+611. 🟡 Does mutating a value affect the ability to retrieve the entry?
+
+612. 🔴 What happens if `equals()` and `hashCode()` are implemented incorrectly?
+
+613. 🟡 What happens if `equals()` returns true but `hashCode()` differs?
+
+614. 🟡 What happens if `hashCode()` is always the same for every key?
+
+615. 🔴 Would HashMap still be functionally correct if every key returned the same hash code?
+
+616. 🔴 Why would such an implementation be disastrous for performance?
+
+617. 🔴 What happens if `hashCode()` changes between `put()` and `get()`?
+
+618. 🟡 What happens if two different classes produce the same hash code?
+
+619. 🟡 Does same hash code imply objects are equal?
+
+620. 🔴 Explain the exact role of hashCode comparison and equals comparison during lookup.
+
+621. 🔴 How does HashMap determine whether an existing key should be replaced?
+
+622. 🟡 Does calling `put(existingKey, newValue)` increase the size?
+
+623. 🟡 What does `HashMap.put()` return?
+
+624. 🟡 What does `HashMap.remove()` return?
+
+625. 🟡 What does `HashMap.compute()` do?
+
+626. 🟡 What does `computeIfAbsent()` do?
+
+627. 🟡 What does `computeIfPresent()` do?
+
+628. 🟡 What does `merge()` do?
+
+629. 🔴 What are common concurrency pitfalls when using `computeIfAbsent()`?
+
+630. 🟡 What happens if a mapping function passed to `computeIfAbsent()` returns `null`?
+
+631. 🔴 What happens if a mapping function recursively modifies the same HashMap?
+
+632. 🟡 What is the difference between `putIfAbsent()` and `computeIfAbsent()`?
+
+633. 🟡 What is the difference between `replace()`, `replaceAll()`, and `put()`?
+
+634. 🔴 How would you use HashMap to implement an in-memory cache?
+
+635. 🔴 What problems would arise if that cache were accessed by hundreds of concurrent requests?
+
+636. 🔴 How would you design a high-throughput concurrent cache using Java collections?
+
+---
+
+# Q. HashMap — Java 7 vs Java 8+
+
+637. 🟡 How was HashMap collision handling different in Java 7?
+
+638. 🟡 What data structure was used for collision chains in Java 7?
+
+639. 🔴 What problem could occur with HashMap under heavy concurrent resizing in older Java versions?
+
+640. 🔴 What was the historical HashMap resize/infinite-loop issue associated with concurrent modification?
+
+641. 🟡 What changed in HashMap in Java 8?
+
+642. 🟢 Why was treeification introduced?
+
+643. 🔴 How does treeification improve worst-case lookup behavior?
+
+644. 🔴 Why does treeification not eliminate the need for good hash functions?
+
+645. 🟡 Are HashMap internals exactly identical across all Java versions?
+
+646. 🔴 Why should interview answers about HashMap internals always specify the Java version when necessary?
+
+---
+
+# R. LinkedHashMap
+
+647. 🟢 What is `LinkedHashMap`?
+
+648. 🟢 How is `LinkedHashMap` different from `HashMap`?
+
+649. 🟢 How does `LinkedHashMap` maintain insertion order?
+
+650. 🟡 What additional links does each entry maintain?
+
+651. 🟡 What is access-order in `LinkedHashMap`?
+
+652. 🟡 What is insertion-order in `LinkedHashMap`?
+
+653. 🟡 How do you create an access-order LinkedHashMap?
+
+654. 🔴 How does access-order change the behavior of `get()`?
+
+655. 🟡 Can `LinkedHashMap` be used to implement an LRU cache?
+
+656. 🔴 Explain how `removeEldestEntry()` can be used for an LRU cache.
+
+657. 🔴 What limitations would an LRU cache based directly on LinkedHashMap have in a multi-threaded backend service?
+
+658. 🟡 Does LinkedHashMap allow `null` keys and values?
+
+659. 🟡 What is the performance difference between HashMap and LinkedHashMap?
+
+660. 🔴 Why does LinkedHashMap require more memory than HashMap?
+
+---
+
+# S. TreeMap — DEEP DIVE
+
+661. 🟢 What is `TreeMap`?
+
+662. 🟢 What internal data structure does `TreeMap` use?
+
+663. 🟢 Does TreeMap maintain sorted keys?
+
+664. 🟢 How does TreeMap determine key ordering?
+
+665. 🟡 What happens if a key does not implement `Comparable` and no Comparator is supplied?
+
+666. 🟢 What is the time complexity of TreeMap `get()`?
+
+667. 🟢 What is the time complexity of TreeMap `put()`?
+
+668. 🟢 What is the time complexity of TreeMap `remove()`?
+
+669. 🔴 Why are TreeMap operations O(log n)?
+
+670. 🟡 Can TreeMap contain duplicate keys?
+
+671. 🟡 Can TreeMap contain duplicate values?
+
+672. 🟡 Can TreeMap contain `null` keys?
+
+673. 🟡 Can TreeMap contain `null` values?
+
+674. 🟡 How does TreeMap handle a custom Comparator?
+
+675. 🔴 What happens when a Comparator considers two different keys equivalent?
+
+676. 🔴 Can TreeMap overwrite a value even when the key objects are not equal according to `equals()`?
+
+677. 🟡 What are `firstKey()`, `lastKey()`, `floorKey()`, `ceilingKey()`, `lowerKey()`, and `higherKey()`?
+
+678. 🟡 What are `headMap()`, `tailMap()`, and `subMap()`?
+
+679. 🔴 Are TreeMap range views backed by the original map?
+
+680. 🟡 What is the difference between TreeMap and HashMap when you need range queries?
+
+681. 🔴 How would you use TreeMap for time-based/range-based lookups?
+
+---
+
+# T. Hashtable
+
+682. 🟢 What is `Hashtable`?
+
+683. 🟢 How is Hashtable different from HashMap?
+
+684. 🟢 Is Hashtable thread-safe?
+
+685. 🟡 Does Hashtable allow `null` keys?
+
+686. 🟡 Does Hashtable allow `null` values?
+
+687. 🟡 Why is Hashtable considered a legacy collection?
+
+688. 🟡 What are the limitations of Hashtable compared with ConcurrentHashMap?
+
+689. 🔴 Why isn't simply synchronizing every method always the best approach for concurrent collections?
+
+690. 🟡 When might you encounter Hashtable in legacy enterprise applications?
+
+---
+
+# U. WeakHashMap
+
+691. 🟢 What is `WeakHashMap`?
+
+692. 🟢 How is WeakHashMap different from HashMap?
+
+693. 🟢 What does a weak reference mean?
+
+694. 🟡 How does garbage collection interact with WeakHashMap keys?
+
+695. 🔴 What happens to a WeakHashMap entry when its key becomes weakly reachable?
+
+696. 🟡 Can WeakHashMap be used as a cache?
+
+697. 🔴 What are the limitations of using WeakHashMap as a cache?
+
+698. 🟡 Why might entries disappear from a WeakHashMap even if you didn't explicitly remove them?
+
+699. 🔴 How does WeakHashMap detect keys that have been garbage-collected?
+
+700. 🟡 What role does `ReferenceQueue` play in WeakHashMap?
+
+701. 🔴 What happens if the value stored in WeakHashMap strongly references its own key?
+
+702. 🔴 When would WeakHashMap be appropriate in a real backend application?
+
+---
+
+# V. IdentityHashMap
+
+703. 🟢 What is `IdentityHashMap`?
+
+704. 🟢 How is IdentityHashMap different from HashMap?
+
+705. 🟢 Does IdentityHashMap use `equals()`?
+
+706. 🟢 What does IdentityHashMap use instead of logical equality?
+
+707. 🟡 What is reference identity?
+
+708. 🟡 How does `==` relate to IdentityHashMap?
+
+709. 🟡 Can IdentityHashMap contain two objects that are equal according to `equals()`?
+
+710. 🔴 Why would you ever need identity-based map semantics?
+
+711. 🟡 What kinds of framework-level use cases can benefit from IdentityHashMap?
+
+712. 🔴 What bugs can occur if IdentityHashMap is accidentally used where HashMap was intended?
+
+---
+
+# W. EnumMap
+
+713. 🟢 What is `EnumMap`?
+
+714. 🟢 What type of keys can EnumMap contain?
+
+715. 🟡 What internal representation does EnumMap use?
+
+716. 🟡 Why is EnumMap generally more efficient than HashMap for enum keys?
+
+717. 🟡 Does EnumMap maintain enum declaration order?
+
+718. 🟡 Can EnumMap contain `null` keys?
+
+719. 🟡 Can EnumMap contain `null` values?
+
+720. 🟡 When should you choose EnumMap over HashMap?
+
+721. 🔴 Why can EnumMap provide better memory and performance characteristics than HashMap?
+
+---
+
+# X. ConcurrentHashMap — VERY DEEP
+
+722. 🟢 What is `ConcurrentHashMap`?
+
+723. 🟢 Why was ConcurrentHashMap introduced?
+
+724. 🟢 How is ConcurrentHashMap different from HashMap?
+
+725. 🟢 How is ConcurrentHashMap different from Hashtable?
+
+726. 🟡 Is ConcurrentHashMap completely lock-free?
+
+727. 🟡 What is CAS?
+
+728. 🟡 Where does CAS appear in ConcurrentHashMap?
+
+729. 🔴 How does ConcurrentHashMap achieve thread safety?
+
+730. 🔴 Explain the high-level internal structure of ConcurrentHashMap in modern Java.
+
+731. 🟡 Did modern ConcurrentHashMap continue using fixed segments like older implementations?
+
+732. 🔴 How did ConcurrentHashMap internals change from Java 7 to Java 8?
+
+733. 🟡 What role do bins/buckets play in ConcurrentHashMap?
+
+734. 🟡 How does ConcurrentHashMap handle hash collisions?
+
+735. 🔴 Can ConcurrentHashMap treeify bins like HashMap?
+
+736. 🔴 How does ConcurrentHashMap resize while other threads are accessing the map?
+
+737. 🔴 What is cooperative resizing in ConcurrentHashMap?
+
+738. 🔴 What does `ForwardingNode` represent internally?
+
+739. 🔴 What role does `sizeCtl` play in ConcurrentHashMap?
+
+740. 🔴 What is the purpose of `CounterCell`/counter mechanisms in ConcurrentHashMap?
+
+741. 🟡 Why can't ConcurrentHashMap simply synchronize the entire map?
+
+742. 🔴 How does fine-grained locking improve ConcurrentHashMap scalability?
+
+743. 🟡 Does ConcurrentHashMap allow `null` keys?
+
+744. 🟡 Does ConcurrentHashMap allow `null` values?
+
+745. 🔴 Why does ConcurrentHashMap prohibit `null` keys and values?
+
+746. 🟡 What happens if `get()` returns `null` from ConcurrentHashMap?
+
+747. 🔴 Why would allowing `null` make concurrent lookup semantics ambiguous?
+
+748. 🟢 Is `ConcurrentHashMap` safe for concurrent reads?
+
+749. 🟢 Is `ConcurrentHashMap` safe for concurrent writes?
+
+750. 🟡 What does weakly consistent iteration mean?
+
+751. 🟡 Does ConcurrentHashMap throw ConcurrentModificationException during normal concurrent iteration?
+
+752. 🔴 What guarantees does a weakly consistent iterator provide?
+
+753. 🔴 What does ConcurrentHashMap's `size()` mean during concurrent updates?
+
+754. 🟡 What is the difference between `putIfAbsent()` and `put()` in ConcurrentHashMap?
+
+755. 🟡 What is the difference between `computeIfAbsent()` and manual `containsKey()` + `put()`?
+
+756. 🔴 Why can `containsKey()` followed by `put()` be unsafe in concurrent code?
+
+757. 🔴 How would you implement a thread-safe frequency counter using ConcurrentHashMap?
+
+758. 🟡 How would you use `ConcurrentHashMap<String, AtomicInteger>`?
+
+759. 🔴 When would `LongAdder` be preferable to `AtomicInteger` for counters?
+
+760. 🔴 What are the performance tradeoffs of `AtomicInteger` vs `LongAdder` in highly concurrent workloads?
+
+761. 🔴 How would you implement a concurrent in-memory cache using ConcurrentHashMap?
+
+762. 🔴 What problems remain even after using ConcurrentHashMap for a cache?
+
+763. 🔴 How would you handle cache eviction, TTL, and maximum size?
+
+764. 🔴 Can a ConcurrentHashMap operation execute arbitrary user code while holding internal locks?
+
+765. 🔴 What restrictions should you consider when using mapping functions such as `compute()` and `computeIfAbsent()`?
+
+---
+
+# Y. CopyOnWriteArrayList — DEEP DIVE
+
+766. 🟢 What is `CopyOnWriteArrayList`?
+
+767. 🟢 What problem does CopyOnWriteArrayList solve?
+
+768. 🟢 How does CopyOnWriteArrayList work internally?
+
+769. 🟢 What happens when you add an element to CopyOnWriteArrayList?
+
+770. 🟢 Why is the underlying array copied during mutation?
+
+771. 🟡 How does CopyOnWriteArrayList provide thread-safe reads?
+
+772. 🟡 Why are reads relatively cheap in CopyOnWriteArrayList?
+
+773. 🟡 What is the cost of writes?
+
+774. 🔴 Why can CopyOnWriteArrayList be extremely expensive for write-heavy workloads?
+
+775. 🟢 When is CopyOnWriteArrayList a good choice?
+
+776. 🟡 What does "many reads, few writes" mean in this context?
+
+777. 🟡 Does CopyOnWriteArrayList allow `null`?
+
+778. 🟡 Does CopyOnWriteArrayList allow duplicate elements?
+
+779. 🟡 What happens to an iterator when the underlying list is modified?
+
+780. 🔴 Why does CopyOnWriteArrayList's iterator not throw ConcurrentModificationException?
+
+781. 🔴 What snapshot does a CopyOnWriteArrayList iterator observe?
+
+782. 🟡 Can the iterator itself modify the list?
+
+783. 🔴 Why is CopyOnWriteArrayList useful for listener/subscriber lists?
+
+784. 🔴 Would CopyOnWriteArrayList be appropriate for a list containing millions of frequently changing records?
+
+---
+
+# Z. Comparable and Comparator
+
+785. 🟢 What is `Comparable`?
+
+786. 🟢 What is `Comparator`?
+
+787. 🟢 What is the difference between Comparable and Comparator?
+
+788. 🟢 When would you use Comparable?
+
+789. 🟢 When would you use Comparator?
+
+790. 🟡 Can a class have multiple Comparators?
+
+791. 🟡 Can a class implement Comparable and still be sorted using a Comparator?
+
+792. 🟡 What does `compareTo()` return?
+
+793. 🟡 What does `Comparator.compare()` return?
+
+794. 🟡 What does a negative comparison result mean?
+
+795. 🟡 What does zero mean?
+
+796. 🟡 What does a positive result mean?
+
+797. 🔴 What contract must a Comparator satisfy?
+
+798. 🔴 What can happen if a Comparator violates transitivity?
+
+799. 🔴 What can happen if a Comparator is inconsistent?
+
+800. 🟡 What happens if Comparator returns zero for objects that are not equal?
+
+801. 🔴 Why can an inconsistent Comparator cause elements to disappear from TreeSet or TreeMap?
+
+802. 🟡 How do you sort objects using multiple fields?
+
+803. 🟡 How do you create a Comparator using `Comparator.comparing()`?
+
+804. 🟡 How do you create descending order?
+
+805. 🟡 How do you chain multiple sorting conditions?
+
+806. 🟡 How do you handle null values while sorting?
+
+807. 🔴 What is the difference between `Comparator.comparing()` and `Comparator.comparingInt()`?
+
+808. 🔴 How can inappropriate Comparator implementations cause boxing overhead?
+
+---
+
+# AA. Fail-Fast, Weakly Consistent and Snapshot Iteration
+
+809. 🟢 What does fail-fast iteration mean?
+
+810. 🟢 Which common collections provide fail-fast iterators?
+
+811. 🟡 What is weakly consistent iteration?
+
+812. 🟡 Which concurrent collections provide weakly consistent iterators?
+
+813. 🟡 What is snapshot iteration?
+
+814. 🟡 Which collection provides snapshot-style iteration?
+
+815. 🔴 Compare fail-fast, weakly consistent, and snapshot iterators.
+
+816. 🔴 Why can't fail-fast behavior be treated as a concurrency guarantee?
+
+817. 🔴 Why does CopyOnWriteArrayList use snapshot semantics?
+
+818. 🔴 Why does ConcurrentHashMap use weakly consistent semantics?
+
+---
+
+# AB. Collection Views and Utility Operations
+
+819. 🟢 What does `Collections.sort()` do?
+
+820. 🟡 How is `Collections.sort()` different from `List.sort()`?
+
+821. 🟢 What does `Collections.reverse()` do?
+
+822. 🟢 What does `Collections.shuffle()` do?
+
+823. 🟢 What does `Collections.binarySearch()` require?
+
+824. 🟡 What happens if binary search is used on an unsorted list?
+
+825. 🟢 What does `Collections.unmodifiableList()` do?
+
+826. 🟡 Is an unmodifiable collection the same as an immutable collection?
+
+827. 🔴 Explain the difference between unmodifiable and immutable collections.
+
+828. 🟡 What happens if the underlying collection of an unmodifiable view changes?
+
+829. 🟢 What is `List.of()`?
+
+830. 🟢 What is `Set.of()`?
+
+831. 🟢 What is `Map.of()`?
+
+832. 🟡 How are Java 9 immutable collection factories different from `Collections.unmodifiableX()`?
+
+833. 🟡 Do `List.of()`, `Set.of()`, and `Map.of()` allow `null`?
+
+834. 🟡 Can collections returned by `List.of()` be modified?
+
+835. 🔴 Why is an immutable collection often preferable to a synchronized mutable collection for shared configuration data?
+
+---
+
+# AC. Collection Complexity and Selection
+
+836. 🟢 What is the average lookup complexity of HashMap?
+
+837. 🟢 What is the lookup complexity of ArrayList by index?
+
+838. 🟢 What is the lookup complexity of LinkedList by index?
+
+839. 🟢 What is the lookup complexity of TreeMap?
+
+840. 🟢 What is the lookup complexity of HashSet?
+
+841. 🟢 What is the lookup complexity of TreeSet?
+
+842. 🟡 Why are Big-O complexities not sufficient to choose between ArrayList and LinkedList?
+
+843. 🔴 How do CPU cache locality, allocation, pointer chasing, and memory overhead affect collection performance?
+
+844. 🟡 Which collection would you choose for 10 million sequential reads?
+
+845. 🟡 Which collection would you choose for frequent key-based lookups?
+
+846. 🟡 Which collection would you choose for sorted range queries?
+
+847. 🟡 Which collection would you choose for preserving insertion order with fast lookup?
+
+848. 🟡 Which collection would you choose for a queue?
+
+849. 🟡 Which collection would you choose for a stack?
+
+850. 🟡 Which collection would you choose for a priority-based scheduler?
+
+851. 🔴 Which collection would you choose for a read-heavy configuration shared across many threads?
+
+852. 🔴 Which collection would you choose for a write-heavy concurrent counter map?
+
+853. 🔴 Which collection would you choose for a list of event listeners where reads are extremely frequent and modifications are rare?
+
+---
+
+# AD. Tricky / Output-Based Questions
+
+854. 🟢 What is the output?
+
+```java
+List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(20);
+list.remove(1);
+System.out.println(list);
+```
+
+855. 🟡 What is the output?
+
+```java
+List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(20);
+list.remove(Integer.valueOf(10));
+System.out.println(list);
+```
+
+856. 🟡 What happens here?
+
+```java
+List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(20);
+
+for (Integer i : list) {
+    list.remove(i);
+}
+```
+
+857. 🟡 What happens here?
+
+```java
+List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(20);
+
+Iterator<Integer> it = list.iterator();
+while (it.hasNext()) {
+    it.next();
+    it.remove();
+}
+```
+
+858. 🟡 What happens?
+
+```java
+Set<Integer> set = new HashSet<>();
+set.add(1);
+set.add(1);
+set.add(2);
+
+System.out.println(set.size());
+```
+
+859. 🟡 What happens if a class overrides `equals()` but not `hashCode()` and instances are inserted into a HashSet?
+
+860. 🔴 What happens?
+
+```java
+class Employee {
+    int id;
+
+    Employee(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Employee && ((Employee)o).id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+}
+```
+
+Then:
+
+```java
+Set<Employee> set = new HashSet<>();
+Employee e = new Employee(10);
+
+set.add(e);
+e.id = 20;
+
+System.out.println(set.contains(e));
+```
+
+861. 🔴 What happens if two objects have the same hash code but `equals()` returns false?
+
+862. 🔴 What happens if `hashCode()` always returns `1`?
+
+863. 🟡 What happens?
+
+```java
+Map<String, Integer> map = new HashMap<>();
+map.put("A", 10);
+map.put("A", 20);
+
+System.out.println(map.size());
+System.out.println(map.get("A"));
+```
+
+864. 🟡 What happens?
+
+```java
+Map<String, Integer> map = new HashMap<>();
+map.put(null, 10);
+map.put(null, 20);
+
+System.out.println(map.size());
+System.out.println(map.get(null));
+```
+
+865. 🔴 What happens if a HashMap key is mutable and its hash code changes after insertion?
+
+866. 🔴 What happens?
+
+```java
+Map<String, Integer> map = new HashMap<>();
+map.put("A", 1);
+
+for (String key : map.keySet()) {
+    map.put("B", 2);
+}
+```
+
+867. 🟡 What happens?
+
+```java
+Map<String, Integer> map = new HashMap<>();
+map.put("A", 1);
+
+for (Map.Entry<String, Integer> entry : map.entrySet()) {
+    entry.setValue(100);
+}
+
+System.out.println(map);
+```
+
+868. 🟡 What happens?
+
+```java
+Set<Integer> set = new TreeSet<>();
+set.add(10);
+set.add(5);
+set.add(20);
+
+System.out.println(set);
+```
+
+869. 🔴 What happens if a TreeSet Comparator always returns `0`?
+
+870. 🔴 What happens if Comparator ordering is inconsistent with equals?
+
+871. 🟡 What happens?
+
+```java
+Queue<Integer> q = new PriorityQueue<>();
+q.add(30);
+q.add(10);
+q.add(20);
+
+System.out.println(q);
+```
+
+872. 🔴 Why should you not assume the printed PriorityQueue representation is sorted?
+
+873. 🟡 What happens?
+
+```java
+Deque<Integer> deque = new ArrayDeque<>();
+deque.push(10);
+deque.push(20);
+deque.push(30);
+
+System.out.println(deque.pop());
+```
+
+874. 🔴 What happens when `List.of()` is modified?
+
+875. 🔴 What happens when `Collections.unmodifiableList()` is modified indirectly through the original list?
+
+---
+
+# AE. Backend / Production Scenarios
+
+876. 🟢 You need to store 100,000 user IDs and frequently check whether an ID exists. Which collection would you choose and why?
+
+877. 🟢 You need to maintain unique transaction IDs while preserving insertion order. Which collection would you choose?
+
+878. 🟢 You need to process requests in FIFO order. Which collection would you choose?
+
+879. 🟢 You need to process tasks based on priority. Which collection would you choose?
+
+880. 🟡 You need to maintain users sorted by account ID and perform range queries. Which collection would you choose?
+
+881. 🟡 Your API receives millions of records and you need fast sequential iteration. Which collection would you consider?
+
+882. 🟡 Your application has a read-heavy list of configuration listeners and very few modifications. Which collection would you choose?
+
+883. 🔴 Your service receives 50,000 requests per second and every request performs a lookup in a shared in-memory map. Which Map implementation would you consider?
+
+884. 🔴 A shared HashMap is being accessed by multiple request threads and production occasionally shows inconsistent results. How would you investigate the collection usage?
+
+885. 🔴 A HashMap lookup suddenly becomes slow after the application starts processing millions of records. What collection-level causes would you investigate?
+
+886. 🔴 Your application creates millions of HashMap objects with tiny initial capacities. What performance issue could occur?
+
+887. 🔴 Your service creates a HashMap with millions of entries at startup. How would you choose its initial capacity?
+
+888. 🔴 A production service has high GC activity after switching from ArrayList to LinkedList. What collection-level factors would you investigate?
+
+889. 🔴 A team claims LinkedList is always faster for insertions and deletions. How would you challenge that assumption?
+
+890. 🔴 You need an LRU cache for frequently accessed reference data. How could LinkedHashMap help?
+
+891. 🔴 What concurrency problems could exist in an LRU cache implemented using LinkedHashMap?
+
+892. 🔴 You need a thread-safe cache with high read/write concurrency. Would you use ConcurrentHashMap alone? What additional concerns would you consider?
+
+893. 🔴 A ConcurrentHashMap contains 10 million entries and receives extremely high write contention. What areas would you investigate for performance bottlenecks?
+
+894. 🔴 A service uses `CopyOnWriteArrayList` for a list that receives thousands of updates per second. What problem could this cause?
+
+895. 🔴 A service uses `Collections.synchronizedList()` and still experiences concurrent iteration problems. What would you inspect?
+
+896. 🔴 You discover a mutable object is being used as a HashMap key. How would you diagnose and fix the issue?
+
+897. 🔴 A HashSet unexpectedly contains what appears to be duplicate business objects. What would you inspect in `equals()` and `hashCode()`?
+
+898. 🔴 A TreeSet unexpectedly drops objects that are not equal according to `equals()`. What would you inspect?
+
+899. 🔴 Your service needs to group millions of transactions by customer ID. Which Map structure would you consider and how would you think about memory usage?
+
+900. 🔴 You need to maintain counts for millions of events concurrently. How would you design the collection and counter structure?
+
+901. 🔴 You need to maintain a bounded in-memory queue for asynchronous processing. Which collection family would you investigate?
+
+902. 🔴 A collection grows continuously throughout the application's lifetime and eventually causes an OutOfMemoryError. How would you investigate whether the collection itself is responsible?
+
+903. 🔴 A production application has a large `ArrayList` that is repeatedly resized. How would you identify and optimize the issue?
+
+904. 🔴 Your application needs sorted access but only occasionally. Would you always use TreeMap? What alternatives would you evaluate?
+
+905. 🔴 Your API response requires deterministic ordering of results but lookup speed is also important. Which collection design would you consider?
+
+---
+
+# AF. Interviewer Drill Chains
+
+## HashMap Drill
+
+906. 🔴 Explain HashMap internals.
+
+907. 🔴 Follow-up: What happens during `put()`?
+
+908. 🔴 Follow-up: How is the bucket selected?
+
+909. 🔴 Follow-up: What happens during collision?
+
+910. 🔴 Follow-up: What changed in Java 8?
+
+911. 🔴 Follow-up: When does treeification happen?
+
+912. 🔴 Follow-up: Why red-black tree?
+
+913. 🔴 Follow-up: What is load factor?
+
+914. 🔴 Follow-up: What triggers resize?
+
+915. 🔴 Follow-up: What happens during resize?
+
+916. 🔴 Follow-up: Why are capacities powers of two?
+
+917. 🔴 Follow-up: What happens if hashCode is poor?
+
+918. 🔴 Follow-up: What happens if hashCode always returns the same value?
+
+919. 🔴 Follow-up: What happens if a key is mutable?
+
+920. 🔴 Follow-up: Is HashMap thread-safe?
+
+921. 🔴 Follow-up: What would you use instead for concurrent access?
+
+---
+
+## HashSet Drill
+
+922. 🟡 Explain HashSet internals.
+
+923. 🟡 Follow-up: What does HashSet use internally?
+
+924. 🟡 Follow-up: How does it prevent duplicates?
+
+925. 🟡 Follow-up: What happens when hash codes collide?
+
+926. 🟡 Follow-up: What happens if equals is overridden incorrectly?
+
+927. 🔴 Follow-up: What happens if a mutable object is inserted?
+
+928. 🔴 Follow-up: How would you debug missing elements from a HashSet?
+
+---
+
+## ArrayList Drill
+
+929. 🟡 Explain ArrayList internals.
+
+930. 🟡 Follow-up: What is capacity?
+
+931. 🟡 Follow-up: What happens when capacity is exhausted?
+
+932. 🟡 Follow-up: What is amortized O(1)?
+
+933. 🟡 Follow-up: Why is random access fast?
+
+934. 🔴 Follow-up: Why can ArrayList outperform LinkedList?
+
+935. 🔴 Follow-up: What happens when millions of elements are stored?
+
+---
+
+## ConcurrentHashMap Drill
+
+936. 🔴 Explain ConcurrentHashMap internals.
+
+937. 🔴 Follow-up: Why not synchronize HashMap?
+
+938. 🔴 Follow-up: What is CAS?
+
+939. 🔴 Follow-up: Where is CAS used?
+
+940. 🔴 Follow-up: How does locking work?
+
+941. 🔴 Follow-up: How does resize work concurrently?
+
+942. 🔴 Follow-up: What is weakly consistent iteration?
+
+943. 🔴 Follow-up: Why are null keys/values prohibited?
+
+944. 🔴 Follow-up: How would you implement a concurrent counter?
+
+945. 🔴 Follow-up: AtomicInteger vs LongAdder?
+
+---
+
+## TreeSet / TreeMap Drill
+
+946. 🟡 Explain TreeMap internals.
+
+947. 🟡 Follow-up: What tree is used?
+
+948. 🟡 Follow-up: Why red-black tree?
+
+949. 🟡 Follow-up: How does Comparator affect TreeMap?
+
+950. 🔴 Follow-up: What happens when Comparator returns zero for different objects?
+
+951. 🔴 Follow-up: Can TreeSet contain two objects that are different according to equals?
+
+952. 🔴 Follow-up: Why can inconsistent Comparator implementations cause lost entries?
+
+---
+
+# AG. Final Collection Selection Questions
+
+953. 🟢 When would you use ArrayList?
+
+954. 🟢 When would you use LinkedList?
+
+955. 🟢 When would you use HashSet?
+
+956. 🟢 When would you use LinkedHashSet?
+
+957. 🟢 When would you use TreeSet?
+
+958. 🟢 When would you use HashMap?
+
+959. 🟢 When would you use LinkedHashMap?
+
+960. 🟢 When would you use TreeMap?
+
+961. 🟢 When would you use ArrayDeque?
+
+962. 🟢 When would you use PriorityQueue?
+
+963. 🟡 When would you use EnumSet?
+
+964. 🟡 When would you use EnumMap?
+
+965. 🟡 When would you use WeakHashMap?
+
+966. 🟡 When would you use IdentityHashMap?
+
+967. 🟡 When would you use CopyOnWriteArrayList?
+
+968. 🟡 When would you use ConcurrentHashMap?
+
+969. 🔴 When would you explicitly avoid using ArrayList?
+
+970. 🔴 When would you explicitly avoid using LinkedList?
+
+971. 🔴 When would you explicitly avoid using HashMap?
+
+972. 🔴 When would you explicitly avoid using TreeMap?
+
+973. 🔴 When would you explicitly avoid using CopyOnWriteArrayList?
+
+974. 🔴 When would you explicitly avoid using ConcurrentHashMap?
+
+975. 🔴 Given an unfamiliar production requirement, what questions would you ask before selecting a collection?
+
+---
+
+# COLLECTIONS MASTER CHECKLIST
+
+Before moving to the next Java topic, make sure you can answer questions around:
+
+* [ ] Collections Framework hierarchy
+* [ ] Iterable
+* [ ] Iterator
+* [ ] ListIterator
+* [ ] Fail-fast iteration
+* [ ] Weakly consistent iteration
+* [ ] Snapshot iteration
+* [ ] ArrayList internals
+* [ ] ArrayList resizing
+* [ ] ArrayList capacity vs size
+* [ ] ArrayList complexity
+* [ ] LinkedList internals
+* [ ] LinkedList vs ArrayList
+* [ ] Vector
+* [ ] Stack
+* [ ] Set hierarchy
+* [ ] HashSet internals
+* [ ] LinkedHashSet
+* [ ] TreeSet
+* [ ] EnumSet
+* [ ] Queue
+* [ ] Deque
+* [ ] PriorityQueue
+* [ ] Binary heap
+* [ ] ArrayDeque
+* [ ] Map hierarchy
+* [ ] HashMap internals
+* [ ] Hashing
+* [ ] hashCode()
+* [ ] equals()
+* [ ] Collision handling
+* [ ] Bucket calculation
+* [ ] Load factor
+* [ ] Capacity
+* [ ] Threshold
+* [ ] Resizing
+* [ ] Treeification
+* [ ] Red-black trees
+* [ ] Java 7 vs Java 8 HashMap
+* [ ] Mutable keys
+* [ ] LinkedHashMap
+* [ ] LRU cache
+* [ ] TreeMap
+* [ ] Hashtable
+* [ ] WeakHashMap
+* [ ] IdentityHashMap
+* [ ] EnumMap
+* [ ] ConcurrentHashMap
+* [ ] CAS
+* [ ] ConcurrentHashMap internals
+* [ ] ConcurrentHashMap resizing
+* [ ] Weakly consistent iterators
+* [ ] CopyOnWriteArrayList
+* [ ] Comparable
+* [ ] Comparator
+* [ ] Comparator contract
+* [ ] Collection views
+* [ ] Unmodifiable vs immutable collections
+* [ ] Collection complexity
+* [ ] Collection selection
+* [ ] Production scenarios
+* [ ] Tricky/output questions
+* [ ] Interviewer follow-up chains
+
+**Next topic after Collections: Topic 7 — Generics — DEEP DIVE.**
+
+That’s a **serious Collections checklist**—this is the level where interviewers can keep drilling from “What is HashMap?” all the way down to **resize mechanics, treeification, CAS, and production concurrency problems**. 🔥

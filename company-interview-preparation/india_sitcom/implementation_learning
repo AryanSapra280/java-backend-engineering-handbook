@@ -1,0 +1,1042 @@
+Yes. **This is the right pivot.** Forget DSA for these 3 days. You already know it.
+
+With ~**23 focused hours**, we should not try to "finish Spring Boot." We should build **one small but realistic payment backend** and use it to cover the interview topics repeatedly.
+
+The goal is:
+
+> **By Wednesday, you should be able to open a blank IDE and implement the important pieces yourself while explaining why you implemented them that way.**
+
+# The project we'll build
+
+Let's build a **Merchant Payment + Wallet/Ledger Service**.
+
+Not a toy CRUD application.
+
+Something like:
+
+```text
+                    ┌──────────────────┐
+                    │      Client      │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │ Spring Boot API  │
+                    │                  │
+                    │ Security         │
+                    │ Validation       │
+                    │ Idempotency      │
+                    └────────┬─────────┘
+                             │
+                    ┌────────▼─────────┐
+                    │ Payment Service   │
+                    └────┬─────────┬────┘
+                         │         │
+                  sync   │         │ async
+                         │         ▼
+                         │    ┌────────────┐
+                         │    │ Executor / │
+                         │    │ CF         │
+                         │    └─────┬──────┘
+                         │          │
+                         ▼          ▼
+                  ┌─────────────────────┐
+                  │ Wallet / Ledger      │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                       ┌───────────┐
+                       │ MongoDB   │
+                       └───────────┘
+```
+
+And we'll introduce:
+
+* Java
+* Spring Boot
+* REST
+* DTOs
+* validation
+* exception handling
+* MongoDB
+* indexes
+* pagination
+* cursor pagination
+* Spring Security
+* JWT
+* OAuth2 concepts
+* Keycloak concepts
+* RBAC
+* `CompletableFuture`
+* `ExecutorService`
+* thread pools
+* concurrency
+* race conditions
+* idempotency
+* transactions/consistency
+* circuit breaker
+* retry
+* timeout
+* testing
+* mocking
+* hexagonal architecture
+* payment state machine
+* ledger
+* wallet
+* edge cases
+
+**But we will NOT build Kafka, Kubernetes, gRPC, etc. into the first version.** Those can become targeted interview exercises later. Otherwise we'll burn our 23 hours on infrastructure.
+
+---
+
+# Your 4-day plan
+
+You have approximately:
+
+| Day           |    Time | Focus                                      |
+| ------------- | ------: | ------------------------------------------ |
+| **Sunday**    |     12h | Build the core project                     |
+| **Monday**    |      3h | Security + Mongo + pagination              |
+| **Tuesday**   |      3h | Async + concurrency + resilience           |
+| **Wednesday** |      5h | Testing + interview simulations + revision |
+| **Total**     | **23h** |                                            |
+
+---
+
+# 🔥 SUNDAY — 12 HOURS
+
+This is where we do most of the learning.
+
+## Phase 1 — Architecture + Spring Boot
+
+**1 hour**
+
+We'll establish:
+
+```text
+Controller
+   ↓
+Application Service
+   ↓
+Domain
+   ↓
+Repository Port
+   ↓
+Mongo Adapter
+```
+
+And understand why.
+
+You need to be able to answer:
+
+> Why don't you put business logic in the controller?
+
+> Why use DTOs instead of exposing entities?
+
+> Why use interfaces between business logic and infrastructure?
+
+> What is dependency inversion?
+
+> How does this relate to hexagonal architecture?
+
+---
+
+# Phase 2 — Build Payment API
+
+**2 hours**
+
+We'll implement:
+
+```http
+POST /payments
+GET /payments/{paymentId}
+GET /payments
+POST /payments/{paymentId}/refund
+```
+
+We'll cover:
+
+```java
+@RestController
+@RequestMapping("/payments")
+```
+
+and:
+
+```java
+@Service
+@Repository
+```
+
+Then:
+
+### Request DTO
+
+```java
+public record CreatePaymentRequest(
+        String merchantId,
+        BigDecimal amount,
+        String currency
+) {}
+```
+
+We'll deliberately discuss:
+
+* Why `BigDecimal`, not `double`
+* Validation
+* Null handling
+* Negative amounts
+* Currency validation
+* Maximum transaction amount
+* malformed requests
+
+---
+
+# Phase 3 — MongoDB
+
+**1.5 hours**
+
+We'll create:
+
+```text
+Payment
+Wallet
+LedgerEntry
+```
+
+And discuss:
+
+### Payment
+
+```text
+paymentId
+merchantId
+customerId
+amount
+currency
+status
+idempotencyKey
+createdAt
+updatedAt
+```
+
+Then Mongo indexes.
+
+For example:
+
+```text
+merchantId + createdAt
+idempotencyKey
+paymentId
+status
+```
+
+And I'll make you think about:
+
+> "What query are you optimizing this index for?"
+
+That's an important interview habit.
+
+---
+
+# Phase 4 — Exception handling + validation
+
+**1 hour**
+
+We'll implement:
+
+```java
+@RestControllerAdvice
+```
+
+with:
+
+```text
+PaymentNotFoundException
+InvalidPaymentException
+DuplicatePaymentException
+InsufficientBalanceException
+```
+
+We'll build a consistent error response:
+
+```json
+{
+  "code": "PAYMENT_ALREADY_EXISTS",
+  "message": "Payment already processed",
+  "timestamp": "...",
+  "traceId": "..."
+}
+```
+
+Then discuss:
+
+> Should you expose the actual exception message to the client?
+
+> What HTTP status should each exception produce?
+
+> What happens if an unexpected exception occurs?
+
+---
+
+# Phase 5 — Idempotency
+
+**1.5 hours**
+
+This is **extremely important for your interview**.
+
+Suppose:
+
+```http
+POST /payments
+Idempotency-Key: ABC123
+```
+
+Client sends it.
+
+Your service processes the payment.
+
+But response gets lost.
+
+Client retries:
+
+```http
+POST /payments
+Idempotency-Key: ABC123
+```
+
+We must NOT create another payment.
+
+We'll implement the logic.
+
+Conceptually:
+
+```text
+Request
+   ↓
+Extract idempotency key
+   ↓
+Check existing request
+   ↓
+Exists?
+ ┌─Yes──────────────┐
+ │                  │
+Return previous     │
+response            │
+                    │
+No                  │
+ ↓                  │
+Create payment      │
+ ↓                  │
+Store result        │
+ ↓                  │
+Return response     │
+```
+
+Then we'll attack it with edge cases.
+
+### Edge case
+
+Two requests arrive simultaneously:
+
+```text
+Thread 1 → ABC123
+Thread 2 → ABC123
+```
+
+Both check:
+
+```text
+Does ABC123 exist?
+NO
+```
+
+Both proceed.
+
+💥 Duplicate payment.
+
+That takes us directly into **Mongo uniqueness + concurrency**.
+
+Perfect interview material.
+
+---
+
+# Phase 6 — Wallet + Ledger
+
+**2 hours**
+
+We'll build:
+
+```text
+Wallet
+```
+
+and:
+
+```text
+LedgerEntry
+```
+
+We'll discuss why a financial system should not simply do:
+
+```java
+balance -= amount;
+```
+
+without considering consistency.
+
+We'll model something like:
+
+```text
+LedgerEntry
+
+id
+transactionId
+accountId
+entryType
+amount
+currency
+createdAt
+```
+
+Then discuss:
+
+```text
+DEBIT
+CREDIT
+```
+
+and the invariant:
+
+```text
+Total debit = Total credit
+```
+
+We'll also discuss:
+
+> Why should ledger records generally be immutable?
+
+Very important.
+
+---
+
+# Phase 7 — Java concurrency
+
+**1.5 hours**
+
+Now we take the same wallet.
+
+Suppose:
+
+```text
+balance = ₹1000
+```
+
+Two requests:
+
+```text
+Thread A → withdraw ₹700
+Thread B → withdraw ₹600
+```
+
+We'll reproduce the race condition.
+
+Then implement multiple approaches:
+
+### Approach 1
+
+```java
+synchronized
+```
+
+### Approach 2
+
+```java
+ReentrantLock
+```
+
+### Approach 3
+
+Atomic/database-level approach.
+
+Then discuss:
+
+> Which one would you use in a distributed application?
+
+This is where you'll understand why:
+
+**Java synchronization alone is NOT enough when you have multiple application instances.**
+
+---
+
+# Phase 8 — Async programming
+
+**1.5 hours**
+
+We'll implement actual async code.
+
+First:
+
+```java
+ExecutorService
+```
+
+Then:
+
+```java
+CompletableFuture
+```
+
+For example:
+
+```java
+CompletableFuture<PaymentResponse> future =
+        CompletableFuture.supplyAsync(
+                () -> processPayment(request),
+                paymentExecutor
+        );
+```
+
+Then we'll cover:
+
+```java
+thenApply()
+thenCompose()
+thenCombine()
+allOf()
+exceptionally()
+handle()
+whenComplete()
+```
+
+But **only the ones useful for interviews**.
+
+We'll answer practical questions:
+
+> Why not create a new thread for every request?
+
+> Why use a thread pool?
+
+> What happens when all threads are busy?
+
+> What happens when the queue is full?
+
+> How do you handle exceptions in CompletableFuture?
+
+> What's the difference between `thenApply` and `thenCompose`?
+
+> How do you execute two independent operations in parallel?
+
+---
+
+# MONDAY — 3 HOURS
+
+## 1 hour — Spring Security
+
+We'll implement:
+
+```text
+Authentication
+Authorization
+JWT
+RBAC
+```
+
+Flow:
+
+```text
+Client
+   ↓
+Login
+   ↓
+Identity Provider / Keycloak
+   ↓
+JWT
+   ↓
+Spring Security
+   ↓
+Authentication
+   ↓
+Authorization
+   ↓
+Controller
+```
+
+You'll understand:
+
+```text
+Authentication
+        vs
+Authorization
+```
+
+and:
+
+```text
+ROLE_MERCHANT
+ROLE_ADMIN
+ROLE_SUPPORT
+```
+
+Then:
+
+```java
+@PreAuthorize("hasRole('MERCHANT')")
+```
+
+We'll also discuss:
+
+> Does every JWT request require a database lookup?
+
+> Where does the signature get validated?
+
+> What happens when the token expires?
+
+> Access token vs refresh token?
+
+> OAuth2 vs JWT?
+
+> Keycloak's role in the architecture?
+
+---
+
+# 1 hour — MongoDB deeply enough
+
+We'll cover:
+
+```text
+Indexes
+Compound indexes
+Query patterns
+Atomic updates
+Optimistic concurrency
+Mongo transactions
+Embedding vs referencing
+```
+
+And pagination:
+
+### Offset
+
+```text
+page=10&size=20
+```
+
+vs
+
+### Cursor
+
+```text
+cursor=eyJpZCI6...
+```
+
+We'll implement both.
+
+---
+
+# 1 hour — Spring practical questions
+
+We'll implement/understand:
+
+```text
+Validation
+Global exception handling
+Profiles
+Configuration
+Actuator
+Transactions
+REST client
+Feign/WebClient concepts
+```
+
+And I'll keep interrupting with:
+
+> "What if this fails?"
+
+Because that's what you need.
+
+---
+
+# TUESDAY — 3 HOURS
+
+This is **distributed-system practicality**.
+
+## 1 hour — Resilience
+
+We'll implement/discuss:
+
+```text
+Timeout
+Retry
+Circuit breaker
+Fallback
+Bulkhead
+```
+
+And importantly:
+
+### Don't retry everything.
+
+Payment:
+
+```text
+Client
+ ↓
+Your service
+ ↓
+PSP
+ ↓
+timeout
+```
+
+Does retry mean another payment?
+
+Potentially yes.
+
+So we need:
+
+```text
+Idempotency
++
+Retry
+```
+
+together.
+
+---
+
+# 1 hour — Async + concurrency scenarios
+
+We'll solve actual scenarios:
+
+### Scenario 1
+
+10 threads update one wallet.
+
+### Scenario 2
+
+100 payment requests arrive simultaneously.
+
+### Scenario 3
+
+PSP takes 10 seconds.
+
+### Scenario 4
+
+PSP succeeds but response is lost.
+
+### Scenario 5
+
+Mongo becomes slow.
+
+### Scenario 6
+
+Your executor has no free threads.
+
+### Scenario 7
+
+Two pods process the same message/request.
+
+This is where your confidence should jump.
+
+---
+
+# 1 hour — Hexagonal architecture
+
+We'll restructure what we built:
+
+```text
+              REST
+               │
+               ▼
+        ┌──────────────┐
+        │ Application  │
+        │    Core      │
+        └──────┬───────┘
+               │
+        ┌──────┴───────┐
+        ▼              ▼
+   Mongo Adapter    PSP Adapter
+```
+
+We'll understand:
+
+```text
+Inbound Port
+Outbound Port
+Adapter
+Domain
+Application Service
+```
+
+And why it makes testing easier.
+
+---
+
+# WEDNESDAY — 5 HOURS
+
+This day is **not for learning new topics.**
+
+It's interview simulation.
+
+---
+
+## Hour 1 — Java implementation
+
+I'll give you problems like:
+
+> Implement a thread-safe wallet.
+
+> Implement an in-memory idempotency store.
+
+> Implement a rate limiter using sliding window.
+
+> Implement pagination.
+
+> Implement asynchronous payment processing.
+
+You write the code.
+
+I'll review it.
+
+---
+
+# Hour 2 — Spring implementation
+
+I'll ask:
+
+> Build a payment endpoint.
+
+You should produce:
+
+```text
+Controller
+DTO
+Validation
+Service
+Repository
+Exception handling
+```
+
+Then I'll introduce failures.
+
+---
+
+# Hour 3 — Security + Mongo
+
+Rapid-fire:
+
+```text
+JWT
+OAuth2
+Keycloak
+RBAC
+Mongo indexes
+Pagination
+Transactions
+Concurrency
+```
+
+---
+
+# Hour 4 — Payment scenarios
+
+I'll become the interviewer.
+
+Example:
+
+> Your payment service gets 10,000 TPS. Design the payment flow.
+
+Then:
+
+> What happens if the database is down?
+
+Then:
+
+> What happens if the PSP times out?
+
+Then:
+
+> What happens if the request is duplicated?
+
+Then:
+
+> How do you maintain ledger consistency?
+
+Then:
+
+> How do you prevent double spending?
+
+---
+
+# Hour 5 — Final interview simulation
+
+**No teaching.**
+
+Just interview.
+
+I'll ask questions one at a time.
+
+You answer.
+
+I'll score your answer internally and correct it.
+
+---
+
+# Most importantly: how we're going to learn
+
+I don't want to give you another giant 150-question document.
+
+That would be exactly the wrong approach now.
+
+We're going to do:
+
+### Concept
+
+↓
+
+### Implement
+
+↓
+
+### Break it
+
+↓
+
+### Fix it
+
+↓
+
+### Interview question
+
+↓
+
+### Follow-up
+
+↓
+
+### Edge case
+
+↓
+
+### Move on
+
+For example:
+
+---
+
+### Topic: `CompletableFuture`
+
+We won't spend 40 minutes defining it.
+
+We'll do:
+
+```java
+CompletableFuture
+    .supplyAsync(...)
+    .thenApply(...)
+    .exceptionally(...);
+```
+
+Then I'll ask:
+
+> What thread executes this?
+
+> What happens when the supplier throws?
+
+> What happens when the executor is exhausted?
+
+> What if we need two calls in parallel?
+
+> What if B depends on A?
+
+> How do we timeout the operation?
+
+> Why shouldn't we call `.get()` immediately?
+
+**Then move on.**
+
+---
+
+# 🚨 One rule for the next 3 days
+
+Whenever you're tempted to ask:
+
+> "What is X?"
+
+We'll convert it into:
+
+> **"Show me how X is actually used in our payment service."**
+
+That's much closer to the interview you're describing.
+
+---
+
+# Let's start NOW — Project 1
+
+We'll build this first:
+
+## `Payment Service`
+
+### API
+
+```http
+POST /api/v1/payments
+```
+
+Request:
+
+```json
+{
+  "merchantId": "M123",
+  "customerId": "C456",
+  "amount": 1000.00,
+  "currency": "INR"
+}
+```
+
+Headers:
+
+```http
+Authorization: Bearer <JWT>
+Idempotency-Key: abc-123
+```
+
+Response:
+
+```json
+{
+  "paymentId": "P10001",
+  "status": "CREATED",
+  "amount": 1000.00,
+  "currency": "INR"
+}
+```
+
+We'll build this **from scratch**, and as we build each class I'll explain the interview reasoning behind it.
+
+Our first implementation sequence will be:
+
+```text
+1. Project structure
+2. Domain model
+3. DTO
+4. Controller
+5. Service
+6. Repository
+7. MongoDB
+8. Validation
+9. Exception handling
+10. Idempotency
+11. Testing
+12. Async processing
+13. Security
+14. Concurrency
+15. Resilience
+```
+
+**Don't worry about setting up 15 technologies at once.** We'll get the basic payment endpoint working first, then progressively make it production-grade.
+
+### Start with Step 1: Project structure + domain model.
+
+I'll teach it as if you're implementing it live in the interview—not just give you code to copy.

@@ -1,0 +1,423 @@
+# Topic 3 — Exception Handling
+
+Now we go **deep**. For a ~5-year Java backend interview, don't stop at `try-catch`; interviewers can drill into exception propagation, bytecode/runtime behavior, suppressed exceptions, custom exception design, and production error handling.
+
+**Questions only — no answers.**
+
+---
+
+## A. Exception Fundamentals & Hierarchy
+
+1. 🟢 What is an exception in Java?
+2. 🟢 What is the difference between an exception and an error?
+3. 🟢 What is the root class of Java's exception hierarchy?
+4. 🟢 What is `Throwable`?
+5. 🟢 What are the major subclasses of `Throwable`?
+6. 🟢 What is the difference between `Error` and `Exception`?
+7. 🟢 What is `RuntimeException`?
+8. 🟢 What is the difference between checked and unchecked exceptions?
+9. 🟢 Give examples of checked exceptions.
+10. 🟢 Give examples of unchecked exceptions.
+11. 🟡 Why are checked exceptions checked at compile time?
+12. 🟡 Why are RuntimeExceptions unchecked?
+13. 🟡 What is the difference between a programming error and a recoverable condition?
+14. 🔴 Why did Java introduce checked exceptions?
+15. 🔴 What are the advantages and disadvantages of checked exceptions?
+16. 🔴 Why do many modern Java applications prefer unchecked exceptions?
+17. 🔴 Can `Error` be caught?
+18. 🔴 Should you normally catch `Error`?
+19. 🔴 What happens if an exception is never caught?
+20. 🔴 What happens to the thread when an uncaught exception reaches the top of the call stack?
+
+---
+
+# B. Checked vs Unchecked Exceptions
+
+21. 🟢 What is a checked exception?
+22. 🟢 What is an unchecked exception?
+23. 🟢 What is the difference between checked and unchecked exceptions from the compiler's perspective?
+24. 🟡 Why does a method declaring a checked exception need `throws`?
+25. 🟡 Does an unchecked exception need to be declared using `throws`?
+26. 🔴 Can you declare a RuntimeException using `throws`?
+27. 🔴 If you declare `throws RuntimeException`, does the caller have to handle it?
+28. 🔴 Can a checked exception be converted into an unchecked exception?
+29. 🔴 When would you wrap a checked exception inside a RuntimeException?
+30. 🔴 What are the trade-offs between propagating and wrapping exceptions?
+31. 🔴 Would you create a checked or unchecked exception for a business validation failure?
+32. 🔴 Would you create a checked or unchecked exception for a database failure?
+33. 🔴 Would you create a checked or unchecked exception for an external service failure?
+34. 🔴 How would you decide whether an exception should be recoverable by the caller?
+
+---
+
+# C. try / catch / finally
+
+35. 🟢 How does `try-catch` work?
+36. 🟢 What is the purpose of `finally`?
+37. 🟢 Can you have a `try` block without a `catch`?
+38. 🟢 Can you have a `try` block with only `finally`?
+39. 🟢 Can you have a `catch` block without a `try`?
+40. 🟢 Can you have multiple `catch` blocks?
+41. 🟡 How does Java determine which catch block should execute?
+42. 🟡 In what order should multiple catch blocks be written?
+43. 🔴 What happens if a superclass exception is caught before a subclass exception?
+44. 🔴 Why must more specific exceptions generally be caught before broader exceptions?
+45. 🔴 Can two catch blocks catch related exceptions in the wrong order?
+46. 🔴 What compile-time error occurs if a catch block can never be reached?
+47. 🟡 Can a `finally` block throw an exception?
+48. 🔴 What happens if both `try` and `finally` throw exceptions?
+49. 🔴 Which exception becomes visible to the caller?
+50. 🔴 Why can an exception from `finally` hide the original exception?
+
+---
+
+# D. Multiple Catch & Multi-Catch
+
+51. 🟢 What is multiple catch?
+52. 🟢 What is multi-catch introduced in Java 7?
+53. 🟡 What is the difference between multiple catch blocks and multi-catch?
+54. 🟡 How do you catch multiple unrelated exceptions using one catch block?
+55. 🔴 Can exceptions in a multi-catch clause have a parent-child relationship?
+56. 🔴 Why can't you catch `IOException | Exception` in the same multi-catch?
+57. 🔴 Is the multi-catch exception parameter implicitly final?
+58. 🔴 Can you reassign the exception variable inside a multi-catch block?
+59. 🔴 How does precise rethrow interact with multi-catch?
+
+---
+
+# E. `throw` vs `throws`
+
+60. 🟢 What is the difference between `throw` and `throws`?
+61. 🟢 Where is `throw` used?
+62. 🟢 Where is `throws` used?
+63. 🟡 Can a method have multiple exceptions in `throws`?
+64. 🟡 Can you throw a checked exception without declaring it?
+65. 🔴 What happens if you try to throw a checked exception without handling or declaring it?
+66. 🟡 Can you throw an unchecked exception without declaring it?
+67. 🔴 Can `throw` be used with `null`?
+68. 🔴 What happens if you execute `throw null`?
+69. 🔴 Can a method declare `throws Exception` and actually throw a RuntimeException?
+70. 🔴 Can a method declare `throws RuntimeException`?
+71. 🔴 Is `throws` part of a method's signature?
+72. 🔴 Can an overriding method declare broader checked exceptions than the overridden method?
+
+---
+
+# F. Exception Propagation
+
+73. 🟢 What is exception propagation?
+74. 🟢 How does an exception propagate through method calls?
+75. 🟡 What happens when a method throws an exception but doesn't catch it?
+76. 🟡 What happens when none of the callers catch the exception?
+77. 🔴 Explain exception propagation through a call stack.
+78. 🔴 What happens to the stack frames when an exception is thrown?
+79. 🔴 How does the JVM locate a matching catch block?
+80. 🔴 What happens when no matching catch block exists?
+81. 🔴 What happens to the current method's remaining statements after an exception?
+82. 🔴 Can execution resume from the point where an exception was thrown?
+83. 🔴 Why doesn't Java normally resume execution at the throw point after a catch?
+84. 🔴 How does stack unwinding work?
+85. 🔴 What information is captured in a stack trace?
+86. 🔴 What is the difference between `getStackTrace()` and `printStackTrace()`?
+
+---
+
+# G. Exception Chaining & Wrapping
+
+87. 🟢 What is exception chaining?
+88. 🟢 What is the cause of an exception?
+89. 🟡 How do you preserve the original exception while throwing another exception?
+90. 🟡 What is the purpose of `Throwable.getCause()`?
+91. 🟡 What is the difference between cause and message?
+92. 🔴 Why should you preserve the original exception cause?
+93. 🔴 What happens if you catch an exception and throw a new exception without passing the original cause?
+94. 🔴 How would you wrap a low-level database exception into a domain-specific exception?
+95. 🔴 When should an exception be translated from one abstraction level to another?
+96. 🔴 Should a service layer expose JDBC-specific exceptions to its callers?
+97. 🔴 How would you preserve debugging information while hiding implementation details?
+98. 🔴 What is the difference between exception wrapping and exception rethrowing?
+
+---
+
+# H. Rethrowing & Precise Rethrow
+
+99. 🟡 What is rethrowing an exception?
+100. 🟡 What is the difference between `throw e` and throwing a new exception?
+101. 🔴 What is precise rethrow?
+102. 🔴 What improvement did Java 7 introduce regarding precise rethrow?
+103. 🔴 How does the compiler determine the actual checked exceptions that can escape a method?
+104. 🔴 What happens when an exception variable is reassigned before rethrowing?
+105. 🔴 How does precise rethrow affect method signatures?
+
+---
+
+# I. Try-with-Resources
+
+106. 🟢 What is try-with-resources?
+107. 🟢 Why was try-with-resources introduced?
+108. 🟢 What interface must a resource implement to be used with try-with-resources?
+109. 🟢 What is `AutoCloseable`?
+110. 🟡 What is the difference between `AutoCloseable` and `Closeable`?
+111. 🟡 Can a resource implement `AutoCloseable` directly?
+112. 🟡 Can try-with-resources contain multiple resources?
+113. 🟡 In what order are multiple resources closed?
+114. 🔴 Why are resources closed in reverse order?
+115. 🔴 What happens if resource initialization fails?
+116. 🔴 What happens if the body of the try block throws an exception?
+117. 🔴 What happens if `close()` throws another exception?
+118. 🔴 Which exception becomes the primary exception?
+119. 🔴 What is a suppressed exception?
+120. 🔴 How do you retrieve suppressed exceptions?
+121. 🔴 What does `Throwable.getSuppressed()` return?
+122. 🔴 Can you manually add a suppressed exception?
+123. 🔴 What happens if `close()` throws an unchecked exception?
+124. 🔴 What happens if multiple resources each throw exceptions during close?
+125. 🔴 How does try-with-resources compare with manually closing resources in `finally`?
+
+---
+
+# J. AutoCloseable Deep Dive
+
+126. 🟢 What is `AutoCloseable`?
+127. 🟡 What is the signature of its `close()` method?
+128. 🟡 Why does `AutoCloseable.close()` allow `Exception`?
+129. 🔴 Can an implementation of `AutoCloseable.close()` throw a narrower exception?
+130. 🔴 Can an implementation choose not to throw any exception?
+131. 🟡 What happens if `close()` is called multiple times?
+132. 🔴 Should `close()` implementations generally be idempotent?
+133. 🔴 How would you design a custom resource implementing `AutoCloseable`?
+134. 🔴 What happens if resource acquisition succeeds but later resource acquisition fails in a multi-resource try-with-resources statement?
+
+---
+
+# K. `finally` — Deep Interview Questions
+
+135. 🟢 What is the purpose of `finally`?
+136. 🟡 Does `finally` always execute?
+137. 🔴 In which situations might `finally` not execute?
+138. 🔴 What happens if `System.exit()` is called inside `try`?
+139. 🔴 What happens if the JVM crashes before finally executes?
+140. 🔴 What happens if the process is forcibly terminated?
+141. 🔴 What happens when `return` occurs inside `try`?
+142. 🔴 Does `finally` execute before the method actually returns?
+143. 🔴 What happens when both `try` and `finally` contain `return`?
+144. 🔴 Which return value wins?
+145. 🔴 What happens if `finally` modifies a local variable after `return` has been evaluated?
+146. 🔴 What happens if `finally` modifies a mutable object that is being returned?
+147. 🔴 Why is returning from `finally` considered dangerous?
+148. 🔴 Can `finally` change the exception being propagated?
+149. 🔴 Why should cleanup logic be carefully designed even when using `finally`?
+
+---
+
+# L. Custom Exceptions
+
+150. 🟢 Why would you create a custom exception?
+151. 🟢 How do you create a custom checked exception?
+152. 🟢 How do you create a custom unchecked exception?
+153. 🟡 When should you use a custom exception instead of an existing exception?
+154. 🟡 Should custom exceptions contain error codes?
+155. 🟡 Should custom exceptions contain business context?
+156. 🔴 How would you design an exception hierarchy for a large backend application?
+157. 🔴 How would you represent validation, authorization, resource-not-found and downstream-service failures?
+158. 🔴 Should every failure have its own exception class?
+159. 🔴 What problems can arise from creating hundreds of custom exception classes?
+160. 🔴 How would you design exceptions so that API responses contain useful information without leaking internal details?
+
+---
+
+# M. Exception Handling in Inheritance
+
+161. 🟢 Can an overriding method throw checked exceptions?
+162. 🟢 Can an overriding method throw broader checked exceptions?
+163. 🟡 Can an overriding method throw narrower checked exceptions?
+164. 🟡 Can an overriding method throw unchecked exceptions?
+165. 🔴 Why can't an overriding method declare broader checked exceptions?
+166. 🔴 What happens when the superclass method declares no checked exceptions?
+167. 🔴 Can the overriding method declare a checked exception in that case?
+168. 🔴 How does this rule support polymorphism and substitutability?
+
+---
+
+# N. Tricky Exception Questions
+
+169. 🔴 What happens if `catch` itself throws an exception?
+170. 🔴 What happens if `finally` throws an exception after `catch` executes?
+171. 🔴 What happens if both `catch` and `finally` throw?
+172. 🔴 What happens if `try` returns, `finally` returns, and `finally` modifies a variable?
+173. 🔴 What happens if a constructor throws an exception?
+174. 🔴 What happens if a static initializer throws an exception?
+175. 🔴 What exception occurs when a static initialization fails?
+176. 🔴 What happens if an exception is thrown while evaluating a method argument?
+177. 🔴 What happens if an exception occurs while evaluating the condition of an `if` statement?
+178. 🔴 Can an exception be thrown from a field initializer?
+179. 🔴 Can an exception be thrown from an instance initialization block?
+180. 🔴 Can an exception be thrown from a static initialization block?
+181. 🔴 What happens if an exception escapes a static initializer?
+182. 🔴 What happens if a thread's `run()` method throws an unchecked exception?
+183. 🔴 Does an exception in one thread automatically terminate the entire application?
+184. 🔴 How can you handle uncaught exceptions from threads?
+185. 🔴 What is `UncaughtExceptionHandler`?
+
+---
+
+# O. Exception Output-Based Questions
+
+186. 🔴 Predict the output when `try` contains `return` and `finally` modifies the return variable.
+187. 🔴 Predict the output when both `try` and `finally` contain `return`.
+188. 🔴 Predict the output when `try` throws an exception and `finally` throws another.
+189. 🔴 Predict the output when `catch` throws and `finally` also throws.
+190. 🔴 Predict the output when multiple catch blocks exist in the wrong order.
+191. 🔴 Predict the output of nested try-catch-finally blocks.
+192. 🔴 Predict the output when an exception propagates through three methods.
+193. 🔴 Predict the output when `throw null` is executed.
+194. 🔴 Predict the output of try-with-resources where both the main operation and `close()` throw.
+195. 🔴 Predict which exception becomes primary when multiple resources throw during closing.
+196. 🔴 Predict the order in which multiple resources are closed.
+197. 🔴 Predict the output when an exception occurs during resource initialization.
+198. 🔴 Predict behavior when a constructor throws an exception.
+199. 🔴 Predict behavior when a static initialization block throws an exception.
+
+---
+
+# P. Backend / Production Exception Handling
+
+200. 🟢 How should exceptions generally be handled in a REST API?
+201. 🟢 Should you catch every exception in a service method?
+202. 🟡 Where should exceptions be handled in a layered backend application?
+203. 🟡 Where should exceptions be translated into HTTP responses?
+204. 🟡 How would you handle validation exceptions?
+205. 🟡 How would you handle resource-not-found exceptions?
+206. 🟡 How would you handle downstream-service failures?
+207. 🟡 How would you handle database exceptions?
+208. 🔴 Why should low-level infrastructure exceptions usually not leak directly to API clients?
+209. 🔴 How would you design a global exception-handling mechanism?
+210. 🔴 How would you distinguish between client errors and server errors?
+211. 🔴 How would you prevent internal stack traces from being exposed through REST APIs?
+212. 🔴 What information should an API error response contain?
+213. 🔴 Should exception messages be returned directly to clients?
+214. 🔴 How would you correlate an exception with a specific request in production?
+215. 🔴 How would correlation IDs help with exception troubleshooting?
+216. 🔴 When should an exception be logged?
+217. 🔴 At which layer should an exception be logged?
+218. 🔴 Why can logging the same exception at multiple layers be problematic?
+219. 🔴 How would you avoid duplicate logging?
+220. 🔴 How would you preserve the original stack trace?
+221. 🔴 What happens if you use `throw new Exception(e.getMessage())` instead of preserving the cause?
+222. 🔴 How would you handle exceptions from an external payment service?
+223. 🔴 How would you distinguish retryable and non-retryable exceptions?
+224. 🔴 Which exceptions should trigger a retry?
+225. 🔴 Which exceptions should not be retried?
+226. 🔴 How can incorrect exception handling cause retry storms?
+227. 🔴 How would you design exception handling for an asynchronous Kafka consumer?
+228. 🔴 What should happen when message processing fails repeatedly?
+229. 🔴 How would you distinguish transient failures from permanent failures?
+230. 🔴 How would you handle a database timeout differently from a validation failure?
+
+---
+
+# Q. Difficult Scenario Questions
+
+231. 🔴 Your REST API calls three downstream services. The second call fails. How would you handle the failure?
+232. 🔴 A downstream service returns a timeout. Would you throw, retry, fallback, or return an error?
+233. 🔴 A database connection times out while processing a request. How would you handle it?
+234. 🔴 A business operation succeeds but publishing an event fails. What exception-handling strategy would you use?
+235. 🔴 A Kafka consumer processes a message successfully but crashes before acknowledging it. How does exception handling affect this?
+236. 🔴 Your service keeps retrying an operation that will never succeed. How would you prevent this?
+237. 🔴 A production service is returning HTTP 500 responses, but application logs contain no useful exception details. How would you investigate?
+238. 🔴 A service is logging the same exception thousands of times per second. What problems can this create?
+239. 🔴 A custom exception contains sensitive database information in its message. What is wrong with this design?
+240. 🔴 An application catches `Exception` everywhere and continues execution. What problems can this create?
+241. 🔴 A developer catches an exception and does nothing. What is wrong with this?
+242. 🔴 A developer catches an exception and only logs `"Something went wrong"`. What information is missing?
+243. 🔴 A service converts every exception into `RuntimeException`. What design problems could this create?
+244. 🔴 A service catches `RuntimeException` globally and returns HTTP 400 for every failure. What's wrong with this approach?
+245. 🔴 How would you design an exception taxonomy for a large microservice?
+
+---
+
+# 🔥 Interviewer Drill Chains
+
+## Drill 1 — Checked vs Unchecked
+
+246. 🟢 What is a checked exception?
+247. 🟡 Why does Java check it at compile time?
+248. 🟡 What is an unchecked exception?
+249. 🔴 Why would you choose unchecked over checked?
+250. 🔴 Give a real backend example.
+251. 🔴 What happens when an unchecked exception propagates?
+252. 🔴 How does Spring typically deal with such exceptions at the web layer?
+
+## Drill 2 — try-with-resources
+
+253. 🟢 What is try-with-resources?
+254. 🟡 What interface does a resource implement?
+255. 🟡 How are multiple resources closed?
+256. 🔴 What happens if both the main operation and `close()` throw?
+257. 🔴 What is a suppressed exception?
+258. 🔴 How do you retrieve it?
+259. 🔴 Why is this better than manually closing resources in `finally`?
+
+## Drill 3 — finally
+
+260. 🟢 What is `finally`?
+261. 🟡 When does it execute?
+262. 🔴 Does it always execute?
+263. 🔴 What happens with `return` in `try`?
+264. 🔴 What happens with `return` in `finally`?
+265. 🔴 What happens if `finally` throws?
+266. 🔴 Why is `return` in finally considered bad practice?
+
+## Drill 4 — Exception Propagation
+
+267. 🟢 What happens when an exception isn't caught?
+268. 🟡 What is exception propagation?
+269. 🔴 What is stack unwinding?
+270. 🔴 How does JVM find the appropriate catch block?
+271. 🔴 What happens if no handler exists?
+272. 🔴 What happens to the thread?
+273. 🔴 How would you diagnose this in production?
+
+## Drill 5 — Backend Exception Design
+
+274. 🟢 How do you handle exceptions in a REST API?
+275. 🟡 Where should exceptions be translated to HTTP responses?
+276. 🔴 How do you distinguish business errors from infrastructure errors?
+277. 🔴 Which errors are retryable?
+278. 🔴 How do you avoid leaking internal implementation details?
+279. 🔴 How do you correlate errors across microservices?
+280. 🔴 How would this design change for asynchronous Kafka processing?
+
+---
+
+## 🎯 Topic 3 Checklist
+
+Before moving forward, make sure you've covered:
+
+* Exception hierarchy
+* `Throwable`
+* Error vs Exception
+* Checked vs unchecked
+* RuntimeException
+* try/catch/finally
+* Multiple catch
+* Multi-catch
+* `throw` vs `throws`
+* Exception propagation
+* Stack unwinding
+* Exception chaining
+* Exception wrapping
+* Rethrowing
+* Precise rethrow
+* try-with-resources
+* AutoCloseable
+* Suppressed exceptions
+* `finally` edge cases
+* Custom exceptions
+* Exception behavior with inheritance
+* Output-based exception questions
+* REST/backend exception handling
+* Retryable vs non-retryable failures
+* Production troubleshooting
+
+**Next topic after this: Topic 4 — Strings**, where we'll go much deeper into **String Pool, `intern()`, `new String()`, compile-time constants, concatenation, StringBuilder internals, memory behavior and tricky output questions**.

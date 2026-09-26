@@ -1,0 +1,651 @@
+# Topic 4 — Strings
+
+🔥 This one deserves a **deep dive** because String questions often look basic but interviewers can go into **memory, pooling, interning, immutability, compiler optimization, performance, thread safety, and tricky output**.
+
+**Questions only — no answers.**
+
+---
+
+## A. String Fundamentals
+
+1. 🟢 What is `String` in Java?
+2. 🟢 Is `String` a class, primitive type, or something else?
+3. 🟢 Why is String one of the most commonly used classes in Java?
+4. 🟢 Is String immutable in Java?
+5. 🟢 What exactly does immutability mean for a String?
+6. 🟢 Why was String designed to be immutable?
+7. 🟡 What are the advantages of String immutability?
+8. 🟡 How does String immutability help with thread safety?
+9. 🟡 How does String immutability help with security?
+10. 🟡 How does String immutability help with caching?
+11. 🔴 How does String immutability make String suitable for use as a `HashMap` key?
+12. 🔴 What would happen if String were mutable?
+13. 🔴 What problems could occur if a String used as a HashMap key could change after insertion?
+14. 🔴 Why can multiple threads safely share the same String object?
+15. 🔴 Is String immutable because the class is declared `final`?
+16. 🔴 What role does `final` play in String's immutability?
+17. 🔴 Could a non-final class theoretically still be immutable?
+18. 🔴 Can reflection or low-level mechanisms modify String internals?
+19. 🔴 Should application code ever rely on such mechanisms to modify immutable objects?
+
+---
+
+# B. String Object Creation
+
+20. 🟢 How can you create a String in Java?
+21. 🟢 What is the difference between:
+
+```java
+String s = "Java";
+```
+
+and
+
+```java
+String s = new String("Java");
+```
+
+22. 🟡 What happens internally when a String literal is encountered?
+23. 🟡 What happens internally when `new String()` is used?
+24. 🟡 How many objects can potentially be created by:
+
+```java
+String s = new String("Java");
+```
+
+25. 🔴 If `"Java"` already exists in the String pool, what happens when `new String("Java")` executes?
+26. 🔴 Does `new String("Java")` create a new pooled String?
+27. 🔴 Where is the String object created using `new String()` stored?
+28. 🔴 Where is the String literal stored?
+29. 🔴 What happens if the literal `"Java"` does not already exist in the String pool?
+30. 🔴 Can the String pool contain only String literals?
+31. 🔴 Can dynamically created Strings become part of the String pool?
+32. 🔴 What is the role of `intern()` in this process?
+
+---
+
+# C. String Pool
+
+33. 🟢 What is the String pool?
+34. 🟢 Why does Java maintain a String pool?
+35. 🟡 Where is the String pool located in modern JVMs?
+36. 🟡 How is the String pool different from the general heap?
+37. 🔴 Was the String pool always located in the same JVM memory area across Java versions?
+38. 🔴 What changed regarding String pool location between older and newer Java versions?
+39. 🟡 What happens when you create two identical String literals?
+40. 🔴 How many objects are created by:
+
+```java
+String a = "hello";
+String b = "hello";
+```
+
+41. 🔴 Do `a` and `b` point to the same object?
+42. 🔴 Why does Java reuse String literals?
+43. 🔴 What happens to pooled Strings during garbage collection?
+44. 🔴 Can unused interned Strings be garbage collected?
+45. 🔴 What are the memory implications of excessive String interning?
+46. 🔴 Can a huge number of unique Strings cause memory pressure in the String pool?
+
+---
+
+# D. `==` vs `equals()` with Strings
+
+47. 🟢 What is the difference between `==` and `equals()` when comparing Strings?
+48. 🟢 Why should `equals()` generally be used for String content comparison?
+49. 🟡 When can `==` unexpectedly return `true` for two Strings?
+50. 🔴 Predict the result:
+
+```java
+String a = "Java";
+String b = "Java";
+
+System.out.println(a == b);
+System.out.println(a.equals(b));
+```
+
+51. 🔴 Predict the result:
+
+```java
+String a = new String("Java");
+String b = new String("Java");
+
+System.out.println(a == b);
+System.out.println(a.equals(b));
+```
+
+52. 🔴 Predict the result:
+
+```java
+String a = "Java";
+String b = new String("Java");
+
+System.out.println(a == b);
+System.out.println(a.equals(b));
+```
+
+53. 🔴 Why does `equals()` return true in cases where `==` returns false?
+54. 🔴 What does String's implementation of `equals()` compare?
+55. 🔴 What happens if you compare a String with `null` using `equals()`?
+56. 🔴 What happens if you call `equals()` on a null String reference?
+57. 🔴 Why is `"Java".equals(variable)` sometimes preferred over `variable.equals("Java")`?
+
+---
+
+# E. `intern()`
+
+58. 🟢 What does `String.intern()` do?
+59. 🟡 Why would you use `intern()`?
+60. 🟡 What does `intern()` return?
+61. 🔴 Does `intern()` modify the original String object?
+62. 🔴 What happens when the String already exists in the pool?
+63. 🔴 What happens when the String does not exist in the pool?
+64. 🔴 Does `intern()` create a new String every time?
+65. 🔴 Predict:
+
+```java
+String a = new String("Java");
+String b = a.intern();
+
+System.out.println(a == b);
+```
+
+66. 🔴 Predict:
+
+```java
+String a = "Java";
+String b = new String("Java").intern();
+
+System.out.println(a == b);
+```
+
+67. 🔴 Predict:
+
+```java
+String a = new String("Java");
+String b = new String("Java");
+
+System.out.println(a == b);
+System.out.println(a.intern() == b.intern());
+```
+
+68. 🔴 What are the performance costs of calling `intern()`?
+69. 🔴 What are the memory risks of excessive interning?
+70. 🔴 Would you use `intern()` blindly for every String in a high-throughput backend application?
+71. 🔴 In what real-world scenario could String interning be useful?
+
+---
+
+# F. Compile-Time Constants
+
+72. 🟢 What is a String literal?
+73. 🟡 What is a compile-time constant?
+74. 🟡 What is constant folding?
+75. 🔴 Is this evaluated at compile time?
+
+```java
+String s = "Hello" + "World";
+```
+
+76. 🔴 Is this evaluated at compile time?
+
+```java
+String a = "Hello";
+String s = a + "World";
+```
+
+77. 🔴 What happens here?
+
+```java
+final String a = "Hello";
+String s = a + "World";
+```
+
+78. 🔴 Why can `final` affect String concatenation behavior?
+79. 🔴 What qualifies a String variable as a compile-time constant?
+80. 🔴 What happens when a `final` variable is initialized using a runtime method call?
+81. 🔴 Predict whether the following Strings refer to the same object:
+
+```java
+String a = "HelloWorld";
+String b = "Hello" + "World";
+String c = "Hello";
+String d = c + "World";
+```
+
+82. 🔴 How does the Java compiler optimize constant String expressions?
+
+---
+
+# G. String Concatenation
+
+83. 🟢 How does String concatenation work in Java?
+84. 🟢 What happens when you use the `+` operator with Strings?
+85. 🟡 What happens internally when you concatenate two Strings?
+86. 🟡 How does the compiler handle String concatenation?
+87. 🔴 Does the compiler always translate `+` into StringBuilder?
+88. 🔴 How has String concatenation implementation evolved across Java versions?
+89. 🔴 What is `invokedynamic` and how can it relate to String concatenation in modern Java?
+90. 🔴 What happens when concatenation occurs inside a loop?
+91. 🔴 Why can repeated String concatenation be expensive?
+92. 🔴 Compare:
+
+```java
+result = result + value;
+```
+
+with
+
+```java
+builder.append(value);
+```
+
+93. 🔴 What happens when concatenating primitives with Strings?
+94. 🔴 What happens when concatenating `null` with a String?
+95. 🔴 What happens when concatenating an object with a String?
+96. 🔴 Which method is effectively involved when an object is converted to a String during concatenation?
+97. 🔴 What happens if that object's `toString()` returns `null`?
+98. 🔴 Predict the output:
+
+```java
+System.out.println(1 + 2 + "Java");
+```
+
+99. 🔴 Predict the output:
+
+```java
+System.out.println("Java" + 1 + 2);
+```
+
+100. 🔴 Predict the output:
+
+```java
+System.out.println(1 + 2 + "Java" + 3 + 4);
+```
+
+---
+
+# H. StringBuilder
+
+101. 🟢 What is StringBuilder?
+102. 🟢 Why would you use StringBuilder?
+103. 🟢 String vs StringBuilder?
+104. 🟢 StringBuilder vs StringBuffer?
+105. 🟡 Is StringBuilder mutable?
+106. 🟡 Is StringBuilder thread-safe?
+107. 🟡 Why is StringBuilder generally faster than StringBuffer?
+108. 🔴 What internal data structure does StringBuilder use?
+109. 🔴 How does StringBuilder manage its capacity?
+110. 🔴 What is the difference between StringBuilder `length()` and `capacity()`?
+111. 🔴 What happens when the capacity is exceeded?
+112. 🔴 How does StringBuilder grow its internal buffer?
+113. 🔴 What is the time complexity of `append()`?
+114. 🔴 Is repeated `append()` always O(1)?
+115. 🔴 What is the amortized complexity of append operations?
+116. 🔴 How can you reduce StringBuilder reallocations?
+117. 🟡 When would you initialize StringBuilder with an explicit capacity?
+118. 🔴 What happens when `toString()` is called on a StringBuilder?
+119. 🔴 Does `toString()` return the same mutable internal buffer?
+120. 🔴 Why is StringBuilder appropriate for constructing large strings?
+121. 🔴 When would using StringBuilder actually be unnecessary?
+
+---
+
+# I. StringBuffer
+
+122. 🟢 What is StringBuffer?
+123. 🟢 Why was StringBuffer introduced?
+124. 🟡 Is StringBuffer thread-safe?
+125. 🟡 How does StringBuffer achieve thread safety?
+126. 🔴 What performance cost can synchronization introduce?
+127. 🔴 StringBuffer vs synchronized StringBuilder?
+128. 🔴 Would StringBuffer guarantee correctness for a compound operation involving multiple calls?
+129. 🔴 When would you choose StringBuffer today?
+130. 🔴 Why is StringBuffer less commonly used in modern backend applications?
+
+---
+
+# J. String Internal Representation
+
+131. 🟡 How is String data represented internally?
+132. 🟡 What is the role of the internal character/byte representation?
+133. 🔴 What changed in String's internal representation in Java 9?
+134. 🔴 What is Compact Strings?
+135. 🔴 Why were Compact Strings introduced?
+136. 🔴 How does Java determine whether a String can use a compact representation?
+137. 🔴 What memory benefit can Compact Strings provide?
+138. 🔴 Does every String use one byte per character internally?
+139. 🔴 What happens for Strings containing characters that cannot use the compact representation?
+140. 🔴 How can String representation affect memory usage in large backend applications?
+
+---
+
+# K. String Memory & Performance
+
+141. 🟢 Why can Strings consume significant memory in backend applications?
+142. 🟡 How can excessive temporary Strings increase GC pressure?
+143. 🟡 Why can processing large JSON payloads create many String objects?
+144. 🔴 How would you investigate excessive String allocation in production?
+145. 🔴 How can String concatenation cause allocation pressure?
+146. 🔴 How can excessive use of `substring()` affect memory/performance across Java versions?
+147. 🔴 Did older Java versions retain the original character array when creating a substring?
+148. 🔴 What changed in substring behavior in modern Java?
+149. 🔴 How could a tiny substring historically keep a huge character array alive?
+150. 🔴 How can String interning affect memory usage?
+151. 🔴 When can interning improve memory usage?
+152. 🔴 When can interning make memory usage worse?
+153. 🔴 How would you process a very large text file without creating unnecessary String objects?
+154. 🔴 How would you process millions of lines efficiently?
+155. 🔴 Would you load a multi-GB text file into one String? Why or why not?
+
+---
+
+# L. String Thread Safety
+
+156. 🟢 Is String thread-safe?
+157. 🟡 Why can Strings safely be shared between threads?
+158. 🔴 Is StringBuilder thread-safe?
+159. 🔴 Is StringBuffer thread-safe?
+160. 🔴 Does thread-safe StringBuilder usage automatically make a larger operation thread-safe?
+161. 🔴 How would you safely build Strings concurrently?
+162. 🔴 Would synchronizing StringBuilder operations necessarily make the entire algorithm thread-safe?
+
+---
+
+# M. Common String Methods — Interview Depth
+
+163. 🟢 What is the difference between `length()` and `isEmpty()`?
+164. 🟢 What does `isBlank()` do?
+165. 🟡 `isEmpty()` vs `isBlank()`?
+166. 🟢 What does `charAt()` do?
+167. 🟡 What happens when `charAt()` receives an invalid index?
+168. 🟢 What does `substring()` do?
+169. 🟡 What happens when substring indexes are invalid?
+170. 🟢 What does `contains()` do?
+171. 🟢 What is the difference between `contains()` and `indexOf()`?
+172. 🟢 What is the difference between `replace()`, `replaceFirst()` and `replaceAll()`?
+173. 🔴 Which of these methods uses regular expressions?
+174. 🟢 What is the difference between `split()` and manually parsing a String?
+175. 🔴 What regex-related performance issues can occur with `split()`?
+176. 🟢 What is the difference between `trim()` and `strip()`?
+177. 🔴 Why was `strip()` introduced?
+178. 🟡 What does `startsWith()` do?
+179. 🟡 What does `endsWith()` do?
+180. 🟡 What does `compareTo()` do?
+181. 🟡 What does `compareToIgnoreCase()` do?
+182. 🔴 How does lexicographical comparison work?
+183. 🟢 What does `String.join()` do?
+184. 🟡 What does `String.format()` do?
+185. 🔴 Why can repeated `String.format()` calls be relatively expensive?
+186. 🟡 What are the differences among `valueOf()`, `toString()` and string concatenation?
+
+---
+
+# N. String Encoding & Unicode
+
+187. 🟢 What is Unicode?
+188. 🟢 What is UTF-8?
+189. 🟡 What is the difference between characters and bytes?
+190. 🟡 Does one Java `char` always represent one complete Unicode character?
+191. 🔴 What is a UTF-16 code unit?
+192. 🔴 What is a Unicode code point?
+193. 🔴 What is a surrogate pair?
+194. 🔴 Can `String.length()` differ from the number of visible characters?
+195. 🔴 How can an emoji affect `String.length()`?
+196. 🔴 What is the difference between `charAt()` and code-point-aware APIs?
+197. 🔴 How would you correctly iterate over Unicode code points?
+198. 🟡 What happens when converting a String to bytes?
+199. 🔴 Why should you explicitly specify a charset when converting String ↔ byte array?
+200. 🔴 What problems can occur when UTF-8 and another charset are mixed incorrectly?
+201. 🔴 How can encoding bugs appear in REST APIs or Kafka messages?
+
+---
+
+# O. Tricky String Output Questions
+
+202. 🔴 Predict the output:
+
+```java
+String a = "Java";
+String b = "Java";
+System.out.println(a == b);
+```
+
+203. 🔴 Predict:
+
+```java
+String a = new String("Java");
+String b = new String("Java");
+System.out.println(a == b);
+```
+
+204. 🔴 Predict:
+
+```java
+String a = "Java";
+String b = new String("Java");
+System.out.println(a == b);
+System.out.println(a.equals(b));
+```
+
+205. 🔴 Predict:
+
+```java
+String a = "Java";
+String b = new String("Java").intern();
+System.out.println(a == b);
+```
+
+206. 🔴 Predict:
+
+```java
+String a = "Ja";
+String b = "va";
+String c = "Java";
+
+System.out.println((a + b) == c);
+```
+
+207. 🔴 Predict:
+
+```java
+String a = "Ja";
+String b = "va";
+String c = a + b;
+String d = "Java";
+
+System.out.println(c == d);
+```
+
+208. 🔴 Predict:
+
+```java
+final String a = "Ja";
+final String b = "va";
+String c = a + b;
+String d = "Java";
+
+System.out.println(c == d);
+```
+
+209. 🔴 Predict:
+
+```java
+String a = "Ja";
+String b = "va";
+final String c = a + b;
+String d = "Java";
+
+System.out.println(c == d);
+```
+
+210. 🔴 Predict:
+
+```java
+System.out.println(10 + 20 + "Java");
+```
+
+211. 🔴 Predict:
+
+```java
+System.out.println("Java" + 10 + 20);
+```
+
+212. 🔴 Predict:
+
+```java
+System.out.println("Java" + (10 + 20));
+```
+
+213. 🔴 Predict:
+
+```java
+String s = null;
+System.out.println(s + "Java");
+```
+
+214. 🔴 Predict:
+
+```java
+String s = null;
+System.out.println(s.equals("Java"));
+```
+
+215. 🔴 Predict:
+
+```java
+System.out.println("Java".equals(null));
+```
+
+216. 🔴 Predict:
+
+```java
+String a = new String("Java");
+String b = a.intern();
+
+System.out.println(a == b);
+```
+
+217. 🔴 Predict:
+
+```java
+String a = new String("Java");
+String b = new String("Java");
+
+System.out.println(a.intern() == b.intern());
+```
+
+218. 🔴 Predict the output when String concatenation occurs inside a loop and determine how many String/StringBuilder-related objects may be involved.
+
+219. 🔴 Predict the output of a program mixing `char`, integer arithmetic and String concatenation.
+
+220. 🔴 Predict the result of String comparisons after serialization/deserialization.
+
+---
+
+# P. Real-World Backend Scenarios
+
+221. 🟢 Why should you avoid repeated String concatenation inside a large loop?
+222. 🟡 How would you build a large CSV response efficiently?
+223. 🟡 How would you generate a large SQL statement safely?
+224. 🔴 How would you process a 500 MB text response without creating excessive temporary Strings?
+225. 🔴 A REST service has unexpectedly high allocation and GC activity. How would you determine whether String creation is contributing?
+226. 🔴 A service processes millions of records and creates a String key for every record. What would you investigate?
+227. 🔴 Would you use `intern()` for millions of dynamically generated keys?
+228. 🔴 How would you decide whether String interning is beneficial for a high-cardinality dataset?
+229. 🔴 A Kafka consumer processes millions of messages containing String fields. What String-related performance considerations would you investigate?
+230. 🔴 Your application repeatedly converts between `String` and `byte[]`. What performance and correctness issues would you investigate?
+231. 🔴 A service receives malformed Unicode data. How would you investigate the problem?
+232. 🔴 A production service generates large JSON payloads using repeated String concatenation. How would you improve the implementation?
+233. 🔴 When would you prefer streaming output instead of constructing one huge String?
+234. 🔴 How can unnecessary String conversions affect CPU and memory?
+235. 🔴 How would you identify String allocation hotspots using profiling tools?
+
+---
+
+# 🔥 Interviewer Drill Chains
+
+## Drill 1 — String Immutability
+
+236. 🟢 Why is String immutable?
+237. 🟡 Give multiple reasons.
+238. 🔴 How does immutability help with String pooling?
+239. 🔴 How does it help with HashMap keys?
+240. 🔴 How does it help with security?
+241. 🔴 How does it help with thread safety?
+242. 🔴 What would break if String were mutable?
+243. 🔴 Could String pooling work safely if Strings were mutable?
+
+## Drill 2 — String Pool
+
+244. 🟢 What is the String pool?
+245. 🟡 Why does it exist?
+246. 🟡 Where is it stored?
+247. 🔴 What happens with `new String()`?
+248. 🔴 What does `intern()` do?
+249. 🔴 Can interned Strings be garbage collected?
+250. 🔴 What are the memory risks of excessive interning?
+251. 🔴 Would you use interning in a high-throughput backend service?
+
+## Drill 3 — `==` vs `equals()`
+
+252. 🟢 Difference between `==` and `equals()`?
+253. 🟡 Why does `==` sometimes return true for Strings?
+254. 🔴 Explain using the String pool.
+255. 🔴 How does `new String()` change the behavior?
+256. 🔴 How does `intern()` change the behavior?
+257. 🔴 How does compile-time concatenation affect it?
+258. 🔴 How does runtime concatenation affect it?
+
+## Drill 4 — StringBuilder
+
+259. 🟢 Why use StringBuilder?
+260. 🟡 StringBuilder vs String?
+261. 🟡 StringBuilder vs StringBuffer?
+262. 🔴 How does StringBuilder grow?
+263. 🔴 What are length and capacity?
+264. 🔴 What is the amortized complexity of append?
+265. 🔴 How would you optimize StringBuilder usage for a large response?
+266. 🔴 Is StringBuilder thread-safe?
+
+## Drill 5 — Backend Performance
+
+267. 🟢 Why can Strings create performance problems?
+268. 🟡 How do temporary Strings increase GC pressure?
+269. 🔴 How would you detect excessive String allocation?
+270. 🔴 How would you optimize a service processing millions of Strings?
+271. 🔴 When would you use StringBuilder?
+272. 🔴 When would you use streaming?
+273. 🔴 When would you consider interning?
+274. 🔴 What String-related issues would you investigate in a high-CPU/high-GC production incident?
+
+---
+
+## 🎯 Topic 4 Checklist
+
+Before moving on, cover:
+
+* String immutability
+* Why String is immutable
+* String pool
+* Heap vs String pool
+* String literals
+* `new String()`
+* `intern()`
+* `==` vs `equals()`
+* Compile-time constants
+* Constant folding
+* String concatenation
+* StringBuilder
+* StringBuffer
+* Internal String representation
+* Compact Strings
+* String memory behavior
+* String allocation/GC pressure
+* Thread safety
+* Common String APIs
+* Unicode/UTF-8/code points
+* Tricky output questions
+* Backend performance scenarios
+
+**Next → Topic 5: Arrays**.
